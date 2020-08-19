@@ -12,6 +12,7 @@
 
     <modules>
         <module>product-core</module>
+        <module>product-consumer</module>
     </modules>
 
     <properties>
