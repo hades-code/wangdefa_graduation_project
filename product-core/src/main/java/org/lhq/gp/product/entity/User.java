@@ -11,16 +11,25 @@ package org.lhq.gp.product.entity;
 public class User {
     private String username;
     private String password;
+    private Role role;
 
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
     }
 
+    public Role getRole() {
+        return role;
+    }
 
+    public User setRole(Role role) {
+        this.role = role;
+        return this;
+    }
 
     public String getUsername() {
         return username;
