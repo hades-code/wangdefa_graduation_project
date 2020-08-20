@@ -7,7 +7,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-<<<<<<< HEAD
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
@@ -18,6 +17,5 @@ buildNumber.properties
 **/.mvn
 **/target/
 .idea
-=======
+
 .mvn/wrapper/maven-wrapper.jar
->>>>>>> dabed95ca1c10ae29ab36f6b0dc417bac81f7ace
