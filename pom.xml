@@ -13,6 +13,8 @@
     <modules>
         <module>product-core</module>
         <module>product-consumer</module>
+        <module>project-gateway</module>
+        <module>product-provider</module>
     </modules>
 
     <properties>
