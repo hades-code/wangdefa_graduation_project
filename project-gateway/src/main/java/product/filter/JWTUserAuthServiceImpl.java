@@ -67,7 +67,7 @@ public class JWTUserAuthServiceImpl implements JWTUserAuthService {
 
     private UserInfo queryUserInfo(String account) {
         // 这里编写获取ShiroUserInfo的逻辑，例如从数据库进行查询
-        return null;
+        return null; 
     }
 
     /**
