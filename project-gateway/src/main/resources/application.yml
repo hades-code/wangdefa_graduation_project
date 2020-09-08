@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        -id: url-proxy-1
+        url: https://baidu.com
+        order: 0
+        predicates:
+          - Path=/baidu

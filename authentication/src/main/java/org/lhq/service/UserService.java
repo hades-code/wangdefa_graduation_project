@@ -1,4 +1,4 @@
-package service;
+package org.lhq.service;
 
 import org.lhq.gp.product.entity.User;
 import org.springframework.stereotype.Service;
