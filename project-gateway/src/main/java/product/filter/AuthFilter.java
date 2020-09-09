@@ -13,7 +13,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.data.redis.core.StringRedisTemplate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -39,8 +39,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Value("${jwt.blacklist.key.format}")
     private String jwtBlacklistKeyFormat;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    //@Autowired
+    // StringRedisTemplate stringRedisTemplate;
 
     @Override
     public int getOrder() {
@@ -57,9 +57,11 @@ public class AuthFilter implements GlobalFilter, Ordered {
         //从请求头中取出token
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         //未携带token或token在黑名单内
-        if (token == null ||
+        boolean flag  = token == null ||
                 token.isEmpty() ||
-                isBlackToken(token)) {
+                isBlackToken(token);
+        flag = true;
+        if (false) {
             ServerHttpResponse originalResponse = exchange.getResponse();
             originalResponse.setStatusCode(HttpStatus.OK);
             originalResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
@@ -69,8 +71,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return originalResponse.writeWith(Flux.just(buffer));
         }
         //取出token包含的身份
-        String userName = verifyJWT(token);
-        if(userName.isEmpty()){
+        //String userName = verifyJWT(token);
+        if(false){
             ServerHttpResponse originalResponse = exchange.getResponse();
             originalResponse.setStatusCode(HttpStatus.OK);
             originalResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
@@ -80,7 +82,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return originalResponse.writeWith(Flux.just(buffer));
         }
         //将现在的request，添加当前身份
-        ServerHttpRequest mutableReq = exchange.getRequest().mutate().header("Authorization-UserName", userName).build();
+        ServerHttpRequest mutableReq = exchange.getRequest().mutate().header("Authorization-UserName", "userName").build();
         ServerWebExchange mutableExchange = exchange.mutate().request(mutableReq).build();
         return chain.filter(mutableExchange);
     }
@@ -93,6 +95,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
     private String verifyJWT(String token){
         String userName = "";
         try {
+        	// 使用对称加密
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("MING")
@@ -106,13 +109,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
         return userName;
     }
 
-    /**
-     * 判断token是否在黑名单内
-     * @param token
-     * @return
-     */
-    private boolean isBlackToken(String token){
-        assert token != null;
-        return stringRedisTemplate.hasKey(String.format(jwtBlacklistKeyFormat, token));
-    }
+  /**
+   * 判断token是否在黑名单内
+   *
+   * @param token
+   * @return
+   */
+  private boolean isBlackToken(String token) {
+    assert token != null;
+    return true;
+        }
 }

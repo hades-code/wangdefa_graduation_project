@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     public User login(String username,String password){
-        return new User();
+        return new User().setUsername("wdf").setPassword("123");
     }
 }

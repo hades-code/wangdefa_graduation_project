@@ -25,7 +25,7 @@ public class CachePostBodyFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String methodValue = request.getMethodValue();
         logger.info("请求方法为:{}",methodValue);
-        return null;
+      return chain.filter(exchange);
     }
 
     @Override

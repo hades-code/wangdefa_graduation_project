@@ -1,6 +1,10 @@
 server:
-  port: 9999
+  port: 6677
 
 spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
   application:
     name: auth-service

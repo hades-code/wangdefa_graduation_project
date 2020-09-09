@@ -1,9 +1,19 @@
 spring:
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          # 开启从注册中心动态创建路由的功能，利用微服务名称进行路由
       routes:
-        -id: url-proxy-1
-        url: https://baidu.com
-        order: 0
-        predicates:
+        - id: url-proxy-1
+          uri: https://baidu.com
+          predicates:
           - Path=/baidu
+
+        - id: url-proxy-2 # 路由的id,没有规定规则但要求唯一,建议配合服务名
+            #匹配后提供服务的路由地址
+          #uri: http://localhost:8001
+          uri: lb://auth-service
+          predicates:
+          - Path=/auth/** # 断言，路径相匹配的进行路由

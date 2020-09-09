@@ -2,7 +2,6 @@ package product.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import util.JwtUtil;
 
 import java.nio.charset.StandardCharsets;
 
@@ -40,9 +38,10 @@ public class JwtFilter implements GlobalFilter, Ordered {
         if (StringUtils.isBlank(authorization)){
             return authError(exchange.getResponse(),"请登录");
         }else {
-            Claims claims = JwtUtil.parseJwt(authorization);
+           // Claims claims = JwtUtil.parseJwt(authorization);
         }
-        return authError(exchange.getResponse(),"请登录");
+        //return authError(exchange.getResponse(),"请登录");
+        return chain.filter(exchange);
     }
 
     public Mono<Void> authError(ServerHttpResponse response,String mess){
@@ -57,6 +56,7 @@ public class JwtFilter implements GlobalFilter, Ordered {
         }
         DataBuffer buffer = response.bufferFactory().wrap(returnStr.getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Flux.just(buffer));
+
     }
 
     @Override
