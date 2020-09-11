@@ -2,6 +2,7 @@ package org.lhq.service;
 
 import org.lhq.gp.product.entity.User;
 import org.lhq.mapper.UserMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ public class UserService {
         User user1 = userMapper.saveAndFlush(user);
         return user;
     }
+    @Cacheable(value = "user",key = "#id")
     public User selectOne(Long id){
         Optional<User> byId = userMapper.findById(id);
         User user = byId.orElse(new User());
