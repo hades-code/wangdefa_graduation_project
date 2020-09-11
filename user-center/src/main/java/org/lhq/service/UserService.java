@@ -5,6 +5,7 @@ import org.lhq.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * @program: wangdefa_graduation_project
@@ -19,6 +20,22 @@ public class UserService {
     @Resource
     private UserMapper userMapper;
 
+    public User addUser(User user){
+        User integer = userMapper.save(user);
+        return integer;
+    }
+    public User updateUser(User user){
+        User user1 = userMapper.saveAndFlush(user);
+        return user;
+    }
+    public User selectOne(Long id){
+        Optional<User> byId = userMapper.findById(id);
+        User user = byId.orElse(new User());
+        return user;
+    }
+    public void deleteUser(User user){
+        userMapper.delete(user);
+    }
     public User login(String username,String password){
         return new User().setUsername("wdf").setPassword("123");
     }

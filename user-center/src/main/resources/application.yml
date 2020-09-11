@@ -3,3 +3,14 @@ server:
 spring:
   profiles:
     active: dev #开发环境
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wgp
+    username: root
+    password: 123456
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
