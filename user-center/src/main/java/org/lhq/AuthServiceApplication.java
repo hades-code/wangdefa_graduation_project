@@ -1,5 +1,6 @@
 package org.lhq;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@MapperScan("org.lhq.mapper")
 public class AuthServiceApplication {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceApplication.class);
   public static void main(String[] args) {
