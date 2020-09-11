@@ -16,4 +16,4 @@ spring:
           #uri: http://localhost:8001
           uri: lb://auth-service
           predicates:
-          - Path=/auth/** # 断言，路径相匹配的进行路由
+          - Path=/auth/**,/config/** # 断言，路径相匹配的进行路由

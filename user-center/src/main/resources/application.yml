@@ -1,0 +1,5 @@
+server:
+  port: 6677
+spring:
+  profiles:
+    active: dev #开发环境

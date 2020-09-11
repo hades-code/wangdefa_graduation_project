@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RefreshScope
-@RequestMapping("/config")
+@RequestMapping("config")
 public class ConfigController {
     @Value("${config.info}")
     private String configInfo;
 
-    @GetMapping("/info")
+    @GetMapping("info")
     public String getConfigInfo() {
         return configInfo;
     }
