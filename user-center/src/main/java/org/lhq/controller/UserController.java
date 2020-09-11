@@ -43,4 +43,9 @@ public class UserController {
         User user = userService.selectOne(1L);
         return user;
     }
+    @PutMapping("/update")
+    public User updateUser(User user){
+        User user1 = userService.updateUser(user);
+        return user1;
+    }
 }
