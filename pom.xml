@@ -15,7 +15,7 @@
         <module>product-consumer</module>
         <module>project-gateway</module>
         <module>product-provider</module>
-        <module>authentication</module>
+        <module>user-center</module>
     </modules>
 
     <properties>
