@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.Claims;
+import org.lhq.gp.product.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +19,12 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import product.service.AuthService;
+import product.util.JwtUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -27,6 +32,9 @@ import java.util.Arrays;
 public class AuthFilter implements GlobalFilter, Ordered {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
+
+  @Resource
+  private AuthService authService;
 
   @Value("${jwt.secret.key}")
   private String secretKey;
@@ -37,8 +45,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
   @Value("${jwt.blacklist.key.format}")
   private String jwtBlacklistKeyFormat;
 
-  // @Autowired
-  // StringRedisTemplate stringRedisTemplate;
 
   @Override
   public int getOrder() {
@@ -48,8 +54,9 @@ public class AuthFilter implements GlobalFilter, Ordered {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String url = exchange.getRequest().getURI().getPath();
+
     LOGGER.info("请求路URL为:{}", url);
-    // 跳过不需要验证的路径
+    // 不需要验证的路径，跳过
     if (Arrays.asList(skipAuthUrls).contains(url)) {
       return chain.filter(exchange);
     }
@@ -68,8 +75,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
       return originalResponse.writeWith(Flux.just(buffer));
     }
     // 取出token包含的身份
-    // String userName = verifyJWT(token);
-    if (false) {
+    User user = verifyJWT(token);
+    if (user.getId() == null) {
       ServerHttpResponse originalResponse = exchange.getResponse();
       originalResponse.setStatusCode(HttpStatus.OK);
       originalResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
@@ -91,19 +98,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
    * @param token
    * @return userName
    */
-  private String verifyJWT(String token) {
-    String userName = "";
-    try {
-      // 使用对称加密
-      Algorithm algorithm = Algorithm.HMAC256(secretKey);
-      JWTVerifier verifier = JWT.require(algorithm).withIssuer("MING").build();
-      DecodedJWT jwt = verifier.verify(token);
-      userName = jwt.getClaim("userName").asString();
-    } catch (JWTVerificationException e) {
-      LOGGER.error(e.getMessage(), e);
-      return "";
-    }
-    return userName;
+  private User verifyJWT(String token) {
+
+    Claims claims = JwtUtil.parseJwt(token);
+    Long userId = claims.get("userId",Long.class);
+    String role = claims.get("role",String.class);
+    String username = claims.getSubject();
+    User user = new User().setId(userId).setUsername(username);
+    return user;
   }
 
   /**

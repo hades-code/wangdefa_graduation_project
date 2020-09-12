@@ -33,12 +33,22 @@ public class UserController {
        return login;
     }
     @PostMapping("add")
-    public String addUser(){
-        userService.addUser(new User().setUsername("wdf"));
-        return "google";
+    public User addUser(){
+        User wdf = userService.addUser(new User().setUsername("wdf").setPassword("123"));
+        return wdf;
     }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") Long id){
         userService.deleteUser(new User().setId(id));
+    }
+    @GetMapping("/get")
+    public User getUser(){
+        User user = userService.selectOne(1L);
+        return user;
+    }
+    @PutMapping("/update")
+    public User updateUser(User user){
+        User user1 = userService.updateUser(user);
+        return user1;
     }
 }

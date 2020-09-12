@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * @program: wangdefa_graduation_project
@@ -17,7 +18,7 @@ import javax.persistence.Id;
  */
 @Entity
 @TableName("t_user")
-public class User {
+public class User  {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
