@@ -65,6 +65,7 @@ public class UserService {
         userMapper.delete(user);
     }
     public User login(String username,String password){
-        return new User().setUsername("wdf").setPassword("123");
+        Optional<User> byId = userMapper.findById(2L);
+        return byId.orElse(new User());
     }
 }

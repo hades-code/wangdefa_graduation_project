@@ -21,10 +21,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 @EnableDiscoveryClient
 @MapperScan("org.lhq.mapper")
 @EnableCaching
-public class AuthServiceApplication {
-  private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceApplication.class);
+public class UserServiceApplication {
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceApplication.class);
   public static void main(String[] args) {
-     SpringApplication.run(AuthServiceApplication.class, args);
+     SpringApplication.run(UserServiceApplication.class, args);
 
   }
 }

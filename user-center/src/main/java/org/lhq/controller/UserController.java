@@ -23,16 +23,11 @@ public class UserController {
 
     @Resource
     private UserService userService;
-    @PostMapping("login")
-    public User login(User user){
-        LOGGER.info("登录行动{}",user);
-        User login = userService.login(user.getUsername(), user.getUsername());
-       return login;
-    }
+
     @PostMapping("add")
-    public String addUser(){
-        userService.addUser(new User().setUsername("wdf"));
-        return "google";
+    public User addUser(){
+        User wdf = userService.addUser(new User().setUsername("wdf").setPassword("123"));
+        return wdf;
     }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") Long id){
