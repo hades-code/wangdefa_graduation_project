@@ -27,9 +27,6 @@ public class UserController {
     public User login(User user){
         LOGGER.info("登录行动{}",user);
         User login = userService.login(user.getUsername(), user.getUsername());
-        if(login.getUsername() != null){
-
-        }
        return login;
     }
     @PostMapping("add")
