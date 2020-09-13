@@ -36,3 +36,12 @@ ${prefix}-${spring.profiles.active}.${file-extension}
 
 - `file-exetension` 为配置内容的数据格式，可以通过配置项 `spring.cloud.nacos.config.file-extension` 来配置。目前只支持 `properties` 和 `yaml` 类型。
 - 通过 Spring Cloud 原生注解 `@RefreshScope` 实现配置自动更新
+
+## WebFlux
+
+当微服务响应头中含有 `Authorization`或者其他串时,gateway中的webflux不能正确识别为json,导致启用视图解析器,发生报错,
+
+ ==解决方法==
+
+1. 把token放到body里面返回,
+2. 待解决

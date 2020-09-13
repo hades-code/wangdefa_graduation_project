@@ -2,6 +2,8 @@ package org.lhq.service;
 
 import org.lhq.gp.product.entity.User;
 import org.lhq.mapper.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Optional;
+
 
 /**
  * @program: wangdefa_graduation_project
@@ -19,6 +22,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Resource
     private UserMapper userMapper;
@@ -57,6 +62,17 @@ public class UserService {
     }
 
     /**
+     * 通过用户名来查找用户的方法
+     * @param user
+     * @return
+     */
+    @Cacheable(value = "userCache",key = "'userId:'+#id")
+    public User selectByUsername(User user){
+        return new User();
+    }
+
+
+    /**
      * @CacheEvict 缓存清理
      * @param user
      */
@@ -65,7 +81,24 @@ public class UserService {
         userMapper.delete(user);
     }
     public User login(String username,String password){
-        Optional<User> byId = userMapper.findById(2L);
+        Optional<User> byId = userMapper.findById(1L);
         return byId.orElse(new User());
+    }
+
+    /**
+     * 注册的方法
+     * @param user
+     * @return
+     */
+    public User register(User user){
+        User findUser = selectByUsername(user);
+        if (findUser.getUsername() != null){
+            User add = addUser(user);
+            LOGGER.info("用户:{} 注册成功",user.getUsername());
+            return add;
+        }else {
+            LOGGER.info("用户注册失败!");
+            return new User();
+        }
     }
 }

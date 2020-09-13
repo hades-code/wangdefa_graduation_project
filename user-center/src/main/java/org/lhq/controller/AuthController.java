@@ -7,13 +7,11 @@ import org.lhq.service.UserService;
 import org.lhq.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("auth")
@@ -24,8 +22,13 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestBody User user, HttpServletResponse response){
+    public ResponseEntity login(@RequestBody(required = false) User user, HttpServletResponse response){
         LOGGER.info("登录行动:{}",user);
+        if (user == null){
+           return new ResponseEntity<>(ResultCode.FAIL)
+                    .setMessage("用户名或密码错误")
+                    .setResultCode(ResultCode.FAIL);
+        }
         User loginUser = userService.login(user.getUsername(), user.getUsername());
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.info("用户名或密码错误");
@@ -47,6 +50,7 @@ public class AuthController {
     @PostMapping("register")
     public ResponseEntity register(User user){
         //明天再写
-        return null;
+        LOGGER.info("请求注册方法");
+        return new ResponseEntity();
     }
 }
