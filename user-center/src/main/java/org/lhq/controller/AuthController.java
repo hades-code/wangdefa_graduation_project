@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,14 +35,19 @@ public class AuthController {
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.info("用户名或密码错误");
         }else {
-            //TO-DO:
+            /**
+             * 因为gateway中不能处理,带Authorization响应头的响应,现在改为在响应体中返回
+             */
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
-            response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
-            response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
-            return new ResponseEntity<User>()
+            //response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
+            //response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("user",loginUser);
+            resultMap.put("token",JwtUtil.TOKEN_PREFIX+token);
+            return new ResponseEntity<Map>()
                     .setMessage("登陆成功")
                     .setResultCode(ResultCode.SUCCESS)
-                    .setData(loginUser);
+                    .setData(resultMap);
 
         }
         return new ResponseEntity<>()

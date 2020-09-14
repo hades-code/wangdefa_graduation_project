@@ -44,4 +44,5 @@ ${prefix}-${spring.profiles.active}.${file-extension}
  ==解决方法==
 
 1. 把token放到body里面返回,
-2. 待解决
+2. 在gateway中签发token
+3. 待解决

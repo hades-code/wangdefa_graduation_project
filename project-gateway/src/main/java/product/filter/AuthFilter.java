@@ -33,8 +33,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
-//  @Resource
-//  private AuthService authService;
+  @Resource
+  private AuthService authService;
 
   @Value("${jwt.secret.key}")
   private String secretKey;
