@@ -39,8 +39,8 @@ public class AuthController {
              * 因为gateway中不能处理,带Authorization响应头的响应,现在改为在响应体中返回
              */
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
-            //response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
-            //response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
+            response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
+            response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("user",loginUser);
             resultMap.put("token",JwtUtil.TOKEN_PREFIX+token);
@@ -58,6 +58,9 @@ public class AuthController {
     public ResponseEntity register(User user){
         //明天再写
         LOGGER.info("请求注册方法");
-        return new ResponseEntity();
+        User register = userService.register(user);
+        return new ResponseEntity()
+                .setMessage("注册成功")
+                .setData(register);
     }
 }

@@ -39,10 +39,6 @@ ${prefix}-${spring.profiles.active}.${file-extension}
 
 ## WebFlux
 
-当微服务响应头中含有 `Authorization`或者其他串时,gateway中的webflux不能正确识别为json,导致启用视图解析器,发生报错,
 
- ==解决方法==
 
-1. 把token放到body里面返回,
-2. 在gateway中签发token
-3. 待解决
+3. 与openfegin请求路径引发冲突,导致报错,修改openfien

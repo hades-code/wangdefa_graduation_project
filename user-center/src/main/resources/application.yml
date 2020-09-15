@@ -16,5 +16,5 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   redis:
     database: 0
-    host: localhost
+    host: vps.wdf2020.cf
     port: 6379

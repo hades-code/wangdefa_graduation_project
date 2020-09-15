@@ -19,12 +19,10 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import product.service.AuthService;
 import product.util.JwtUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -33,8 +31,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
-  @Resource
-  private AuthService authService;
+//  @Resource
+//  private AuthService authService;
 
   @Value("${jwt.secret.key}")
   private String secretKey;

@@ -66,7 +66,7 @@ public class UserService {
      * @param user
      * @return
      */
-    @Cacheable(value = "userCache",key = "'userId:'+#id")
+    @Cacheable(value = "userCache",key = "'userId:'+#user.id")
     public User selectByUsername(User user){
         return new User();
     }
@@ -91,8 +91,9 @@ public class UserService {
      * @return
      */
     public User register(User user){
+        LOGGER.info("请求注册的User:{}",user);
         User findUser = selectByUsername(user);
-        if (findUser.getUsername() != null){
+        if (findUser.getUsername() == null){
             User add = addUser(user);
             LOGGER.info("用户:{} 注册成功",user.getUsername());
             return add;
