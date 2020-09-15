@@ -19,7 +19,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@MapperScan("org.lhq.mapper")
+@MapperScan("org.lhq.dao")
 @EnableCaching
 public class UserServiceApplication {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceApplication.class);

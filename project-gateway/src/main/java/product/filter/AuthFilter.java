@@ -1,10 +1,6 @@
 package product.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import io.jsonwebtoken.Claims;
 import org.lhq.gp.product.entity.User;
 import org.slf4j.Logger;
@@ -31,8 +27,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
-//  @Resource
-//  private AuthService authService;
 
   @Value("${jwt.secret.key}")
   private String secretKey;

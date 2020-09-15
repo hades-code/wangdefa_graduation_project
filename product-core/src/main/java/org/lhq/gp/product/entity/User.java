@@ -1,8 +1,5 @@
 package org.lhq.gp.product.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +14,6 @@ import java.io.Serializable;
  * @create: 2020-08-19 16:39
  */
 @Entity
-@TableName("t_user")
 public class User  {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

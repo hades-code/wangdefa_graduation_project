@@ -1,7 +1,6 @@
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.lhq.gp.product.entity.User;
-import org.lhq.mapper.UserMapper;
+import org.lhq.dao.UserDao;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
@@ -16,9 +15,9 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class SampleTest {
     @Resource
-    private UserMapper userMapper;
+    private UserDao userDao;
     @Test
     public void test(){
-        userMapper.save(new User().setUsername("dasdddsd"));
+        userDao.selectById(1);
     }
 }

@@ -31,7 +31,7 @@ public class AuthController {
                     .setMessage("用户名或密码错误")
                     .setResultCode(ResultCode.FAIL);
         }
-        User loginUser = userService.login(user.getUsername(), user.getUsername());
+        User loginUser = userService.login(user);
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.info("用户名或密码错误");
         }else {

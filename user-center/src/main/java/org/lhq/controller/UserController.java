@@ -1,50 +1,83 @@
 package org.lhq.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.api.ApiController;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import org.lhq.gp.product.entity.User;
 import org.lhq.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * @program: wangdefa_graduation_project
- * @description: UserController
- * @author: Wang defa
- * @create: 2020-09-08 17:55
+ * (User)表控制层
+ *
+ * @author makejava
+ * @since 2020-09-15 20:28:43
  */
-
 @RestController
 @RequestMapping("user")
-public class UserController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+public class UserController extends ApiController {
+  /** 服务对象 */
+  @Resource private UserService userService;
 
-    @Resource
-    private UserService userService;
-    @PostMapping("login")
-    public User login(User user){
-        LOGGER.info("登录行动{}",user);
-        User login = userService.login(user.getUsername(), user.getUsername());
-       return login;
-    }
-    @PostMapping("add")
-    public User addUser(){
-        User wdf = userService.addUser(new User().setUsername("wdf").setPassword("123"));
-        return wdf;
-    }
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") Long id){
-        userService.deleteUser(new User().setId(id));
-    }
-    @GetMapping("/get")
-    public User getUser(){
-        User user = userService.selectOne(1L);
-        return user;
-    }
-    @PutMapping("/update")
-    public User updateUser(User user){
-        User user1 = userService.updateUser(user);
-        return user1;
-    }
+  /**
+   * 分页查询所有数据
+   *
+   * @param page 分页对象
+   * @param user 查询实体
+   * @return 所有数据
+   */
+  @GetMapping
+  public R selectAll(Page<User> page, User user) {
+    return success(this.userService.page(page, new QueryWrapper<>(user)));
+  }
+
+  /**
+   * 通过主键查询单条数据
+   *
+   * @param id 主键
+   * @return 单条数据
+   */
+  @GetMapping("{id}")
+  public R selectOne(@PathVariable Serializable id) {
+    return success(this.userService.getById(id));
+  }
+
+  /**
+   * 新增数据
+   *
+   * @param user 实体对象
+   * @return 新增结果
+   */
+  @PostMapping
+  public R insert(@RequestBody User user) {
+    return success(this.userService.save(user));
+  }
+
+  /**
+   * 修改数据
+   *
+   * @param user 实体对象
+   * @return 修改结果
+   */
+  @PutMapping
+  public R update(@RequestBody User user) {
+    return success(this.userService.updateById(user));
+  }
+
+  /**
+   * 删除数据
+   *
+   * @param idList 主键结合
+   * @return 删除结果
+   */
+  @DeleteMapping
+  public R delete(@RequestParam("idList") List<Long> idList) {
+    return success(this.userService.removeByIds(idList));
+  }
 }
