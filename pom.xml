@@ -16,7 +16,7 @@
         <module>project-gateway</module>
         <module>product-provider</module>
         <module>user-center</module>
-        <module>prodict-service</module>
+        <module>product-service</module>
     </modules>
 
     <properties>
