@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import org.lhq.gp.product.entity.CustomizeResponseEntity;
 import org.lhq.gp.product.entity.User;
 import org.lhq.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,8 +35,11 @@ public class UserController extends ApiController {
    * @return 所有数据
    */
   @GetMapping
-  public R selectAll(Page<User> page, User user) {
-    return success(this.userService.page(page, new QueryWrapper<>(user)));
+  public ResponseEntity selectAll(Page<User> page, User user) {
+    //return success(this.userService.page(page, new QueryWrapper<>(user)));
+    CustomizeResponseEntity responseEntity = new CustomizeResponseEntity().setData(this.userService.page(page, new QueryWrapper<>(user)));
+
+    return responseEntity;
   }
 
   /**

@@ -23,19 +23,31 @@ import java.util.concurrent.TimeUnit;
 public class JwtUtil {
     private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
-    //
+    /**
+     * token 头
+     */
     public static final String AUTH_HEADER_KEY = "Authorization";
-    //token前缀
+    /**
+     * token 前缀
+     */
     public static final String TOKEN_PREFIX = "Bearer ";
 
-    //设置签名客户端
+    /**
+     * token 签名id
+     */
     private static String clientId = "org.lhq";
-    //设置签名密钥
-    private static final String base64Secret = "org.lhq";
-    //设置签名人
-    private static String name = "wang_de_fa";
-    //设置过期时间
-    private static final long expiresSecond = TimeUnit.MILLISECONDS.convert(8L,TimeUnit.HOURS);
+    /**
+     * 签名密钥
+     */
+    private static final String BASE64_SECRET = "org.lhq";
+    /**
+     * 签名人
+     */
+    private static final String NAME = "wang_de_fa";
+    /**
+     * token过期时间
+     */
+    private static final long EXPIRES_SECOND = TimeUnit.MILLISECONDS.convert(8L,TimeUnit.HOURS);
 
 
 
@@ -50,7 +62,7 @@ public class JwtUtil {
             String token = jsonWebToken.substring(7);
             try {
                 return Jwts.parser()
-                        .setSigningKey(DatatypeConverter.parseBase64Binary(base64Secret))
+                        .setSigningKey(DatatypeConverter.parseBase64Binary(BASE64_SECRET))
                         .parseClaimsJws(token).getBody();
             } catch (ExpiredJwtException eje) {
                 log.error("===== Token过期 =====", eje);
@@ -83,7 +95,7 @@ public class JwtUtil {
             Date now = new Date(nowMillis);
 
             //生成签名密钥
-            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(base64Secret);
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(BASE64_SECRET);
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
             //添加构成JWT参数
@@ -97,10 +109,10 @@ public class JwtUtil {
                     //代表签名的签发客户端
                     .setIssuedAt(new Date())
                     //签发日期
-                    .setAudience(name)
+                    .setAudience(NAME)
                     //代表这个JWT的接收对象
                     .signWith(signatureAlgorithm, signingKey);
-            long TTLMillis = expiresSecond;
+            long TTLMillis = EXPIRES_SECOND;
             if (TTLMillis >= 0) {
                 long expMillis = nowMillis + TTLMillis;
                 Date exp = new Date(expMillis);

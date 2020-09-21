@@ -22,8 +22,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @MapperScan("org.lhq.dao")
 @EnableCaching
 public class UserServiceApplication {
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceApplication.class);
-  public static void main(String[] args) {
+    public static void main(String[] args) {
      SpringApplication.run(UserServiceApplication.class, args);
 
   }
