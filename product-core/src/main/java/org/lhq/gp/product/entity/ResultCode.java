@@ -1,5 +1,9 @@
 package org.lhq.gp.product.entity;
 
+/**
+ * @author Wallace
+ */
+
 public enum ResultCode {
   /** 成功响应 */
   SUCCESS(200, "响应成功"),

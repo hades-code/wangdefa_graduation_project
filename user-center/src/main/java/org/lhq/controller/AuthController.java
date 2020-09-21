@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Wallace
+ */
 @RestController
 @RequestMapping("auth")
 public class AuthController {
@@ -25,7 +28,7 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public CustomizeResponseEntity login(@RequestBody(required = false) User user, HttpServletResponse response){
+    public CustomizeResponseEntity<Object> login(@RequestBody(required = false) User user, HttpServletResponse response){
         LOGGER.info("登录行动:{}",user);
         if (user == null){
            return new CustomizeResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -45,7 +48,7 @@ public class AuthController {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("user",loginUser);
             resultMap.put("token",JwtUtil.TOKEN_PREFIX+token);
-            return new CustomizeResponseEntity<Map>()
+            return new CustomizeResponseEntity<>()
                     .setMessage("登陆成功")
                     .setResultCode(ResultCode.SUCCESS)
                     .setData(resultMap);
@@ -56,7 +59,7 @@ public class AuthController {
                 .setResultCode(ResultCode.FAIL);
     }
     @PostMapping("register")
-    public CustomizeResponseEntity register(User user){
+    public CustomizeResponseEntity<User> register(User user){
         //明天再写
         LOGGER.info("请求注册方法");
         User register = userService.register(user);

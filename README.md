@@ -37,7 +37,7 @@ ${prefix}-${spring.profiles.active}.${file-extension}
 - `file-exetension` 为配置内容的数据格式，可以通过配置项 `spring.cloud.nacos.config.file-extension` 来配置。目前只支持 `properties` 和 `yaml` 类型。
 - 通过 Spring Cloud 原生注解 `@RefreshScope` 实现配置自动更新
 
-## WebFlux
+## _WebFlux_
 
 
 
