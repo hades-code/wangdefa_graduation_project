@@ -1,6 +1,6 @@
+
 import org.junit.Test;
 import org.lhq.dao.UserDao;
-
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
@@ -16,8 +16,9 @@ import javax.annotation.Resource;
 public class SampleTest {
     @Resource
     private UserDao userDao;
+
     @Test
-    public void test(){
+    public void test() {
         userDao.selectById(1);
     }
 }

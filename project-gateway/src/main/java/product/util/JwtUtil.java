@@ -19,11 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 
 @Component
-//@ConfigurationProperties(prefix = "jwt.config")
 public class JwtUtil {
     private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
-    //
     public static final String AUTH_HEADER_KEY = "Authorization";
     //token前缀
     public static final String TOKEN_PREFIX = "Bearer ";

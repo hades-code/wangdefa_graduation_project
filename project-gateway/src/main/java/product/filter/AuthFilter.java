@@ -1,7 +1,9 @@
 package product.filter;
 
 
-import io.jsonwebtoken.Claims;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 import org.lhq.gp.product.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +17,15 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+
+import io.jsonwebtoken.Claims;
 import product.util.JwtUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
+/**
+ * @author Wallace
+ */
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
 
@@ -56,8 +60,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
     String token = exchange.getRequest().getHeaders().getFirst("Authorization");
     // 未携带token或token在黑名单内
     boolean flag = token == null || token.isEmpty() || isBlackToken(token);
-    flag = true;
-    if (false) {
+    if (flag) {
       ServerHttpResponse originalResponse = exchange.getResponse();
       originalResponse.setStatusCode(HttpStatus.OK);
       originalResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");

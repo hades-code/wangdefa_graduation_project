@@ -10,58 +10,57 @@ import org.springframework.http.ResponseEntity;
  * @create: 2020-09-13 00:45
  */
 public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
-  //private int code
-  private int resultCode;
-  private String message;
-  private T data;
+    // private int code
+    private int resultCode;
 
+    private String message;
 
-  public CustomizeResponseEntity() {
-    super(HttpStatus.OK);
-    this.resultCode = ResultCode.SUCCESS.code;
-    this.message = "请求成功,处理中";
-  }
+    private T data;
 
-  public CustomizeResponseEntity(HttpStatus httpStatus) {
-    super(httpStatus);
-  }
-  public CustomizeResponseEntity(HttpStatus httpStatus,T data){
-    super(data,httpStatus);
-  }
+    public CustomizeResponseEntity() {
+        super(HttpStatus.OK);
+        this.resultCode = ResultCode.SUCCESS.code;
+        this.message = "请求成功,处理中";
+    }
 
-  @Override
-  public String toString() {
-    return "CustomizeResponseEntity{" +
-            "resultCode=" + resultCode +
-            ", message='" + message + '\'' +
-            ", data=" + data +
-            '}';
-  }
+    public CustomizeResponseEntity(HttpStatus httpStatus) {
+        super(httpStatus);
+    }
 
-  public int getResultCode() {
-    return resultCode;
-  }
+    public CustomizeResponseEntity(HttpStatus httpStatus, T data) {
+        super(data, httpStatus);
+    }
 
-  public CustomizeResponseEntity<T> setResultCode(ResultCode resultCode) {
-    this.resultCode = resultCode.code;
-    return this;
-  }
+    @Override
+    public String toString() {
+        return "CustomizeResponseEntity{" + "resultCode=" + resultCode + ", message='" + message + '\'' + ", data="
+            + data + '}';
+    }
 
-  public String getMessage() {
-    return message;
-  }
+    public int getResultCode() {
+        return resultCode;
+    }
 
-  public CustomizeResponseEntity<T> setMessage(String message) {
-    this.message = message;
-    return this;
-  }
+    public CustomizeResponseEntity<T> setResultCode(ResultCode resultCode) {
+        this.resultCode = resultCode.code;
+        return this;
+    }
 
-  public T getData() {
-    return data;
-  }
+    public String getMessage() {
+        return message;
+    }
 
-  public CustomizeResponseEntity<T> setData(T data) {
-    this.data = data;
-    return this;
-  }
+    public CustomizeResponseEntity<T> setMessage(String message) {
+        this.message = message;
+        return this;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public CustomizeResponseEntity<T> setData(T data) {
+        this.data = data;
+        return this;
+    }
 }

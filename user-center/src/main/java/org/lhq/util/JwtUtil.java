@@ -19,8 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Component
-//@ConfigurationProperties(prefix = "jwt.config")
-public class JwtUtil {
+public class JwtUtil{
     private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
     /**
