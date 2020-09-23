@@ -1,6 +1,11 @@
 server:
   port: 6677
 spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8719
   profiles:
     active: dev #开发环境
   datasource:
