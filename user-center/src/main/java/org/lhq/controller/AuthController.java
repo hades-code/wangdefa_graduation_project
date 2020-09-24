@@ -39,13 +39,13 @@ public class AuthController {
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.info("用户名或密码错误");
         }else {
-            /**
+            /*
              * 因为gateway中不能处理,带Authorization响应头的响应,现在改为在响应体中返回
              */
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
             response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
             response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
-            Map<String, Object> resultMap = new HashMap<>();
+            Map<String, Object> resultMap = new HashMap<>(16);
             resultMap.put("user",loginUser);
             resultMap.put("token",JwtUtil.TOKEN_PREFIX+token);
             return new CustomizeResponseEntity<>()
@@ -63,7 +63,7 @@ public class AuthController {
         //明天再写
         LOGGER.info("请求注册方法");
         User register = userService.register(user);
-        return new CustomizeResponseEntity()
+        return new CustomizeResponseEntity<User>()
                 .setMessage("注册成功")
                 .setData(register);
     }

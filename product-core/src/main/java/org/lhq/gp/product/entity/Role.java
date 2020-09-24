@@ -1,9 +1,31 @@
 package org.lhq.gp.product.entity;
-/*
-用户角色
+/**
+ * @author Wallace
  */
 public enum  Role {
-    God,
-    Admin,
-    User;
+    /**
+     * 超级管理员
+     */
+    God(0,"草鸡管理员"),
+    /**
+     * 普通管理员
+     */
+    Admin(1,"普通管理员"),
+    /**
+     * 普通用户
+     */
+    User(10,"用户");
+    /**
+     * 角色代码
+     */
+    private Integer roleCode;
+    /**
+     * 角色名字
+     */
+    private String roleName;
+
+     Role(Integer roleCode,String roleName){
+        this.roleCode = roleCode;
+        this.roleName = roleName;
+    }
 }
