@@ -7,7 +7,7 @@ import org.lhq.gp.product.entity.User;
 /**
  * (User)表服务接口
  *
- * @author makejava
+ * @author wangdefa
  * @since 2020-09-15 20:28:37
  */
 public interface UserService extends IService<User> {

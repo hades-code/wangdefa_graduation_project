@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * (User)表实体类
  *
- * @author makejava
+ * @author wangdefa
  * @since 2020-09-15 20:25:04
  */
 @SuppressWarnings("serial")
