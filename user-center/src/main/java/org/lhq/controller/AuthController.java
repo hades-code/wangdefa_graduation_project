@@ -38,10 +38,10 @@ public class AuthController {
         User loginUser = userService.login(user);
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.info("用户名或密码错误");
+            return new CustomizeResponseEntity<>()
+                    .setMessage("用户名或密码错误")
+                    .setResultCode(ResultCode.FAIL);
         }else {
-            /*
-             * 因为gateway中不能处理,带Authorization响应头的响应,现在改为在响应体中返回
-             */
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
             response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
             response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
@@ -54,9 +54,7 @@ public class AuthController {
                     .setData(resultMap);
 
         }
-        return new CustomizeResponseEntity<>()
-                .setMessage("用户名或密码错误")
-                .setResultCode(ResultCode.FAIL);
+
     }
     @PostMapping("register")
     public CustomizeResponseEntity<User> register(User user){

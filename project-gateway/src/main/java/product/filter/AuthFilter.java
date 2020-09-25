@@ -70,7 +70,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
       return originalResponse.writeWith(Flux.just(buffer));
     }
     // 取出token包含的身份
-    User user = verifyJWT(token);
+    User user = verifyJwt(token);
     if (user.getId() == null) {
       ServerHttpResponse originalResponse = exchange.getResponse();
       originalResponse.setStatusCode(HttpStatus.OK);
@@ -93,7 +93,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
    * @param token
    * @return userName
    */
-  private User verifyJWT(String token) {
+  private User verifyJwt(String token) {
 
     Claims claims = JwtUtil.parseJwt(token);
     Long userId = claims.get("userId",Long.class);

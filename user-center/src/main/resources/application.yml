@@ -1,13 +1,13 @@
 server:
   port: 6677
 spring:
-  cloud:
-    sentinel:
-      transport:
-        dashboard: localhost:8080
-        port: 8719
-  profiles:
-    active: dev #开发环境
+# cloud:
+#   sentinel:
+#      transport:
+#       dashboard: localhost:8080
+#        port: 8719
+#  profiles:
+#    active: dev #开发环境
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wgp?serverTimezone=UTC
