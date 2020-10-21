@@ -1,10 +1,16 @@
-# wangdefa_graduation_project
-
-王德发的毕业设计
+# wangdefa_微服务_project
 
 ## 整体设计架构
 
 ### springcloud Alibaba
+
+### 启动顺序
+
+1. 先启动nacos服务注册与中心
+2. 启动skywalking 服务追踪（可选）
+3. 启动mq
+4. 启动各个模块
+5. 启动网关
 
 
 
