@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
  * @create: 2020-09-13 00:45
  */
 public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
-    // private int code
+
     private int resultCode;
 
     private String message;

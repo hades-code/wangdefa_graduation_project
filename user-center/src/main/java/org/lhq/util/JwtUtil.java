@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * jwt工具,使用对称加密算法
+ * @author Wallace
  */
 
 
