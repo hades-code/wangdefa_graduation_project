@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>org.lhq.gp</groupId>
-            <artifactId>product-core</artifactId>
+            <artifactId>project-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

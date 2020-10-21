@@ -9,13 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>product-provider</artifactId>
+    <artifactId>kafka-provider</artifactId>
 
 
     <dependencies>
         <dependency>
             <groupId>org.lhq.gp</groupId>
-            <artifactId>product-core</artifactId>
+            <artifactId>project-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

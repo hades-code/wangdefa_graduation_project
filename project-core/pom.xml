@@ -9,9 +9,9 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>product-core</artifactId>
+    <artifactId>project-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>product-core</name>
+    <name>project-core</name>
     <description>业务核心</description>
 
 

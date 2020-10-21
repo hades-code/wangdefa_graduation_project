@@ -11,10 +11,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>product-core</module>
-        <module>product-consumer</module>
+        <module>project-core</module>
+        <module>kafka-consumer</module>
         <module>project-gateway</module>
-        <module>product-provider</module>
+        <module>kafka-provider</module>
         <module>user-center</module>
         <module>product-service</module>
     </modules>

@@ -11,6 +11,17 @@ import org.lhq.gp.product.entity.User;
  * @since 2020-09-15 20:28:37
  */
 public interface UserService extends IService<User> {
+    /**
+     * 登录功能
+     * @param user
+     * @return
+     */
     User login(User user);
+
+    /**
+     * 注册功能
+     * @param user
+     * @return
+     */
     User register(User user);
 }

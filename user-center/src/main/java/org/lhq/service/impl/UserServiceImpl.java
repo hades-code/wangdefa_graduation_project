@@ -7,6 +7,7 @@ import org.lhq.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @CachePut(key = "#result.id")
     public boolean saveOrUpdate(User entity) {
         return super.saveOrUpdate(entity);
+    }
+
+    @Override
+    @CacheEvict(key = "#id")
+    public boolean removeById(Serializable id) {
+        return super.removeById(id);
     }
 
     @Override
