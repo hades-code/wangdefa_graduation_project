@@ -1,9 +1,8 @@
 package org.lhq.gp.controller;
 
+import org.lhq.gp.service.MySendServcie;
 import org.lhq.gp.service.SendService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -19,9 +18,15 @@ public class ProviderController {
 
     @Resource
     private SendService sendService;
+    @Resource
+    private MySendServcie mySendServcie;
 
-    @PostMapping("/send/{msg}")
+    @GetMapping("/send/{msg}")
     public void send(@PathVariable("msg") String msg){
         sendService.sendMsg(msg);
+    }
+    @GetMapping("sentMyMsg/{msg}")
+    public void sendMyMsg(@PathVariable("msg") String msg){
+        mySendServcie.sendMsg(msg);
     }
 }

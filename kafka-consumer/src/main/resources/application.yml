@@ -1,12 +1,19 @@
+server:
+  port: 8889
 spring:
   cloud:
     sentinel:
       transport:
         dashboard: localhost:8080
         port: 8719
-
-management:
-  endpoint:
-    web:
-      exposure:
-        include: '*'
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          #zk-nodes: localhost:2181
+          auto-create-topics: true
+        bindings:
+          input:
+            destination: lhq
+          myMq:
+            destination: demo

@@ -9,8 +9,11 @@ spring:
         binder:
           brokers: localhost:9092
           auto-create-topics: true
-          zk-nodes: localhost:2181
+          #zk-nodes: localhost:2181
       binders:
         output:
-          destination: stream-demo
+          destination: lhq
+          content-type: text/plain
+        myMq:
+          destination: demo
           content-type: text/plain

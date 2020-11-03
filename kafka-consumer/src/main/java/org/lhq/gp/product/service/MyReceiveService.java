@@ -1,22 +1,24 @@
 package org.lhq.gp.product.service;
 
+import org.lhq.gp.product.sink.MySink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
+import sun.reflect.generics.tree.VoidDescriptor;
 
 /**
  * @program: wangdefa_graduation_project
- * @description: 消息队列
+ * @description:
  * @author: Wang defa
- * @create: 2020-10-21 16:47
+ * @create: 2020-11-02 11:18
  */
 
-@EnableBinding(Sink.class)
-public class ReceiveService {
+@EnableBinding(MySink.class)
+public class MyReceiveService {
     private static final Logger logger = LoggerFactory.getLogger(ReceiveService.class);
-    @StreamListener(Sink.INPUT)
+
+    @StreamListener(MySink.INPUT)
     public void receive(Object payload){
         logger.info("接收到消息{}",payload);
         System.out.println(payload);

@@ -2,6 +2,7 @@ package org.lhq.gp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @program: wangdefa_graduation_project
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@EnableDiscoveryClient
 public class KafkaProviderApplication {
     public static void main(String[] args) {
         SpringApplication.run(KafkaProviderApplication.class,args);
