@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.lhq.dao.UserDao">
 
-    <resultMap type="org.lhq.entity.User" id="UserMap">
+    <resultMap type="org.lhq.gp.product.entity.User" id="UserMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="INTEGER"/>
