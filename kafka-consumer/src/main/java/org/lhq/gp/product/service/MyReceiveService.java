@@ -16,7 +16,7 @@ import sun.reflect.generics.tree.VoidDescriptor;
 
 @EnableBinding(MySink.class)
 public class MyReceiveService {
-    private static final Logger logger = LoggerFactory.getLogger(ReceiveService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyReceiveService.class);
 
     @StreamListener(MySink.INPUT)
     public void receive(Object payload){

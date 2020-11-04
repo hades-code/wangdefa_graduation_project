@@ -14,7 +14,5 @@ spring:
           auto-create-topics: true
         bindings:
           #无论是生产者还是消费者，要接收到的对应的消息bindings下面的名称要保持一致
-          output:
-            destination: lhq
           myMq:
             destination: demo
