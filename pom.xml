@@ -3,6 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.2.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <groupId>org.lhq.gp</groupId>
     <artifactId>Graduation_Project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -17,47 +24,61 @@
         <module>kafka-provider</module>
         <module>user-center</module>
         <module>product-service</module>
+        <module>search-service</module>
+        <module>core-starter</module>
     </modules>
 
+    <!--版本号统一管理-->
     <properties>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
-        <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
-<!--        <aliyun-spring-boot.version>2.2.1.RELEASE</aliyun-spring-boot.version>-->
-        <spring-boot-startrt.version>2.3.1.RELEASE</spring-boot-startrt.version>
-        <jjwt.version>0.9.0</jjwt.version>
-        <lombok.version>1.18.12</lombok.version>
+        <!--此版本修复了Apache-Tomcat-Ajp漏洞-->
+        <tomcat.version>9.0.31</tomcat.version>
+        <cloud.version>1.0-SNAPSHOT</cloud.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
+        <mysql.version>8.0.21</mysql.version>
+        <fastjson.version>1.2.58</fastjson.version>
+        <!--mybatis-plus-->
+        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <dynamic-plus.version>3.2.1</dynamic-plus.version>
+        <knife4j.version>2.0.0</knife4j.version>
+        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <alibaba-cloud.version>2.2.3.RELEASE</alibaba-cloud.version>
+        <netty-websocket.version>0.9.5</netty-websocket.version>
+        <redisson.version>3.10.6</redisson.version>
+        <fast-dfs.version>1.27.2</fast-dfs.version>
+        <artofsolving.jodconverter>2.2.1</artofsolving.jodconverter>
+        <openoffice.version>1.0.3.RELEASE</openoffice.version>
+        <boot-admin.version>2.2.0</boot-admin.version>
+        <jetcache.version>2.5.9</jetcache.version>
+        <retry.version>1.2.5.RELEASE</retry.version>
+        <shiro.version>1.4.0</shiro.version>
+        <jwt.version>3.3.0</jwt.version>
+        <activiti.version>6.0.0</activiti.version>
+        <p6spy.version>1.6.2</p6spy.version>
+        <easyexcel.version>2.1.4</easyexcel.version>
+        <openoffice.version>1.0.3.RELEASE</openoffice.version>
+        <jasypt.version>1.16</jasypt.version>
+        <kaptcha.version>1.1.0</kaptcha.version>
+        <pinyin.version>2.5.1</pinyin.version>
+        <flying-saucer.version>9.1.9</flying-saucer.version>
+        <itext.version>2.1.7</itext.version>
+        <emoji-java.version>5.1.1</emoji-java.version>
+        <hdrhistogram.version>2.1.1</hdrhistogram.version>
+        <hutool.version>5.2.1</hutool.version>
+        <image.version>2.0.1</image.version>
+        <csv.version>1.8</csv.version>
     </properties>
 
+    <!--依赖统一管理-->
     <dependencyManagement>
         <dependencies>
-          <!--  <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>aliyun-spring-boot-dependencies</artifactId>
-                <version>${aliyun-spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>-->
+            <!--数据库-->
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>${spring-boot-startrt.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <scope>runtime</scope>
+                <version>${mysql.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13</version>
-                <scope>test</scope>
-            </dependency>
+            <!--spring cloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -65,22 +86,41 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--spring cloud -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
+                <version>${alibaba-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--fastjson-->
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-test</artifactId>
-                <version>${spring-boot-startrt.version}</version>
+                <artifactId>fastjson</artifactId>
+                <groupId>com.alibaba</groupId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>guava</artifactId>
+                <groupId>com.google.guava</groupId>
+                <version>20.0</version>
+            </dependency>
+            <!--itext-->
+            <dependency>
+                <groupId>com.lowagie</groupId>
+                <artifactId>itext</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <!--gourd-->
+            <dependency>
+                <groupId>org.gourd.hu</groupId>
+                <artifactId>base-plus-starter</artifactId>
+                <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
-                <version>${jjwt.version}</version>
+                <version>0.9.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
