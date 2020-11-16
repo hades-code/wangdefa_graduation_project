@@ -18,14 +18,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>project-core</module>
-        <module>kafka-consumer</module>
+        <module>common-core</module>
         <module>project-gateway</module>
-        <module>kafka-provider</module>
         <module>user-center</module>
-        <module>product-service</module>
-        <module>core-plus-starter</module>
-        <module>base-plus-starter</module>
+        <module>file-service</module>
     </modules>
 
     <!--版本号统一管理-->

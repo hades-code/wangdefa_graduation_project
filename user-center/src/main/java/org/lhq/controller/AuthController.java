@@ -28,19 +28,21 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public CustomizeResponseEntity<Object> login(@RequestBody(required = false) User user, HttpServletResponse response){
+    public CustomizeResponseEntity<Object> login(String username,String password, HttpServletResponse response){
+    	User user = new User().setUsername(username).setPassword(password);
         LOGGER.info("登录行动:{}",user);
         if (user == null){
            return new CustomizeResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .setMessage("用户名或密码错误")
+                    .setMessage("用户名为空")
                     .setResultCode(ResultCode.FAIL);
         }
         User loginUser = userService.login(user);
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.info("用户名或密码错误");
-            return new CustomizeResponseEntity<>()
-                    .setMessage("用户名或密码错误")
-                    .setResultCode(ResultCode.FAIL);
+			return new CustomizeResponseEntity<>()
+					.setMessage("登陆成功")
+					.setResultCode(ResultCode.SUCCESS)
+					.setData(22222);
         }else {
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
             response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
@@ -60,6 +62,8 @@ public class AuthController {
     public CustomizeResponseEntity<User> register(User user){
         //明天再写
         LOGGER.info("请求注册方法");
+        //user.setId(1L);
+        LOGGER.info("获得的User：{}",user);
         User register = userService.register(user);
         return new CustomizeResponseEntity<User>()
                 .setMessage("注册成功")
