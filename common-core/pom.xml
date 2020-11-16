@@ -9,10 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>project-core</artifactId>
+    <artifactId>common-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>project-core</name>
-    <description>业务核心</description>
+    <name>common-core</name>
+    <description>业务核心-公用类</description>
 
 
 
