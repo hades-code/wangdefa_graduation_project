@@ -1,20 +1,26 @@
 package org.lhq.gp.product.entity;
 
 
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
 /**
  * @program: wangdefa_graduation_project
  * @description: User
  * @author: Wang defa
  * @create: 2020-08-19 16:39
  */
-
+@Data
 public class User {
 
     private Long id;
-
     private String username;
     private String password;
     private Role role;
+    private String status;
+    private Integer usedStorageSize;
+    private LocalDateTime createTime;
 
     @Override
     public String toString() {
