@@ -1,4 +1,4 @@
-package org.lhq.gp.product.entity;
+package org.lhq.gp.product.common;
 
 /**
  * @author Wallace
