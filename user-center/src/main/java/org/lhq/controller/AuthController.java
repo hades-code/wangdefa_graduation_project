@@ -1,8 +1,9 @@
 package org.lhq.controller;
 
 
-import org.lhq.gp.product.entity.CustomizeResponseEntity;
-import org.lhq.gp.product.entity.ResultCode;
+
+import org.lhq.gp.product.common.CustomizeResponseEntity;
+import org.lhq.gp.product.common.ResultCode;
 import org.lhq.gp.product.entity.User;
 import org.lhq.service.UserService;
 import org.lhq.util.JwtUtil;
@@ -28,7 +29,7 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public CustomizeResponseEntity<Object> login(String username,String password, HttpServletResponse response){
+    public CustomizeResponseEntity<Object> login(String username, String password, HttpServletResponse response){
     	User user = new User().setUsername(username).setPassword(password);
         LOGGER.info("登录行动:{}",user);
         if (user == null){

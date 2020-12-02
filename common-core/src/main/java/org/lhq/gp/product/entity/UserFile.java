@@ -1,14 +1,17 @@
 package org.lhq.gp.product.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
  * @author hades
  */
 @Data
+@Entity
 public class UserFile {
 	@Id
 	private Long id;
