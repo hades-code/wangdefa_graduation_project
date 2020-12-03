@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import org.lhq.gp.product.entity.CustomizeResponseEntity;
+import org.lhq.gp.product.common.CustomizeResponseEntity;
 import org.lhq.gp.product.entity.User;
 import org.lhq.service.UserService;
 import org.springframework.http.ResponseEntity;

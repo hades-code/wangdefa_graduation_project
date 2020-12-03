@@ -2,6 +2,7 @@ package org.lhq.gp.product.entity;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * @author hades
  */
 @Data
+@Entity
 public class Directory {
 	@Id
 	private Long id;

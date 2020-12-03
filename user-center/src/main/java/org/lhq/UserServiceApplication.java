@@ -14,6 +14,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 
 @SpringBootApplication
+//@EnableDiscoveryClient
 @MapperScan("org.lhq.dao")
 @EnableCaching
 public class UserServiceApplication {
