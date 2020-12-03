@@ -18,8 +18,8 @@ public class Directory {
 	 * 目录名称
 	 */
 	private String directoryName;
-	private String parentId;
-	private String userId;
+	private Long parentId;
+	private Long userId;
 	private Date createTime;
 	private Date modifyTime;
 }
