@@ -4,7 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.gp.product.entity.Directory;
 import org.lhq.service.DirectorySerivce;
-import org.lhq.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,10 +18,10 @@ import java.util.List;
 @Service
 @Slf4j
 public class DirectoryServiceImpl implements DirectorySerivce {
+
 	@Resource
 	DirectoryDao directoryDao;
-	@Resource
-	UserService userService;
+
 	@Override
 	public List<Object> getListPartDirectoryById(Long id, Long userId, List list) {
 		Directory one = directoryDao.getListParDirById(id, userId);

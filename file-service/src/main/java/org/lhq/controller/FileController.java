@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author hades
  */
 @RestController
-@RequestMapping("file")
+@RequestMapping("tran")
 @Slf4j
 public class FileController {
 	@Autowired
