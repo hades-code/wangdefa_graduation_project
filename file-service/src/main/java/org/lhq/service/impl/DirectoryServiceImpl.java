@@ -4,13 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.gp.product.entity.Directory;
 import org.lhq.service.DirectorySerivce;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.lhq.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author hades
@@ -22,6 +23,16 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	@Resource
 	DirectoryDao directoryDao;
 
+
+
+
+	/**
+	 *查询某一目录的上级目录
+	 * @param id
+	 * @param userId
+	 * @param list
+	 * @return
+	 */
 	@Override
 	public List<Object> getListPartDirectoryById(Long id, Long userId, List list) {
 		Directory one = directoryDao.getListParDirById(id, userId);
@@ -38,4 +49,24 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		}
 		return list;
 	}
+
+	/**
+	 * 查询某一目录，合他下面的文件
+	 * @param id
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<Object> getListDircById(Long id, Long userId) {
+		ArrayList<Object> dirc = new ArrayList<>();
+		Directory listParDirById = this.directoryDao.getListParDirById(id, userId);
+
+		return null;
+	}
+
+	@Override
+	public void mkdir(String dirName, Long pid, Long userId) {
+		//获取当前文件夹下所有目录名称
+	}
+
 }

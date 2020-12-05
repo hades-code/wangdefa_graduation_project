@@ -48,6 +48,7 @@
         </dependency>
         <!--p6spy 打印sql-->
       <!--  <dependency>
+       <!- <dependency>
             <groupId>com.github.gavlyukovskiy</groupId>
             <artifactId>p6spy-spring-boot-starter</artifactId>
             <version>${p6spy.version}</version>
