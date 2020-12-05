@@ -1,5 +1,7 @@
 package org.lhq.service;
 
+import org.lhq.gp.product.entity.Directory;
+
 import java.util.List;
 
 public interface DirectorySerivce {
@@ -16,11 +18,7 @@ public interface DirectorySerivce {
 	 */
 	List<Object> getListDircById(Long id,Long userId);
 
-	/**
-	 * 新建一个目录
-	 * @param dirName
-	 * @param pid
-	 * @param userId
-	 */
-	void mkdir(String dirName,Long pid,Long userId);
+	Directory getDirById(Long id);
+	Directory getDirByPid(Long id,Long userId);
+	Integer saveDir(Directory directory);
 }

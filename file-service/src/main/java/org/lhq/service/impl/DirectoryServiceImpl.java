@@ -1,6 +1,7 @@
 package org.lhq.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.gp.product.entity.Directory;
 import org.lhq.service.DirectorySerivce;
@@ -22,9 +23,6 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 
 	@Resource
 	DirectoryDao directoryDao;
-
-
-
 
 	/**
 	 *查询某一目录的上级目录
@@ -65,8 +63,19 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 
 	@Override
-	public void mkdir(String dirName, Long pid, Long userId) {
-		//获取当前文件夹下所有目录名称
+	public Directory getDirById(Long id){
+		Directory directory = this.directoryDao.selectById(id);
+		return directory;
+	}
+	@Override
+	public Directory getDirByPid(Long id, Long userId){
+		Directory dir = this.directoryDao.getDirByPid(id, userId);
+		return dir;
+	}
+	@Override
+	public Integer saveDir(Directory directory){
+		int insert = this.directoryDao.insert(directory);
+		return insert;
 	}
 
 }

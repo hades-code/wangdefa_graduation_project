@@ -33,7 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
 
     @Override
-    @Cacheable(key = "#result.id",condition = "result != null")
+   // @Cacheable(key = "#id",condition = "id != null")
     public User getById(Serializable id) {
         return super.getById(id);
     }
