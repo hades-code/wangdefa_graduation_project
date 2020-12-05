@@ -1,11 +1,13 @@
 package org.lhq.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.gp.product.entity.Directory;
 import org.lhq.service.DirectorySerivce;
-import org.lhq.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +26,11 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	@Resource
 	DirectoryDao directoryDao;
 
+	@Override
+	public DirectoryDao getDirectoryDao() {
+		return this.directoryDao;
+	}
+
 	/**
 	 *查询某一目录的上级目录
 	 * @param id
@@ -38,7 +45,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		HashMap<String, Object> map = new HashMap<>(16);
 		map.put("id",one.getId());
 		if (one.getParentId() == null){
-			map.put("name","全部文件");
+			map.put("name","根目录");
 			list.add(map);
 		}else {
 			map.put("name",one.getDirectoryName());
@@ -50,16 +57,22 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 
 	/**
 	 * 查询某一目录，合他下面的文件
-	 * @param id
+	 * @param pid
 	 * @param userId
 	 * @return
 	 */
 	@Override
-	public List<Object> getListDircById(Long id, Long userId) {
+	public List<Object> getListDircByPid(Long pid, Long userId) {
 		ArrayList<Object> dirc = new ArrayList<>();
-		Directory listParDirById = this.directoryDao.getListParDirById(id, userId);
-
-		return null;
+		List<Directory> directoryList = this.directoryDao.getListDirByPid(pid, userId);
+		for (Directory directory : directoryList) {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("id",directory.getId());
+			map.put("dirName",directory.getDirectoryName());
+			map.put("modifyTime", DateUtil.format(directory.getModifyTime(),"yyyy-MM-dd HH:mm"));
+			dirc.add(map);
+		}
+		return dirc;
 	}
 
 	@Override
@@ -77,6 +90,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		int insert = this.directoryDao.insert(directory);
 		return insert;
 	}
+	@Override
 	public Integer updateById (Directory directory){
 		return this.directoryDao.updateById(directory);
 	}

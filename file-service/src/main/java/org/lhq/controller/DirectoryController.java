@@ -8,14 +8,16 @@ import org.lhq.gp.product.common.CustomizeResponseEntity;
 import org.lhq.gp.product.common.ResultCode;
 import org.lhq.gp.product.entity.Directory;
 import org.lhq.service.DirectorySerivce;
+import org.lhq.service.UserFileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
 *@program: wangdefa_graduation_project
@@ -30,6 +32,8 @@ import java.util.Date;
 public class DirectoryController {
     @Resource
     DirectorySerivce directorySerivce;
+    @Resource
+    UserFileService userFileService;
 
     @PostMapping("mkdir")
     public ResponseEntity<Object> mkdir(String dirName, Long parentId, Long userId){
@@ -37,12 +41,11 @@ public class DirectoryController {
             return new ResponseEntity<Object>("文件夹名称为空",HttpStatus.FORBIDDEN);
         }
         Directory dir = directorySerivce.getDirById(parentId);
-        if (dir == null){
-            Directory directory = directorySerivce.getDirByPid(0L, userId);
-            if (directory != null){
-                parentId = directory.getId();
-            }
-        }
+		Directory directory = directorySerivce.getDirByPid(0L, userId);
+		if (dir == null && directory != null){
+			parentId = directory.getId();
+		}
+
         Directory newDir = new Directory();
         newDir.setDirectoryName(dirName);
         newDir.setParentId(parentId);
@@ -66,4 +69,29 @@ public class DirectoryController {
         directorySerivce.updateById(directory);
         return new ResponseEntity<Object>("目录重命名成功",HttpStatus.OK);
     }
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getDir(Long pid,@PathVariable Long userId){
+    	//如果传上来的pid为空泽获取根目录
+    	if (pid <= 0){
+			Directory dir = directorySerivce.getDirByPid(0L, userId);
+			if (dir!=null){
+				pid = dir.getId();
+			}
+		}
+		Directory directory = directorySerivce.getDirById(pid);
+    	if (directory == null){
+    		return new ResponseEntity<>("目录不存在",HttpStatus.NOT_FOUND);
+		}
+		HashMap<String, Object> result = new HashMap<>(16);
+		//获取目录
+		List<Object> directories = directorySerivce.getListDircByPid(pid, userId);
+		List<Object> userFiles = userFileService.getListFileByPid(pid, userId);
+		List<Object> parentDirs = new ArrayList<>();
+		parentDirs = directorySerivce.getListPartDirectoryById(pid, userId, parentDirs);
+		result.put("id",pid);
+		result.put("dirs",directories);
+		result.put("file",userFiles);
+		result.put("path",parentDirs);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
 }

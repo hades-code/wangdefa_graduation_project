@@ -12,7 +12,11 @@
     <artifactId>project-gateway</artifactId>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.lhq.gp</groupId>
+            <artifactId>common-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
