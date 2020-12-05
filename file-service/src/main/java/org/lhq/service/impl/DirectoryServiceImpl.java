@@ -77,5 +77,8 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		int insert = this.directoryDao.insert(directory);
 		return insert;
 	}
+	public Integer updateById (Directory directory){
+		return this.directoryDao.updateById(directory);
+	}
 
 }

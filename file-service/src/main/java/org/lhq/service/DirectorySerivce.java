@@ -21,4 +21,5 @@ public interface DirectorySerivce {
 	Directory getDirById(Long id);
 	Directory getDirByPid(Long id,Long userId);
 	Integer saveDir(Directory directory);
+	Integer updateById (Directory directory);
 }
