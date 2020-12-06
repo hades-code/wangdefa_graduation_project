@@ -23,6 +23,7 @@ public class UserFile {
 	private String fileType;
 	private Long userId;
 	private String fileStatus;
+	private Double fileSize;
 	private Date createTime;
 	private Date modifyTime;
 

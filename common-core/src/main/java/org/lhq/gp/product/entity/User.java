@@ -24,7 +24,7 @@ public class User {
     private String password;
     private Role role;
     private String status;
-    private Integer usedStorageSize;
+    private Double usedStorageSize;
     private LocalDateTime createTime;
 
 

@@ -24,4 +24,5 @@ public interface UserService extends IService<User> {
      * @return
      */
     User register(User user);
+    void updateStorage(Long userId,Double size,String type);
 }

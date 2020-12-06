@@ -72,4 +72,18 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             return user;
         }
     }
+
+	@Override
+	public void updateStorage(Long userId, Double size, String type) {
+		User user = userDao.selectById(userId);
+		if (user == null) {
+			return;
+		}
+		if (user.getUsedStorageSize() - size < 0){
+			user.setUsedStorageSize(0.0);
+		}else {
+			user.setUsedStorageSize(user.getUsedStorageSize() + size);
+		}
+		userDao.updateById(user);
+	}
 }

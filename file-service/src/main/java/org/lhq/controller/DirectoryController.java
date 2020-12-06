@@ -5,8 +5,10 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.gp.product.common.CustomizeResponseEntity;
+import org.lhq.gp.product.common.Item;
 import org.lhq.gp.product.common.ResultCode;
 import org.lhq.gp.product.entity.Directory;
+import org.lhq.gp.product.entity.UserFile;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.UserFileService;
 import org.springframework.http.HttpStatus;
@@ -14,10 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
 *@program: wangdefa_graduation_project
@@ -69,6 +69,13 @@ public class DirectoryController {
         directorySerivce.updateById(directory);
         return new ResponseEntity<Object>("目录重命名成功",HttpStatus.OK);
     }
+
+	/**
+	 * 获取该文件夹下的文件和文件夹
+	 * @param pid
+	 * @param userId
+	 * @return
+	 */
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getDir(Long pid,@PathVariable Long userId){
     	//如果传上来的pid为空泽获取根目录
@@ -94,4 +101,17 @@ public class DirectoryController {
 		result.put("path",parentDirs);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
+	//删除一个目录和他下面的文件
+	@GetMapping("deleteDir")
+	public ResponseEntity<Object> deleteDir(@RequestBody List<Item> list){
+		Boolean result = directorySerivce.deleteDirAndFile(list);
+
+		return null;
+	}
+	@PostMapping("copy")
+	public ResponseEntity copy(@RequestBody List<Item> list,Long targetId){
+    	return null;
+	}
+
+
 }
