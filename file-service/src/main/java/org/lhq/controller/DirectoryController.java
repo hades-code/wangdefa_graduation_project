@@ -110,7 +110,12 @@ public class DirectoryController {
 	}
 	@PostMapping("copy")
 	public ResponseEntity copy(@RequestBody List<Item> list,Long targetId){
+    	directorySerivce.copyDirAndFile(list,targetId);
     	return null;
+	}
+	public ResponseEntity move(Long sourceId,Long targetId){
+		Boolean moveDir = directorySerivce.moveDir(sourceId, targetId);
+		return null;
 	}
 
 

@@ -151,7 +151,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 
 		Long checkId = targetId;
 		while (true) {
-			Directory directory = directoryDao.selectById(targetId);
+			Directory directory = directoryDao.selectById(checkId);
 			for (Directory dir : dirs) {
 				if (dir.getId().equals(targetId)){
 					log.error("不能移动到相同文件「{}」夹下",dir.getDirectoryName());
