@@ -22,6 +22,7 @@
         <module>project-gateway</module>
         <module>user-center</module>
         <module>file-service</module>
+        <module>doc-peoject</module>
     </modules>
 
     <!--版本号统一管理-->

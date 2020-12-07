@@ -1,0 +1,13 @@
+server:
+  port: 19081
+knife4j:
+  enableAggregation: true
+  cloud:
+    enable: true
+    routes:
+      - name: 用户服务
+        uri: localhost:8899
+        location: /v2/api-docs?group=2
+      - name: 文件服务
+        uri: localhost:9999
+        location: /v2/api-docs?group=2.0
