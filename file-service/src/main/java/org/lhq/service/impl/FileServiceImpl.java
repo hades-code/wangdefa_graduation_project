@@ -146,7 +146,8 @@ public class FileServiceImpl implements FileService {
 		for (FileStatus fileStatus:fileStatuses) {
 			Path filePath = fileStatus.getPath();
 			in = local.open(filePath);
-			IOUtils.copyBytes(in, out, 2097152, false); // 复制数据
+			IOUtils.copyBytes(in, out, 2097152, false);
+			// 复制数据
 			in.close();
 		}
 		if (out != null) {

@@ -15,4 +15,6 @@ public interface UserFileDao extends BaseMapper<UserFile> {
 	List<UserFile> getListUserFileByPid(Long pid);
 	@Select("select * from user_file where directory_id = #{pid} and #{userId}")
 	List<UserFile> getListUserFileByPid(Long pid,Long userId);
+	@Select("select * from user_file where md5 = #{md5}")
+	UserFile getUserFileByMd5(String md5);
 }

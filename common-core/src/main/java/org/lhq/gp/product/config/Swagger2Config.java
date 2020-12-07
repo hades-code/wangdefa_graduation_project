@@ -13,7 +13,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * swagger接口文档
- * 访问：http://localhost:10001/doc.html#/
  *
  * @author lhq
  */
@@ -26,7 +25,7 @@ public class Swagger2Config {
                 .groupName("模块demo接口文档")
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.gourd.hu.demo.controller"))
+                .apis(RequestHandlerSelectors.basePackage("org.lhq.controller"))
                 .paths(PathSelectors.any()).build();
     }
 

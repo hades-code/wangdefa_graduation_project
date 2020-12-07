@@ -3,6 +3,9 @@ package org.lhq.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.gp.product.common.Item;
 import org.lhq.gp.product.entity.Directory;
@@ -26,12 +29,15 @@ import java.util.*;
 @RestController
 @RequestMapping("dir")
 @Slf4j
+@Api(tags = "目录模块")
 public class DirectoryController {
     @Resource
     DirectorySerivce directorySerivce;
     @Resource
     UserFileService userFileService;
 
+	@ApiImplicitParam(name = "dirName",value = "文件夹名称",required = true)
+	@ApiOperation(value = "新建目录")
     @PostMapping("mkdir")
     public ResponseEntity<Object> mkdir(String dirName, Long parentId, Long userId){
         if (StrUtil.isEmpty(dirName)){
