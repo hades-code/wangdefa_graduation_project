@@ -22,7 +22,6 @@
         <module>project-gateway</module>
         <module>user-center</module>
         <module>file-service</module>
-        <module>doc-service</module>
     </modules>
 
     <!--版本号统一管理-->
