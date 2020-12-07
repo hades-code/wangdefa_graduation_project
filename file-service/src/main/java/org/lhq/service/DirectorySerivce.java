@@ -28,4 +28,5 @@ public interface DirectorySerivce {
 	Boolean moveDir(Long sourceId,Long targetId);
 	Boolean deleteDirAndFile(List<Item> items);
 	Boolean copyDirAndFile(List<Item> items,Long targetId);
+	List findDirByName(String name,Long userId);
 }

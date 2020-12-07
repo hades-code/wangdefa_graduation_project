@@ -1,6 +1,7 @@
 package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.UserFileDao;
 import org.lhq.gp.product.common.ActionType;
@@ -54,10 +55,31 @@ public class UserFileServiceImpl implements UserFileService {
 		userFile.setModifyTime(new Date());
 		this.userFileDao.updateById(userFile);
 	}
+	@Override
 	public void move(Long sourceFileId,Long targetId){
 		UserFile userFile = this.userFileDao.selectById(sourceFileId);
 		userFile.setDirectoryId(targetId);
 		userFile.setModifyTime(new Date());
 		this.userFileDao.updateById(userFile);
+	}
+
+	@Override
+	public void copy(Long sourceFileId, Long targetDirId) {
+		Date date = new Date();
+		UserFile userFile = this.userFileDao.selectById(sourceFileId);
+		UserFile newUserFile = userFile;
+		//修改文件信息
+		if (newUserFile.getDirectoryId().equals(targetDirId)){
+			newUserFile.setFileName(newUserFile.getFileName() + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
+		}
+		newUserFile.setId(null);
+		newUserFile.setDirectoryId(targetDirId);
+		newUserFile.setCreateTime(date);
+		newUserFile.setModifyTime(date);
+		//修改用户信息
+		this.userService.updateStorage(userFile.getUserId(),userFile.getFileSize(),ActionType.COPY.code);
+		//保存文件
+		this.userFileDao.insert(newUserFile);
+
 	}
 }

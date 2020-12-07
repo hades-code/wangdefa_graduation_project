@@ -6,7 +6,9 @@ import lombok.Data;
 public enum ActionType {
 	DELETE("DELETE","删除"),
 	OK("OK","正常"),
+	COPY("COPY","复制"),
 	ILLEGAL("ILLEGAL","违规");
+
 
 	ActionType(String code,String msg){
 		this.code = code;

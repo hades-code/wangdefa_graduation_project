@@ -23,5 +23,7 @@ public interface DirectoryDao extends BaseMapper<Directory> {
 	List<Directory> getListDirByPid(Long pid);
 	@Select("select * from directory where parent_id = #{pid} and user_id = #{userId}")
 	List<Directory> getListDirByPid(Long pid,Long userId);
+	@Select("select * from directory where directory_name = #{name} and user_id = #{userId}")
+	Directory getDirByName(String name,Long userId);
 
 }

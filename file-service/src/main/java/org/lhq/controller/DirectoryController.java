@@ -1,14 +1,11 @@
 package org.lhq.controller;
 
 
-import cn.hutool.core.util.NumberUtil;
+
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.gp.product.common.CustomizeResponseEntity;
 import org.lhq.gp.product.common.Item;
-import org.lhq.gp.product.common.ResultCode;
 import org.lhq.gp.product.entity.Directory;
-import org.lhq.gp.product.entity.UserFile;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.UserFileService;
 import org.springframework.http.HttpStatus;
@@ -16,8 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.naming.Name;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
 *@program: wangdefa_graduation_project
@@ -116,6 +113,13 @@ public class DirectoryController {
 	public ResponseEntity move(Long sourceId,Long targetId){
 		Boolean moveDir = directorySerivce.moveDir(sourceId, targetId);
 		return null;
+	}
+	@GetMapping("/{name}")
+	public ResponseEntity findByName(@PathVariable String name){
+    	if (StrUtil.isEmpty(name)){
+    		log.error("名字为空,查找失败");
+		}
+    	return new ResponseEntity("应阴阳",HttpStatus.OK);
 	}
 
 

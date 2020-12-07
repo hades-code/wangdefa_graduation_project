@@ -174,6 +174,13 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		return true;
 	}
 
+	@Override
+	public List findDirByName(String name, Long userId) {
+		Directory dirByName = this.directoryDao.getDirByName(name, userId);
+		//TO-DO
+		return null;
+	}
+
 	private Map common(List<Item> list) {
 		if (list == null){
 			return new HashMap();

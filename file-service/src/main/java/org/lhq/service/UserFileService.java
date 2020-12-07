@@ -9,4 +9,5 @@ public interface UserFileService {
 	List<Object> getListFileByPid(Long pid, Long userId);
 	void deleteById(Long id);
 	void move(Long sourceFileId,Long targetId);
+	void copy(Long sourceFileId,Long targetDirId);
 }
