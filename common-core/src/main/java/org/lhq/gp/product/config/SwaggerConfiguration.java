@@ -24,7 +24,7 @@ import java.util.List;
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfiguration {
 
-    @Bean(value = "orderApi")
+    @Bean(value = "fileApi")
     @Order(value = 1)
     public Docket groupRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)

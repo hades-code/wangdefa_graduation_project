@@ -22,7 +22,6 @@
         <module>project-gateway</module>
         <module>user-center</module>
         <module>file-service</module>
-        <module>doc-service</module>
     </modules>
 
     <!--版本号统一管理-->
@@ -36,7 +35,7 @@
         <!--mybatis-plus-->
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <dynamic-plus.version>3.2.1</dynamic-plus.version>
-        <knife4j.version>2.0.7</knife4j.version>
+        <knife4j.version>2.0.8</knife4j.version>
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <alibaba-cloud.version>2.2.3.RELEASE</alibaba-cloud.version>
         <netty-websocket.version>0.9.5</netty-websocket.version>
@@ -131,6 +130,13 @@
                 <artifactId>knife4j-micro-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-aggregation-spring-boot-starter -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-aggregation-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
