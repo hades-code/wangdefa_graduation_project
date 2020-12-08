@@ -1,5 +1,7 @@
 package org.lhq.gp.product.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -15,6 +17,7 @@ import javax.persistence.Id;
 public class Permission {
 	@Id
 	@GeneratedValue
+	@JsonSerialize(using = ToStringSerializer.class)
 	private Integer id;
 	private String permissionName;
 	private String permissionCode;

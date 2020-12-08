@@ -1,3 +1,4 @@
+/*
 package product.filter;
 
 
@@ -24,9 +25,11 @@ import product.util.JwtUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+*/
 /**
  * @author Wallace
- */
+ *//*
+
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
 
@@ -88,12 +91,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
     return chain.filter(mutableExchange);
   }
 
-  /**
+  */
+/**
    * JWT验证
    *
    * @param token
    * @return userName
-   */
+   *//*
+
   private User verifyJwt(String token) {
 
     Claims claims = JwtUtil.parseJwt(token);
@@ -104,14 +109,17 @@ public class AuthFilter implements GlobalFilter, Ordered {
     return user;
   }
 
-  /**
+  */
+/**
    * 判断token是否在黑名单内
    *
    * @param token
    * @return
-   */
+   *//*
+
   private boolean isBlackToken(String token) {
     assert token != null;
     return true;
   }
 }
+*/

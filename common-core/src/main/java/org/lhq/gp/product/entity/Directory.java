@@ -1,5 +1,7 @@
 package org.lhq.gp.product.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -14,12 +16,15 @@ import java.util.Date;
 @Entity
 public class Directory {
 	@Id
+	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
 	/**
 	 * 目录名称
 	 */
 	private String directoryName;
+	@JsonSerialize(using = ToStringSerializer.class)
 	private Long parentId;
+	@JsonSerialize(using = ToStringSerializer.class)
 	private Long userId;
 	private Date createTime;
 	private Date modifyTime;

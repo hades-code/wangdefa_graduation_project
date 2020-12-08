@@ -1,5 +1,7 @@
 package org.lhq.gp.product.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -19,6 +21,7 @@ import java.util.Date;
 public class VirtualAddress {
     @Id
     @GeneratedValue
+	@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String uuid;
     private Long userFileId;

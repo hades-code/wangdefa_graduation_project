@@ -44,11 +44,15 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	 */
 	@Override
 	public List<Object> getListPartDirectoryById(Long id, Long userId, List list) {
+		if (id ==null || id<=0){
+			log.error("没有上一级目录");
+			return null;
+		}
 		Directory one = directoryDao.getListParDirById(id, userId);
 		log.info("找到的目录为:{}",one);
 		HashMap<String, Object> map = new HashMap<>(16);
 		map.put("id",one.getId());
-		if (one.getParentId() == null){
+		if (one.getParentId() == 0){
 			map.put("name","根目录");
 			list.add(map);
 		}else {

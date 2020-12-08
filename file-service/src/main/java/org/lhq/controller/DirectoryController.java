@@ -79,10 +79,10 @@ public class DirectoryController {
 	 * @param userId
 	 * @return
 	 */
-    @GetMapping("/{userId}")
-    public ResponseEntity<Object> getDir(Long pid,@PathVariable Long userId){
+    @GetMapping("/getDir")
+    public ResponseEntity<Object> getDir(@RequestParam("pid") Long pid,@RequestParam("userId") Long userId){
     	//如果传上来的pid为空泽获取根目录
-    	if (pid <= 0){
+    	if (pid ==null || pid <= 0){
 			Directory dir = directorySerivce.getDirByPid(0L, userId);
 			if (dir!=null){
 				pid = dir.getId();
@@ -90,7 +90,7 @@ public class DirectoryController {
 		}
 		Directory directory = directorySerivce.getDirById(pid);
     	if (directory == null){
-    		return new ResponseEntity<>("目录不存在",HttpStatus.NOT_FOUND);
+    		return new ResponseEntity<>("目录不存在",HttpStatus.OK);
 		}
 		HashMap<String, Object> result = new HashMap<>(16);
 		//获取目录

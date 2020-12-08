@@ -1,6 +1,8 @@
 package org.lhq.gp.product.entity;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class User {
 	@Id
+	@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String username;
     private String password;
