@@ -15,11 +15,33 @@ public class Share {
 	@Id
 	@GeneratedValue
 	private Long id;
-	private Long userFileId;
+	/**
+	 * 分享链接
+	 */
+	private String shareLink;
+	/**
+	 * 是否需要提取码
+	 */
+	private Boolean needCode;
+	/**
+	 * 分享用户
+	 */
 	private Long userId;
-	private String code;
-	private String status;
+	/**
+	 * 提取码
+	 */
+	private String shareCode;
+	/**
+	 * 是否多文件
+	 */
+	private Boolean multiFile;
+	/**
+	 * 创建时间
+	 */
 	private Date createTime;
+	/**
+	 * 过期时间
+	 */
 	private Date timeToLive;
 
 

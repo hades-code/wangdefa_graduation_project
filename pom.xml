@@ -60,7 +60,7 @@
         <itext.version>2.1.7</itext.version>
         <emoji-java.version>5.1.1</emoji-java.version>
         <hdrhistogram.version>2.1.1</hdrhistogram.version>
-        <hutool.version>5.2.1</hutool.version>
+        <hutool.version>5.5.2</hutool.version>
         <image.version>2.0.1</image.version>
         <csv.version>1.8</csv.version>
         <lombok.version>1.18.12</lombok.version>
