@@ -2,7 +2,7 @@ package org.lhq.controller;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.gp.product.common.Item;
+import org.lhq.common.Item;
 import org.lhq.service.IShareService;
 import org.lhq.service.IVirtualAddressService;
 import org.springframework.http.ResponseEntity;

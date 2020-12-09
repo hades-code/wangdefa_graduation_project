@@ -1,7 +1,7 @@
 package org.lhq.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.lhq.gp.product.entity.VirtualAddress;
+import org.lhq.entity.VirtualAddress;
 
 /**
  * @author hades

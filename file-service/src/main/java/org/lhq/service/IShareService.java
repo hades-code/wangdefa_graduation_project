@@ -1,7 +1,7 @@
 package org.lhq.service;
 
 import org.lhq.dao.ShareDao;
-import org.lhq.gp.product.common.Item;
+import org.lhq.common.Item;
 
 import java.util.List;
 

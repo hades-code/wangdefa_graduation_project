@@ -1,6 +1,6 @@
 package org.lhq.service;
 
-import org.lhq.gp.product.entity.User;
+import org.lhq.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

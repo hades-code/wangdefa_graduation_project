@@ -4,15 +4,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.lhq.dao.DirectoryDao;
-import org.lhq.gp.product.common.Item;
-import org.lhq.gp.product.entity.Directory;
-import org.lhq.gp.product.entity.UserFile;
+import org.lhq.common.Item;
+import org.lhq.entity.Directory;
+import org.lhq.entity.UserFile;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.UserFileService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

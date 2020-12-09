@@ -1,8 +1,8 @@
 package org.lhq.service;
 
 import org.lhq.dao.DirectoryDao;
-import org.lhq.gp.product.common.Item;
-import org.lhq.gp.product.entity.Directory;
+import org.lhq.common.Item;
+import org.lhq.entity.Directory;
 
 import java.util.List;
 

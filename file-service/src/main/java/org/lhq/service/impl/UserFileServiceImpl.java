@@ -1,11 +1,10 @@
 package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.UserFileDao;
-import org.lhq.gp.product.common.ActionType;
-import org.lhq.gp.product.entity.UserFile;
+import org.lhq.common.ActionType;
+import org.lhq.entity.UserFile;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
 import org.springframework.stereotype.Service;

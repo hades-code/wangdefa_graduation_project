@@ -1,7 +1,7 @@
 package org.lhq.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.lhq.gp.product.entity.Share;
+import org.lhq.entity.Share;
 
 /**
  * @author hades

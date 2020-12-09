@@ -1,18 +1,16 @@
 package org.lhq.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.generator.UUIDGenerator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.ShareDao;
 import org.lhq.dao.VirtualAddressDao;
-import org.lhq.gp.product.common.Item;
-import org.lhq.gp.product.entity.Directory;
-import org.lhq.gp.product.entity.Share;
-import org.lhq.gp.product.entity.UserFile;
-import org.lhq.gp.product.entity.VirtualAddress;
+import org.lhq.common.Item;
+import org.lhq.entity.Directory;
+import org.lhq.entity.Share;
+import org.lhq.entity.UserFile;
+import org.lhq.entity.VirtualAddress;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.IShareService;
 import org.lhq.service.UserFileService;
