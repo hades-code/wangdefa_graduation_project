@@ -64,6 +64,7 @@
         <image.version>2.0.1</image.version>
         <csv.version>1.8</csv.version>
         <lombok.version>1.18.12</lombok.version>
+        <skywalking.version>8.3.0</skywalking.version>
     </properties>
 
     <!--依赖统一管理-->

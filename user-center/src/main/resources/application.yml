@@ -23,3 +23,7 @@ spring:
     database: 0
     host: vps.wdf2020.cf
     port: 6379
+
+logging:
+  level:
+    org.lhq.dao: debug

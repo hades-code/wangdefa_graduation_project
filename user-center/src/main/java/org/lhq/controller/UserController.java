@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.lhq.gp.product.common.CustomizeResponseEntity;
+import com.sun.org.apache.regexp.internal.RE;
+import io.swagger.annotations.Api;
+import org.lhq.gp.product.common.Result;
 import org.lhq.gp.product.entity.User;
 import org.lhq.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("user")
+@Api(tags = "用户接口")
 public class UserController extends ApiController {
   /** 服务对象 */
   @Resource private UserService userService;
@@ -34,9 +37,9 @@ public class UserController extends ApiController {
    * @return 所有数据
    */
   @GetMapping
-  public ResponseEntity selectAll(Page<User> page, User user) {
+  public Result selectAll(Page<User> page, User user) {
     //return success(this.userService.page(page, new QueryWrapper<>(user)));
-    CustomizeResponseEntity responseEntity = new CustomizeResponseEntity().setData(this.userService.page(page, new QueryWrapper<>(user)));
+    Result responseEntity = new Result().setData(this.userService.page(page, new QueryWrapper<>(user)));
 
     return responseEntity;
   }

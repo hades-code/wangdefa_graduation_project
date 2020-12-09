@@ -29,7 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("tran")
 @Slf4j
-@Api(tags = "上传下载接口")
+@Api(tags = "文件上传下载接口")
 public class FileController {
 	@Autowired
 	FileService fileService;
@@ -79,8 +79,8 @@ public class FileController {
 		//获取当前上传块的md5值
 		String identifier = chunk.getIdentifier();
 		UserFile fileByMd5 = userFileService.getUserFileDao().getUserFileByMd5(identifier);
-		if (fileByMd5 == null){
-			System.out.println(fileByMd5);
+		if (fileByMd5 != null){
+			log.info("文件已存在,不需要再上传");
 		}
 		return ResponseEntity.ok("上传完成");
 	}

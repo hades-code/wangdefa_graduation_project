@@ -64,7 +64,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 
 	/**
-	 * 查询某一目录，合他下面的文件
+	 * 查询某一目录，和他下面的文件
 	 * @param pid
 	 * @param userId
 	 * @return

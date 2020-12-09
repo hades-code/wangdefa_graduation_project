@@ -25,9 +25,6 @@ hdfs:
   #  path: hdfs://192.168.88.132:9000
   user: hades
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   level:
     org.lhq.dao: debug

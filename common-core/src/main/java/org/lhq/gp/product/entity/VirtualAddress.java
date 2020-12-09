@@ -24,9 +24,10 @@ public class VirtualAddress {
 	@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String uuid;
-    private Long userFileId;
+    private Boolean booleanFile;
+    private Long dirOrFileId;
     private Long userId;
-    private String fileName;
+    private String name;
     private String fileMd5;
     private Double fileSize;
     private Date createTime;

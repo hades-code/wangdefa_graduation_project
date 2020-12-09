@@ -1,7 +1,6 @@
 package org.lhq.gp.product.common;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 /**
  * @program: wangdefa_graduation_project
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
  * @author: Wang defa
  * @create: 2020-09-13 00:45
  */
-public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
+public class Result<T> {
 
     private int resultCode;
 
@@ -17,19 +16,12 @@ public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
 
     private T data;
 
-    public CustomizeResponseEntity() {
-        super(HttpStatus.OK);
+    public Result() {
         this.resultCode = ResultCode.SUCCESS.code;
         this.message = "请求成功,处理中";
     }
 
-    public CustomizeResponseEntity(HttpStatus httpStatus) {
-        super(httpStatus);
-    }
 
-    public CustomizeResponseEntity(HttpStatus httpStatus, T data) {
-        super(data, httpStatus);
-    }
 
     @Override
     public String toString() {
@@ -41,7 +33,7 @@ public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
         return resultCode;
     }
 
-    public CustomizeResponseEntity<T> setResultCode(ResultCode resultCode) {
+    public Result<T> setResultCode(ResultCode resultCode) {
         this.resultCode = resultCode.code;
         return this;
     }
@@ -50,7 +42,7 @@ public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
         return message;
     }
 
-    public CustomizeResponseEntity<T> setMessage(String message) {
+    public Result<T> setMessage(String message) {
         this.message = message;
         return this;
     }
@@ -59,7 +51,7 @@ public class CustomizeResponseEntity<T> extends ResponseEntity<T> {
         return data;
     }
 
-    public CustomizeResponseEntity<T> setData(T data) {
+    public Result<T> setData(T data) {
         this.data = data;
         return this;
     }

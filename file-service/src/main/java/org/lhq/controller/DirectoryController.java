@@ -29,7 +29,7 @@ import java.util.*;
 @RestController
 @RequestMapping("dir")
 @Slf4j
-@Api(tags = "目录模块")
+@Api(tags = "目录接口")
 public class DirectoryController {
     @Resource
     DirectorySerivce directorySerivce;
