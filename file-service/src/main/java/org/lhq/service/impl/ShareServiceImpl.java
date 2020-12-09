@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.*;
 
 /**
@@ -32,6 +33,7 @@ public class ShareServiceImpl implements IShareService {
 	private DirectorySerivce directorySerivce;
 	@Resource
 	private UserFileService userFileService;
+	@Resource
 	private VirtualAddressDao virtualAddressDao;
 	@Override
 	public ShareDao getShareDao(){
@@ -39,6 +41,7 @@ public class ShareServiceImpl implements IShareService {
 	}
 
 	@Override
+	@Transactional
 	public Object shareDirAndFile(@RequestBody List<Item> items, Long userId) {
 		Date date = new Date();
 		Map common = this.common(items);
@@ -53,6 +56,7 @@ public class ShareServiceImpl implements IShareService {
 			virtualAddress.setUserId(userId);
 			virtualAddress.setBooleanFile(false);
 			virtualAddress.setName(dir.getDirectoryName());
+			virtualAddress.setId(IdUtil.getSnowflake(12L,30L).nextId());
 			int insert = virtualAddressDao.insert(virtualAddress);
 			log.info(String.valueOf(insert));
 		}

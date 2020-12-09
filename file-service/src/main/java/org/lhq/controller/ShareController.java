@@ -28,7 +28,7 @@ public class ShareController {
 
 	}
 	@PostMapping("shareFile")
-	public ResponseEntity shareDirAndFile(List<Item> item, Long userId){
+	public ResponseEntity shareDirAndFile(@RequestBody List<Item> item, Long userId){
 		Object file = shareService.shareDirAndFile(item, userId);
 		return ResponseEntity.ok(file);
 	}
