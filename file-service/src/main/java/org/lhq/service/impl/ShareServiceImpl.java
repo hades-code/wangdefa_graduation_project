@@ -1,16 +1,19 @@
 package org.lhq.service.impl;
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.ShareDao;
+import org.lhq.dao.ShareFileDao;
+import org.lhq.dao.UserFileDao;
 import org.lhq.dao.VirtualAddressDao;
 import org.lhq.common.Item;
-import org.lhq.entity.Directory;
-import org.lhq.entity.Share;
-import org.lhq.entity.UserFile;
-import org.lhq.entity.VirtualAddress;
+import org.lhq.entity.*;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.IShareService;
 import org.lhq.service.UserFileService;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author hades
@@ -34,53 +39,73 @@ public class ShareServiceImpl implements IShareService {
 	@Resource
 	private UserFileService userFileService;
 	@Resource
-	private VirtualAddressDao virtualAddressDao;
+	private ShareFileDao shareFileDao;
 	@Override
 	public ShareDao getShareDao(){
 		return this.shareDao;
 	}
 
 	@Override
-	@Transactional
-	public Object shareDirAndFile(@RequestBody List<Item> items, Long userId) {
+	@Transactional(rollbackOn = Exception.class)
+	public Map<String,Object> shareDirAndFile(@RequestBody List<Item> items, Long userId,Boolean shareLock,Date expirationTime) {
+		HashMap<Object, Object> result = new HashMap<>();
 		Date date = new Date();
-		Map common = this.common(items);
-		//获取文件夹
-		List<Directory> dirs = MapUtil.get(common, "dirs", List.class);
-		//获取文件
-		List<UserFile> files = MapUtil.get(common, "files", List.class);
-		for (Directory dir : dirs) {
-			VirtualAddress virtualAddress = new VirtualAddress();
-			virtualAddress.setCreateTime(date);
-			virtualAddress.setDirOrFileId(dir.getId());
-			virtualAddress.setUserId(userId);
-			virtualAddress.setBooleanFile(false);
-			virtualAddress.setName(dir.getDirectoryName());
-			virtualAddress.setId(IdUtil.getSnowflake(12L,30L).nextId());
-			int insert = virtualAddressDao.insert(virtualAddress);
-			log.info(String.valueOf(insert));
-		}
-		for (UserFile file : files) {
-			VirtualAddress virtualAddress = new VirtualAddress();
-			virtualAddress.setBooleanFile(true);
-			virtualAddress.setName(file.getFileName());
-			virtualAddress.setDirOrFileId(file.getId());
-			virtualAddress.setCreateTime(date);
-			virtualAddress.setUserId(userId);
-			int insert = virtualAddressDao.insert(virtualAddress);
-			log.info(String.valueOf(insert));
-		}
-		Share share = new Share();
+		Share share = new Share().setShareLink(IdUtil.fastSimpleUUID());
 		share.setCreateTime(date);
-		share.setUserId(userId);
-		share.setMultiFile(true);
-		share.setNeedCode(true);
-		share.setShareCode("1234");
-		share.setShareLink(IdUtil.fastSimpleUUID());
+		share.setExpirationTime(expirationTime);
+		share.setShareLock(shareLock);
 		shareDao.insert(share);
-
+		for (Item item :items){
+			ShareFile shareFile = new ShareFile();
+			if (StrUtil.equals(item.getType(),"dir")){
+				shareFile.setFileOrDir(false);
+			}
+			shareFile.setFileId(item.getId());
+			shareFile.setShareId(share.getShareLink());
+			shareFileDao.insert(shareFile);
+		}
+		result.put("shareLink",share.getShareLink());
+		result.put("shareCode",share.getShareCode());
 		return null;
  	}
+
+	@Override
+	public Map<String,Object> getShare(String shareLink, String shareCode) {
+		Date date = new Date();
+		HashMap<String, Object> result = new HashMap<>();
+		Share share = new Share().setShareLink(shareLink);
+		Share getShare = this.shareDao.selectOne(new QueryWrapper<>(share));
+		if (getShare == null){
+			log.error("分享不存在或者已被取消");
+			return null;
+		}
+		if(!DateUtil.isIn(date,getShare.getCreateTime(),getShare.getExpirationTime())){
+			log.error("分享文件已经过期");
+			return null;
+		}
+		if (getShare.getShareLock()&&StrUtil.equals(getShare.getShareCode(),shareCode)){
+			ShareFile shareFile = new ShareFile();
+			shareFile.setShareId(getShare.getShareLink());
+			List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<>(shareFile));
+			List<Long> fileIdList = shareFiles.stream()
+					.filter(ShareFile::getFileOrDir)
+					.map(ShareFile::getFileId)
+					.collect(Collectors.toList());
+			if (!fileIdList.isEmpty()){
+				List<UserFile> fileList = userFileService.getUserFileDao().selectBatchIds(fileIdList);
+				result.put("files",fileList);
+			}
+			List<Long> dirIdList = shareFiles.stream()
+					.filter(sF -> !sF.getFileOrDir())
+					.map(ShareFile::getFileId)
+					.collect(Collectors.toList());
+			if (!dirIdList.isEmpty()){
+				List<Directory> directoryList = directorySerivce.getDirectoryDao().selectBatchIds(dirIdList);
+				result.put("dirs",directoryList);
+			}
+		}
+		return result;
+	}
 
 	private Map common(List<Item> list) {
 		if (list == null){
