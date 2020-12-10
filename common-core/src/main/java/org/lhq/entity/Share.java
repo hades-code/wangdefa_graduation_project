@@ -26,14 +26,6 @@ public class Share {
 
 	private String shareLink;
 	/**
-	 * 唯一id
-	 */
-	private String uuid;
-	/**
-	 * 是否需要提取码
-	 */
-	private Boolean needCode;
-	/**
 	 * 分享用户
 	 */
 	private Long userId;
@@ -45,10 +37,6 @@ public class Share {
 	 * 是否需要提取码
 	 */
 	private Boolean shareLock;
-	/**
-	 * 是否多文件
-	 */
-	private Boolean multiFile;
 	/**
 	 * 创建时间
 	 */

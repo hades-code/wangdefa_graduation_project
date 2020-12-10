@@ -8,7 +8,6 @@ import org.lhq.common.Item;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.service.IShareService;
-import org.lhq.service.IVirtualAddressService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +24,7 @@ import java.util.*;
 public class ShareController {
 	@Resource
 	IShareService shareService;
-	@Resource
-	IVirtualAddressService virtualAddressService;
+
 	@GetMapping("/{shareLink}")
 	public ResponseEntity shareLink(@PathVariable String shareLink,String shareCode){
 		Map share = shareService.getShare(shareLink, shareCode);

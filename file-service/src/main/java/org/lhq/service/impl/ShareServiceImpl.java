@@ -1,17 +1,12 @@
 package org.lhq.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.ShareDao;
 import org.lhq.dao.ShareFileDao;
-import org.lhq.dao.UserFileDao;
-import org.lhq.dao.VirtualAddressDao;
 import org.lhq.common.Item;
 import org.lhq.entity.*;
 import org.lhq.service.DirectorySerivce;
@@ -24,7 +19,6 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author hades
@@ -81,6 +75,10 @@ public class ShareServiceImpl implements IShareService {
 		}
 		if(!DateUtil.isIn(date,getShare.getCreateTime(),getShare.getExpirationTime())){
 			log.error("分享文件已经过期");
+			return null;
+		}
+		if(getShare.getShareLock() && !StrUtil.equals(getShare.getShareCode(),shareCode)){
+			log.error("提取码错误");
 			return null;
 		}
 		if (getShare.getShareLock()&&StrUtil.equals(getShare.getShareCode(),shareCode)){
