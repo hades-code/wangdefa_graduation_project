@@ -7,6 +7,9 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 
+/**
+ * @author Wallace
+ */
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor

@@ -1,5 +1,6 @@
 package org.lhq.service;
 
+import org.lhq.common.ProjectException;
 import org.lhq.dao.ShareDao;
 import org.lhq.common.Item;
 
@@ -10,5 +11,5 @@ import java.util.Map;
 public interface IShareService {
 	ShareDao getShareDao();
 	Object shareDirAndFile(List<Item> items, Long userId, Boolean shareLock, Date expirationTime);
-	Map getShare(String shareLink, String shareCode);
+	Map getShare(String shareLink, String shareCode) throws ProjectException;
 }

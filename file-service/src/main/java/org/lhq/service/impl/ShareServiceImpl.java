@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.lhq.common.ProjectException;
 import org.lhq.dao.ShareDao;
 import org.lhq.dao.ShareFileDao;
 import org.lhq.common.Item;
@@ -64,24 +65,24 @@ public class ShareServiceImpl implements IShareService {
  	}
 
 	@Override
-	public Map<String,Object> getShare(String shareLink, String shareCode) {
+	public Map<String,Object> getShare(String shareLink, String shareCode) throws ProjectException {
 		Date date = new Date();
 		HashMap<String, Object> result = new HashMap<>();
 		Share share = new Share().setShareLink(shareLink);
 		Share getShare = this.shareDao.selectOne(new QueryWrapper<>(share));
 		if (getShare == null){
 			log.error("分享不存在或者已被取消");
-			return null;
+			throw new ProjectException("分享不存在或者已被取消");
 		}
 		if(!DateUtil.isIn(date,getShare.getCreateTime(),getShare.getExpirationTime())){
 			log.error("分享文件已经过期");
-			return null;
+			throw new ProjectException("分享文件已经过期");
 		}
 		if(getShare.getShareLock() && !StrUtil.equals(getShare.getShareCode(),shareCode)){
 			log.error("提取码错误");
-			return null;
+			throw new ProjectException("提取码错误");
 		}
-		if (getShare.getShareLock()&&StrUtil.equals(getShare.getShareCode(),shareCode)){
+		if (getShare.getShareLock() && StrUtil.equals(getShare.getShareCode(),shareCode)){
 			ShareFile shareFile = new ShareFile();
 			shareFile.setShareId(getShare.getShareLink());
 			List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<>(shareFile));
@@ -105,30 +106,4 @@ public class ShareServiceImpl implements IShareService {
 		return result;
 	}
 
-	private Map common(List<Item> list) {
-		if (list == null){
-			return new HashMap();
-		}
-		List<Directory> dirs = new ArrayList<>();
-		List<UserFile> files  = new ArrayList<>();
-		HashMap<String, Object> result = new HashMap<>();
-		for (Item item : list) {
-			if (StrUtil.equals(item.getType(),"dir")){
-				Directory directory = this.directorySerivce.getDirById(item.getId());
-				if (directory == null){
-					log.error("不存在此目录");
-				}
-				dirs.add(directory);
-			}else {
-				UserFile userFile = userFileService.getUserFileDao().selectById(item.getId());
-				if (userFile == null){
-					log.error("不存在此文件");
-				}
-				files.add(userFile);
-			}
-		}
-		result.put("dirs",dirs);
-		result.put("files",files);
-		return result;
-	}
 }
