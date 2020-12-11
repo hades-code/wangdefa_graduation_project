@@ -23,6 +23,7 @@
         <module>user-service</module>
         <module>file-service</module>
         <module>doc-service</module>
+        <module>mail-service</module>
     </modules>
 
     <!--版本号统一管理-->

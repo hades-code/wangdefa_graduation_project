@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
+import org.lhq.exception.ProjectException;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.UserFileService;
 import org.springframework.http.HttpStatus;
@@ -71,28 +72,29 @@ public class UserFileController {
 		return new ResponseEntity("删除完成",HttpStatus.OK);
 	}
 	@PostMapping("copy")
-	public ResponseEntity copyFile(Long sourceId,Long targetId){
+	public String copyFile(Long sourceId,Long targetId) throws ProjectException {
 		if (sourceId < 0 || targetId < 0){
-			log.error("复制失败");
+			throw new ProjectException("文件复制失败");
 		}
 		Directory directory = directorySerivce.getDirectoryDao().selectById(targetId);
 		UserFile userFile = userFileService.getUserFileDao().selectById(sourceId);
 		if (directory == null || userFile == null){
 			log.error("文件或目录不存在");
+			throw new ProjectException("文件或者目录不存在");
 		}
 		this.userFileService.copy(sourceId,targetId);
-		return new ResponseEntity("复制成功",HttpStatus.OK);
+		return "复制成功";
 	}
 	@PostMapping("/move")
-	public ResponseEntity moveFile(Long sourceId,Long targetId){
+	public ResponseEntity moveFile(Long sourceId,Long targetId) throws ProjectException {
 		if (sourceId < 0 || targetId <0){
-			log.error("移动失败");
+			throw new ProjectException("移动失败");
 		}
 		// 判断文件、目标目录是否存在
 		Directory directory = directorySerivce.getDirectoryDao().selectById(targetId);
 		UserFile userFile = userFileService.getUserFileDao().selectById(sourceId);
 		if (directory == null || userFile == null){
-			log.error("文件或文件夹不存在");
+			throw new ProjectException("目录或者文件不存在");
 		}
 		this.userFileService.move(sourceId,targetId);
 		return new ResponseEntity("移动成功",HttpStatus.OK);
