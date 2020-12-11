@@ -5,7 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.common.Item;
-import org.lhq.common.ProjectException;
+import org.lhq.exception.ProjectException;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.service.IShareService;
@@ -27,7 +27,7 @@ public class ShareController {
 	IShareService shareService;
 
 	@GetMapping("/{shareLink}")
-	public ResponseEntity shareLink(@PathVariable String shareLink,String shareCode) throws ProjectException {
+	public List<Item> shareLink(@PathVariable String shareLink, String shareCode) throws ProjectException {
 		Map share = shareService.getShare(shareLink, shareCode);
 		List<Directory> dirs = MapUtil.get(share, "dirs", List.class);
 		List<UserFile> files = MapUtil.get(share, "files", List.class);
@@ -42,7 +42,6 @@ public class ShareController {
 				items.add(item);
 			}
 		}
-		ArrayList<Map> fileMap = new ArrayList<>();
 		if ( files != null && !files.isEmpty() ){
 			for (UserFile file : files) {
 				Item item = new Item()
@@ -53,7 +52,7 @@ public class ShareController {
 				items.add(item);
 			}
 		}
-		return ResponseEntity.ok(items);
+		return items;
 	}
 	@PostMapping("shareFile")
 	public ResponseEntity shareDirAndFile(@RequestBody List<Item> item, Long userId, boolean shareLock, Date expirationTime){

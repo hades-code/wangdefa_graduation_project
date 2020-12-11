@@ -5,7 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.common.ProjectException;
+import org.lhq.exception.ProjectException;
 import org.lhq.dao.ShareDao;
 import org.lhq.dao.ShareFileDao;
 import org.lhq.common.Item;
@@ -82,26 +82,25 @@ public class ShareServiceImpl implements IShareService {
 			log.error("提取码错误");
 			throw new ProjectException("提取码错误");
 		}
-		if (getShare.getShareLock() && StrUtil.equals(getShare.getShareCode(),shareCode)){
-			ShareFile shareFile = new ShareFile();
-			shareFile.setShareId(getShare.getShareLink());
-			List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<>(shareFile));
-			List<Long> fileIdList = shareFiles.stream()
-					.filter(ShareFile::getFileOrDir)
-					.map(ShareFile::getFileId)
-					.collect(Collectors.toList());
-			if (!fileIdList.isEmpty()){
-				List<UserFile> fileList = userFileService.getUserFileDao().selectBatchIds(fileIdList);
-				result.put("files",fileList);
-			}
-			List<Long> dirIdList = shareFiles.stream()
-					.filter(sF -> !sF.getFileOrDir())
-					.map(ShareFile::getFileId)
-					.collect(Collectors.toList());
-			if (!dirIdList.isEmpty()){
-				List<Directory> directoryList = directorySerivce.getDirectoryDao().selectBatchIds(dirIdList);
-				result.put("dirs",directoryList);
-			}
+
+		ShareFile shareFile = new ShareFile();
+		shareFile.setShareId(getShare.getShareLink());
+		List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<>(shareFile));
+		List<Long> fileIdList = shareFiles.stream()
+				.filter(ShareFile::getFileOrDir)
+				.map(ShareFile::getFileId)
+				.collect(Collectors.toList());
+		if (!fileIdList.isEmpty()){
+			List<UserFile> fileList = userFileService.getUserFileDao().selectBatchIds(fileIdList);
+			result.put("files",fileList);
+		}
+		List<Long> dirIdList = shareFiles.stream()
+				.filter(sF -> !sF.getFileOrDir())
+				.map(ShareFile::getFileId)
+				.collect(Collectors.toList());
+		if (!dirIdList.isEmpty()){
+			List<Directory> directoryList = directorySerivce.getDirectoryDao().selectBatchIds(dirIdList);
+			result.put("dirs",directoryList);
 		}
 		return result;
 	}

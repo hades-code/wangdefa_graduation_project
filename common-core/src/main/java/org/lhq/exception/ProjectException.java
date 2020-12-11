@@ -1,4 +1,4 @@
-package org.lhq.common;
+package org.lhq.exception;
 
 /**
  * @program: wangdefa_graduation_project

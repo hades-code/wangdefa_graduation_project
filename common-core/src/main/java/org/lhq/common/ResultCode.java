@@ -1,9 +1,12 @@
 package org.lhq.common;
 
+import lombok.Data;
+import lombok.Getter;
+
 /**
  * @author Wallace
  */
-
+@Getter
 public enum ResultCode {
   /** 成功响应 */
   SUCCESS(200, "响应成功"),

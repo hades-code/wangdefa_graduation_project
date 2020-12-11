@@ -3,8 +3,8 @@ package org.lhq.controller;
 
 
 import io.swagger.annotations.Api;
+import org.lhq.exception.ProjectException;
 import org.lhq.common.Result;
-import org.lhq.common.ResultCode;
 import org.lhq.entity.User;
 import org.lhq.service.UserService;
 import org.lhq.util.JwtUtil;
@@ -31,16 +31,16 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public ResponseEntity<Object> login(String username, String password, HttpServletResponse response){
+    public User login(String username, String password, HttpServletResponse response) throws ProjectException {
     	User user = new User().setUsername(username).setPassword(password);
         LOGGER.info("登录行动:{}",user);
         if (user == null){
-           return ResponseEntity.ok(new Result<>().setResultCode(ResultCode.FAIL));
+           throw new ProjectException("登陆用户为空");
         }
         User loginUser = userService.login(user);
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
-            LOGGER.info("用户名或密码错误");
-			return ResponseEntity.ok(new Result<>().setResultCode(ResultCode.FAIL).setMessage("用户名或密码错误"));
+            LOGGER.error("用户名或密码错误");
+            throw new ProjectException("用户名或密码错误");
         }else {
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
             response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
@@ -48,7 +48,7 @@ public class AuthController {
             Map<String, Object> resultMap = new HashMap<>(16);
             resultMap.put("user",loginUser);
             resultMap.put("token",JwtUtil.TOKEN_PREFIX+token);
-            return ResponseEntity.ok(new Result<>().setData(resultMap));
+            return loginUser;
 
         }
 

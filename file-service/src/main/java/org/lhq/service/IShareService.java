@@ -1,6 +1,6 @@
 package org.lhq.service;
 
-import org.lhq.common.ProjectException;
+import org.lhq.exception.ProjectException;
 import org.lhq.dao.ShareDao;
 import org.lhq.common.Item;
 

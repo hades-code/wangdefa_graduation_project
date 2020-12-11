@@ -16,7 +16,34 @@ public class Result<T> {
 
     public Result() {
         this.resultCode = ResultCode.SUCCESS.code;
-        this.message = "请求成功,处理中";
+        this.message = "请求成功";
+    }
+    public Result(int resultCode,T data){
+        this.resultCode = resultCode;
+        this.data = data;
+    }
+    public Result(T data){
+        this.resultCode = ResultCode.SUCCESS.getCode();
+        this.message = "请求成功";
+        this.data = data;
+    }
+    public static Result success(){
+        Result<Object> result = new Result<>();
+        result.setResultCode(ResultCode.SUCCESS);
+        return result;
+    }
+    public static<T> Result<T> success(T data){
+        Result<T> result = new Result<>();
+        result.setData(data);
+        result.setResultCode(ResultCode.SUCCESS);
+        return result;
+    }
+    public static<T> Result<T> error(ResultCode resultCode,T data){
+        Result<T> result = new Result<>();
+        result.setData(data);
+        result.setMessage(resultCode.getMessage());
+        result.setResultCode(resultCode);
+        return result;
     }
 
 
