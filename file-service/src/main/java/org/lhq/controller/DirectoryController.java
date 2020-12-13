@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.common.Item;
+import org.lhq.common.Result;
 import org.lhq.entity.Directory;
+import org.lhq.exception.ProjectException;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.UserFileService;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.security.PrivilegedActionException;
 import java.util.*;
 
 /**
@@ -38,13 +41,13 @@ public class DirectoryController {
 	@ApiImplicitParam(name = "dirName",value = "文件夹名称",required = true)
 	@ApiOperation(value = "新建目录")
     @PostMapping("mkdir")
-    public ResponseEntity<Object> mkdir(String dirName, Long parentId, Long userId){
+    public Result mkdir(String dirName, Long parentId, Long userId) throws ProjectException {
         if (StrUtil.isEmpty(dirName)){
-            return new ResponseEntity<Object>("文件夹名称为空",HttpStatus.FORBIDDEN);
+            throw new ProjectException("文件夹名为空");
         }
-        Directory dir = directorySerivce.getDirById(parentId);
-		Directory directory = directorySerivce.getDirByPid(0L, userId);
-		if (dir == null && directory != null){
+		// 如果父目录等于空，
+        if (parentId == null){
+			Directory directory = directorySerivce.getDirByPid(0L, userId);
 			parentId = directory.getId();
 		}
 
@@ -55,7 +58,7 @@ public class DirectoryController {
         newDir.setCreateTime(new Date());
         newDir.setModifyTime(new Date());
         directorySerivce.saveDir(newDir);
-        return new ResponseEntity<Object>("创建成功",HttpStatus.OK);
+        return new Result("新建成功").setMessage("新建成功");
     }
     @PostMapping("rename")
     public ResponseEntity<Object> updateDirName(String dirName,Long id){
@@ -79,7 +82,7 @@ public class DirectoryController {
 	 * @return
 	 */
     @GetMapping("/getDir")
-    public ResponseEntity<Object> getDir(@RequestParam("pid") Long pid,@RequestParam("userId") Long userId){
+    public Map getDir(@RequestParam("pid") Long pid,@RequestParam("userId") Long userId) throws ProjectException {
     	//如果传上来的pid为空泽获取根目录
     	if (pid ==null || pid <= 0){
 			Directory dir = directorySerivce.getDirByPid(0L, userId);
@@ -89,7 +92,7 @@ public class DirectoryController {
 		}
 		Directory directory = directorySerivce.getDirById(pid);
     	if (directory == null){
-    		return new ResponseEntity<>("目录不存在",HttpStatus.OK);
+    		throw new ProjectException("目录不存在");
 		}
 		HashMap<String, Object> result = new HashMap<>(16);
 		//获取目录
@@ -101,20 +104,20 @@ public class DirectoryController {
 		result.put("dirs",directories);
 		result.put("file",userFiles);
 		result.put("path",parentDirs);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+		return result;
 	}
 	//删除一个目录和他下面的文件
-	@GetMapping("deleteDir")
-	public ResponseEntity<Object> deleteDir(@RequestBody List<Item> list){
+	@PostMapping("deleteDir")
+	public String deleteDir(@RequestBody List<Item> list){
 		Boolean result = directorySerivce.deleteDirAndFile(list);
-
-		return null;
+		return "删除"+ (result?"成功":"失败");
 	}
 	@PostMapping("copy")
 	public ResponseEntity copy(@RequestBody List<Item> list,Long targetId){
     	directorySerivce.copyDirAndFile(list,targetId);
     	return null;
 	}
+	@PostMapping("move")
 	public ResponseEntity move(Long sourceId,Long targetId){
 		Boolean moveDir = directorySerivce.moveDir(sourceId, targetId);
 		return null;

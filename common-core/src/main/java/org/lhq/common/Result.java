@@ -1,11 +1,15 @@
 package org.lhq.common;
 
+import lombok.Data;
+import lombok.ToString;
+
 /**
  * @program: wangdefa_graduation_project
  * @description: 响应实体
  * @author: Wang defa
  * @create: 2020-09-13 00:45
  */
+@Data
 public class Result<T> {
 
     private int resultCode;
@@ -48,11 +52,7 @@ public class Result<T> {
 
 
 
-    @Override
-    public String toString() {
-        return "CustomizeResponseEntity{" + "resultCode=" + resultCode + ", message='" + message + '\'' + ", data="
-            + data + '}';
-    }
+
 
     public int getResultCode() {
         return resultCode;

@@ -34,7 +34,7 @@ public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {
         if (returnType.getGenericParameterType().equals(String.class)){
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                return objectMapper.writeValueAsString(new Result<Object>(body));
+                return objectMapper.writeValueAsString(new Result<>(body));
             } catch (JsonProcessingException e) {
                 throw new ProjectException();
             }

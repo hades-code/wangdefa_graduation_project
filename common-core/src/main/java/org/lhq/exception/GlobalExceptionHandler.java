@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result<Object> projectException(ProjectException e){
-        log.error("业务异常");
+        log.error("业务异常",e);
         return Result.error(ResultCode.FAIL,e.getMessage());
     }
 }

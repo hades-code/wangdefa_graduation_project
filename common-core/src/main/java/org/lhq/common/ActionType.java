@@ -1,6 +1,6 @@
 package org.lhq.common;
 
-import lombok.Data;
+
 
 
 public enum ActionType {

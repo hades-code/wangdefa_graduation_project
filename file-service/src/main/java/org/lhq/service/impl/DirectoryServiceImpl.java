@@ -73,7 +73,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		for (Directory directory : directoryList) {
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("id",directory.getId());
-			map.put("dirName",directory.getDirectoryName());
+			map.put("name",directory.getDirectoryName());
 			map.put("modifyTime", DateUtil.format(directory.getModifyTime(),"yyyy-MM-dd HH:mm"));
 			dirc.add(map);
 		}

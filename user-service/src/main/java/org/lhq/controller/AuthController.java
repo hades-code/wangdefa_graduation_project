@@ -2,6 +2,7 @@ package org.lhq.controller;
 
 
 
+import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import org.lhq.exception.ProjectException;
 import org.lhq.common.Result;
@@ -31,7 +32,7 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public User login(String username, String password, HttpServletResponse response) throws ProjectException {
+    public User login(String username,String password, HttpServletResponse response) throws ProjectException {
     	User user = new User().setUsername(username).setPassword(password);
         LOGGER.info("登录行动:{}",user);
         if (user == null){
@@ -41,7 +42,10 @@ public class AuthController {
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.error("用户名或密码错误");
             throw new ProjectException("用户名或密码错误");
-        }else {
+        }if (!StrUtil.equals(loginUser.getPassword(),user.getPassword())){
+			LOGGER.error("用户名或密码错误");
+			throw new ProjectException("用户名或密码错误");
+		} else {
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
             response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
             response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);

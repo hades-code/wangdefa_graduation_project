@@ -1,6 +1,8 @@
 package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.UserFileDao;
 import org.lhq.common.ActionType;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author hades
@@ -34,12 +37,17 @@ public class UserFileServiceImpl implements UserFileService {
 	@Override
 	public List<Object> getListFileByPid(Long pid,Long userId){
 		List<Object> files = new ArrayList<>();
-		List<UserFile> listUserFile = userFileDao.getListUserFileByPid(pid, userId);
-		for (UserFile userFile : listUserFile) {
+		List<UserFile> userFiles = userFileDao.selectList(new QueryWrapper<UserFile>().lambda()
+				.eq(UserFile::getDirectoryId,pid)
+				.eq(UserFile::getUserId,userId)
+				.ne(UserFile::getFileStatus,ActionType.DELETE.code)
+				.ne(UserFile::getFileStatus,ActionType.ILLEGAL.code));
+		for (UserFile userFile : userFiles) {
 			HashMap<String, Object> fileMap = new HashMap<>(16);
 			fileMap.put("id",userFile.getId());
 			fileMap.put("name", userFile.getFileName());
 			fileMap.put("type", userFile.getFileType());
+			fileMap.put("size",userFile.getFileSize());
 			fileMap.put("modifyTime", DateUtil.format(userFile.getModifyTime(),"yyyy-MM-dd HH:mm"));
 			files.add(fileMap);
 		}

@@ -18,5 +18,6 @@ public class Item {
 	private Long id;
 	private String type;
 	private String name;
+	private Double size;
 	private String modifyTime;
 }
