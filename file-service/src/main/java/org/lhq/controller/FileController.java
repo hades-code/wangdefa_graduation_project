@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.lhq.common.Chunk;
 import org.lhq.entity.User;
 import org.lhq.entity.UserFile;
+import org.lhq.exception.ProjectException;
 import org.lhq.service.FileService;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,7 @@ import java.util.Map;
 @RequestMapping("tran")
 @Slf4j
 @Api(tags = "文件上传下载接口")
+@CrossOrigin
 public class FileController {
 	@Autowired
 	FileService fileService;
@@ -74,15 +77,31 @@ public class FileController {
 		map.put("needMerge",true);
 		return  map;
 	}
-	@GetMapping("checkChunk")
-	public ResponseEntity checkChunk (Chunk chunk){
+
+	/**
+	 * 检查分片是否已经上传
+	 * @param chunk
+	 * @return
+	 * @throws ProjectException
+	 */
+	@GetMapping("chunkupload")
+	public Map checkChunk (Chunk chunk) throws Exception {
+		HashMap<String, Object> result = new HashMap<>();
 		//获取当前上传块的md5值
 		String identifier = chunk.getIdentifier();
 		UserFile fileByMd5 = userFileService.getUserFileDao().getUserFileByMd5(identifier);
 		if (fileByMd5 != null){
-			log.info("文件已存在,不需要再上传");
+			throw new ProjectException("文件已存在,不需要再上传");
 		}
-		return ResponseEntity.ok("上传完成");
+		String tempPath = TEMPPATH +"/"+ chunk.getIdentifier();
+		if (!this.fileService.exitFile(tempPath)){
+			return result;
+		}else {
+			List<Integer> ls = this.fileService.ls(tempPath);
+			result.put("uploaded",ls);
+			result.put("needMerge",true);
+		}
+		return result;
 	}
 	@GetMapping("md5")
 	public ResponseEntity checkMD5(String md5,double fileSize){

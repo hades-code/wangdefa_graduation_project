@@ -1,11 +1,12 @@
 package org.lhq.common;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
 
 /**
  * @author Wallace
@@ -15,6 +16,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Accessors(chain = true)
 public class Item {
+	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
 	private String type;
 	private String name;

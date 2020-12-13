@@ -2,6 +2,7 @@ package org.lhq.controller;
 
 
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,8 +41,10 @@ public class DirectoryController {
 
 	@ApiImplicitParam(name = "dirName",value = "文件夹名称",required = true)
 	@ApiOperation(value = "新建目录")
-    @PostMapping("mkdir")
-    public Result mkdir(String dirName, Long parentId, Long userId) throws ProjectException {
+    @PostMapping(value = "mkdir" )
+    public Result mkdir(@RequestParam(value = "dirName",required = false) String dirName,
+						@RequestParam(value = "pid",required = false) Long parentId,
+						@RequestParam(value = "userId",required = false) Long userId) throws ProjectException {
         if (StrUtil.isEmpty(dirName)){
             throw new ProjectException("文件夹名为空");
         }
@@ -103,7 +106,7 @@ public class DirectoryController {
 		result.put("id",pid);
 		result.put("dirs",directories);
 		result.put("file",userFiles);
-		result.put("path",parentDirs);
+		result.put("path",ListUtil.reverse(parentDirs));
 		return result;
 	}
 	//删除一个目录和他下面的文件
