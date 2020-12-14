@@ -56,7 +56,7 @@ public class Chunk {
 	/**
 	 * 文件目录
 	 */
-	private String dirId;
+	private Long dirId;
 	@Transient
 	private MultipartFile file;
 }

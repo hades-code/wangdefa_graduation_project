@@ -1,10 +1,8 @@
 package org.lhq.feign;
 
+import org.lhq.entity.User;
 import org.lhq.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -27,4 +25,9 @@ public class UserFeign {
                               @RequestParam("type") String type){
         this.userService.updateStorage(userId,size,type);
     }
+    @PostMapping("/{id}")
+    public User getUserById(@PathVariable("id") Long userId){
+		User byId = this.userService.getById(userId);
+		return byId;
+	}
 }

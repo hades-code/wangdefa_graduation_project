@@ -3,6 +3,17 @@ spring:
     allow-bean-definition-overriding: true
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedHeaders: "*"
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+                POST
+                DELETE
+                PUT
+                OPTION
       discovery:
         locator:
           enabled: true

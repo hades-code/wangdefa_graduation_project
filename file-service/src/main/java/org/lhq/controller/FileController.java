@@ -2,9 +2,12 @@ package org.lhq.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sun.jersey.core.header.AcceptableToken;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileStatus;
+import org.lhq.common.ActionType;
 import org.lhq.common.Chunk;
 import org.lhq.entity.User;
 import org.lhq.entity.UserFile;
@@ -32,7 +35,6 @@ import java.util.Map;
 @RequestMapping("tran")
 @Slf4j
 @Api(tags = "文件上传下载接口")
-@CrossOrigin
 public class FileController {
 	@Autowired
 	FileService fileService;
@@ -85,14 +87,49 @@ public class FileController {
 	 * @throws ProjectException
 	 */
 	@GetMapping("chunkupload")
-	public Map checkChunk (Chunk chunk) throws Exception {
+	public Map checkChunk (Chunk chunk,Long userId) throws Exception {
 		HashMap<String, Object> result = new HashMap<>();
+		User userInfo = userService.getUserById(1336364264798789633L);
 		//获取当前上传块的md5值
 		String identifier = chunk.getIdentifier();
 		UserFile fileByMd5 = userFileService.getUserFileDao().getUserFileByMd5(identifier);
-		if (fileByMd5 != null){
-			throw new ProjectException("文件已存在,不需要再上传");
+		//如果根据md5找到相同的文件，并且大小一致
+		if (fileByMd5 != null && fileByMd5.getFileSize().equals(Double.parseDouble(chunk.getTotalSize().toString()))){
+			result.put("skipUpload",true);
+			result.put("needMerge",false);
+			Date date = new Date();
+			fileByMd5.setId(null);
+			int index = chunk.getFilename().lastIndexOf(".");
+			String fileType = null;
+			if (index != -1){
+				fileType = chunk.getFilename().substring(index + 1);
+				String filename = chunk.getFilename().substring(0,index);
+				UserFile userFile = this.userFileService.getUserFileDao().selectOne(new QueryWrapper<UserFile>().lambda()
+						.eq(UserFile::getDirectoryId, chunk.getDirId())
+						.eq(UserFile::getFileStatus, ActionType.OK.code)
+						.eq(UserFile::getMd5,identifier));
+				// 如果文件存在就把文件名加上日期在存储一遍
+				if (userFile != null && StrUtil.equals(filename,userFile.getFileName())){
+						filename =filename + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss");
+				}
+				chunk.setFilename(filename);
+			}
+			//throw new ProjectException("文件已存在,不需要再上传");
+			fileByMd5.setFileName(chunk.getFilename())
+					.setFileType(fileType)
+					.setDirectoryId(chunk.getDirId())
+					.setCreateTime(date)
+					.setUserId(userId)
+					.setModifyTime(date);
+			this.userFileService.getUserFileDao().insert(fileByMd5);
+			userService.updateStorage(userId,1.0,ActionType.OK.code);
+			return result;
 		}
+		/**
+		 *  如果不存在，则查询文件是否有上传
+		 *  查询文件是否有上传过
+		 *  获取文件路径，查询文件是否存在
+		 */
 		String tempPath = TEMPPATH +"/"+ chunk.getIdentifier();
 		if (!this.fileService.exitFile(tempPath)){
 			return result;
@@ -123,7 +160,7 @@ public class FileController {
 									Long dirId) throws Exception {
 		// 获取临时文件的路径
 		FileStatus[] fileStatuses = this.fileService.tempFile(TEMPPATH + "/" + md5);
-		User userInfo = userService.getUserInfo(userId);
+		User userInfo = userService.getUserById(userId);
 		Date date= new Date();
 		if (userInfo == null){
 			log.error("查无此人");

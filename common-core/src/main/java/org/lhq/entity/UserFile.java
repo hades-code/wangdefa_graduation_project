@@ -3,6 +3,7 @@ package org.lhq.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 @Data
 @Entity
+@Accessors(chain = true)
 public class UserFile {
 	@Id
 	@JsonSerialize(using = ToStringSerializer.class)

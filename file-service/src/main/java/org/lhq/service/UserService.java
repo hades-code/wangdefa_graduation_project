@@ -18,7 +18,7 @@ public interface UserService {
 						   @RequestParam("size") Double size,
 						   @RequestParam("type") String type);
 		@PostMapping("/{id}")
-		User getUserInfo(@PathVariable Long userId);
+		User getUserById(@PathVariable("id") Long userId);
 		@PostMapping("update")
 		Integer updateUserInfoById(User user);
 }
