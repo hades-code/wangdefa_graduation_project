@@ -1,5 +1,7 @@
 package org.lhq.filter;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Configuration
+@Slf4j
 public class Cors {
 	private static final String MAX_AGE = "18000L";
 
@@ -35,7 +38,7 @@ public class Cors {
 				for (String accessControlRequestHeaders : stringList) {
 					headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,accessControlRequestHeaders);
 			}
-				//headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, requestHeaders.getOrigin());
+				headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, requestHeaders.getOrigin());
 				headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 				headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,"GET,POST,OPTIONS,PUT,DELETE");
 				headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "*");

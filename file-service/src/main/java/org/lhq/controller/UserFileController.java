@@ -100,20 +100,20 @@ public class UserFileController {
 		return new ResponseEntity("移动成功",HttpStatus.OK);
 	}
 	@GetMapping("getOne")
-	public ResponseEntity getOne(Long id){
+	public ResponseEntity getOne(Long id) throws ProjectException {
 		if (id < 0 ){
-			log.error("查找失败!ID错误");
+			throw new ProjectException("查找失败,Id错误");
 		}
 		UserFile userFile = userFileService.getUserFileDao().selectById(id);
 		if (userFile == null){
-			log.error("问价不存在");
+			throw new ProjectException("查找失败,文件不存在");
 		}
 		return ResponseEntity.ok(userFile);
 	}
 	@PostMapping("edit")
-	public ResponseEntity<Object> edit(UserFile userFile){
+	public ResponseEntity<Object> edit(UserFile userFile) throws ProjectException {
 		if (userFile == null || userFile.getId() == null){
-			log.error("修改失败");
+			throw new ProjectException("文件为空，修改失败");
 		}
 		UserFile getFile = userFileService.getUserFileDao().selectById(userFile.getId());
 		if (StrUtil.isNotEmpty(userFile.getFileName())){
