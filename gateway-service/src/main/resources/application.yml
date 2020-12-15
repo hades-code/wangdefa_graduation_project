@@ -1,7 +1,11 @@
+
 spring:
   main:
     allow-bean-definition-overriding: true
   cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
     gateway:
       globalcors:
         cors-configurations:
@@ -37,3 +41,5 @@ feign:
       default:
         connectTimeout: 5000
         readTimeout: 5000
+server:
+  port: 8000
