@@ -64,18 +64,18 @@ public class DirectoryController {
         return new Result("新建成功").setMessage("新建成功");
     }
     @PostMapping("rename")
-    public ResponseEntity<Object> updateDirName(String dirName,Long id){
-        if (StrUtil.isEmpty(dirName) || id <= 0){
-            return new ResponseEntity<Object>("目录重命名失败",HttpStatus.INTERNAL_SERVER_ERROR);
+    public String updateDirName(String name,Long id) throws ProjectException {
+        if (StrUtil.isEmpty(name) || id <= 0){
+            throw new ProjectException("文件名为空");
         }
         Directory directory = directorySerivce.getDirById(id);
         if (directory == null){
-            return new ResponseEntity<>("文件夹不存在",HttpStatus.INTERNAL_SERVER_ERROR);
+        	throw  new ProjectException("文件夹不存在");
         }
-        directory.setDirectoryName(dirName);
+        directory.setDirectoryName(name);
         directory.setModifyTime(new Date());
         directorySerivce.updateById(directory);
-        return new ResponseEntity<Object>("目录重命名成功",HttpStatus.OK);
+        return "目录重命名成功";
     }
 
 	/**

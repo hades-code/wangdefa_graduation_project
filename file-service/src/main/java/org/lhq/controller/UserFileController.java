@@ -37,18 +37,18 @@ public class UserFileController {
 	 * @return
 	 */
 	@PostMapping("rename")
-	public ResponseEntity rename(Long id,String name){
+	public String rename(@RequestParam("id") Long id,@RequestParam("name") String name) throws ProjectException {
 		if (StrUtil.isEmpty(name)){
-			log.error("重命名失败，文件名为空");
+			throw new ProjectException("重命名失败,文件名为空");
 		}
 		UserFile userFile = userFileService.getUserFileDao().selectById(id);
 		if (userFile == null){
-			log.error("文件不存在");
+			throw new ProjectException("文件不存在");
 		}
 		userFile.setFileName(name);
 		userFile.setModifyTime(new Date());
 		userFileService.getUserFileDao().updateById(userFile);
-		return new ResponseEntity("修改成功", HttpStatus.OK);
+		return "修改成功";
 	}
 
 	/**
