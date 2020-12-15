@@ -55,8 +55,7 @@ public class ShareController {
 		return items;
 	}
 	@PostMapping("shareFile")
-	public ResponseEntity shareDirAndFile(@RequestBody List<Item> item, Long userId, boolean shareLock, Date expirationTime){
-		Object file = shareService.shareDirAndFile(item, userId,shareLock,expirationTime);
-		return ResponseEntity.ok(file);
+	public Object shareDirAndFile(@RequestBody List<Item> item, Long userId, boolean shareLock, String shareCode,Date expirationTime){
+		return shareService.shareDirAndFile(item, userId,shareLock,shareCode,expirationTime);
 	}
 }

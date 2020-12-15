@@ -42,26 +42,30 @@ public class ShareServiceImpl implements IShareService {
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
-	public Map<String,Object> shareDirAndFile(@RequestBody List<Item> items, Long userId,Boolean shareLock,Date expirationTime) {
-		HashMap<Object, Object> result = new HashMap<>();
+	public Map<String,Object> shareDirAndFile(@RequestBody List<Item> items, Long userId,Boolean shareLock,String shareCode,Date expirationTime) {
+		HashMap<String, Object> result = new HashMap<>();
 		Date date = new Date();
 		Share share = new Share().setShareLink(IdUtil.fastSimpleUUID());
 		share.setCreateTime(date);
 		share.setExpirationTime(expirationTime);
 		share.setShareLock(shareLock);
+		if (shareLock){
+			share.setShareCode(shareCode);
+		}
 		shareDao.insert(share);
 		for (Item item :items){
 			ShareFile shareFile = new ShareFile();
 			if (StrUtil.equals(item.getType(),"dir")){
 				shareFile.setFileOrDir(false);
 			}
+			shareFile.setFileOrDir(true);
 			shareFile.setFileId(item.getId());
 			shareFile.setShareId(share.getShareLink());
 			shareFileDao.insert(shareFile);
 		}
 		result.put("shareLink",share.getShareLink());
 		result.put("shareCode",share.getShareCode());
-		return null;
+		return result;
  	}
 
 	@Override
