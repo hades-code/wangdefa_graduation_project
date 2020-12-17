@@ -89,7 +89,8 @@ public class ShareServiceImpl implements IShareService {
 
 		ShareFile shareFile = new ShareFile();
 		shareFile.setShareId(getShare.getShareLink());
-		List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<>(shareFile));
+		List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<ShareFile>().lambda()
+				.eq(ShareFile::getShareId,getShare.getShareLink()));
 		List<Long> fileIdList = shareFiles.stream()
 				.filter(ShareFile::getFileOrDir)
 				.map(ShareFile::getFileId)

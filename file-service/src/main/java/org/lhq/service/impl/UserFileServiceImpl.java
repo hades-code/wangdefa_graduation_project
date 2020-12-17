@@ -74,19 +74,18 @@ public class UserFileServiceImpl implements UserFileService {
 	public void copy(Long sourceFileId, Long targetDirId) {
 		Date date = new Date();
 		UserFile userFile = this.userFileDao.selectById(sourceFileId);
-		UserFile newUserFile = userFile;
 		//修改文件信息
-		if (newUserFile.getDirectoryId().equals(targetDirId)){
-			newUserFile.setFileName(newUserFile.getFileName() + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
+		if (userFile.getDirectoryId().equals(targetDirId)){
+			userFile.setFileName(userFile.getFileName() + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
 		}
-		newUserFile.setId(null);
-		newUserFile.setDirectoryId(targetDirId);
-		newUserFile.setCreateTime(date);
-		newUserFile.setModifyTime(date);
+		userFile.setId(null);
+		userFile.setDirectoryId(targetDirId);
+		userFile.setCreateTime(date);
+		userFile.setModifyTime(date);
 		//修改用户信息
 		this.userService.updateStorage(userFile.getUserId(),userFile.getFileSize(),ActionType.COPY.code);
 		//保存文件
-		this.userFileDao.insert(newUserFile);
+		this.userFileDao.insert(userFile);
 
 	}
 }

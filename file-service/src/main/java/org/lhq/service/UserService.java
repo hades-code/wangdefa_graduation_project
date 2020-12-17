@@ -13,12 +13,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "user-service")
 @RequestMapping("user-feign")
 public interface UserService {
+		/**
+		 * 更改用户已用存储空间
+		 */
 		@PostMapping("/updateStorage")
 		void updateStorage(@RequestParam("userId") Long userId,
 						   @RequestParam("size") Double size,
 						   @RequestParam("type") String type);
+
+		/**
+		 * 根据用户id查找用户
+		 * @param userId
+		 * @return
+		 */
 		@PostMapping("/{id}")
 		User getUserById(@PathVariable("id") Long userId);
+
+		/**
+		 *
+		 * @param user
+		 * @return
+		 */
 		@PostMapping("update")
 		Integer updateUserInfoById(User user);
 }

@@ -13,10 +13,6 @@ import java.util.List;
  */
 
 public interface DirectoryDao extends BaseMapper<Directory> {
-	@Select("select * from directory where id = #{id} and user_id = #{userId}")
-    Directory getListParDirById(Long id,Long userId);
-	@Select("select * from directory where parent_id = #{pid}")
-	Directory getDirByPid(Long pid);
 	@Select("select * from directory where parent_id = #{pid} and user_id = #{userId}")
 	Directory getDirByPid(Long pid,Long userId);
 	@Select("select * from directory where parent_id = #{pid}")

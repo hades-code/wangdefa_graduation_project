@@ -3,6 +3,7 @@ package org.lhq.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.common.Item;
@@ -45,17 +46,19 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 			log.error("没有上一级目录");
 			return null;
 		}
-		Directory one = directoryDao.getListParDirById(id, userId);
-		log.info("找到的目录为:{}",one);
+		Directory directory = directoryDao.selectOne(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getId, id)
+				.eq(Directory::getUserId, userId));
+		log.info("找到的目录为:{}",directory);
 		HashMap<String, Object> map = new HashMap<>(16);
-		map.put("id",one.getId());
-		if (one.getParentId() == 0){
+		map.put("id",directory.getId());
+		if (directory.getParentId() == 0){
 			map.put("name","根目录");
 			list.add(map);
 		}else {
-			map.put("name",one.getDirectoryName());
+			map.put("name",directory.getDirectoryName());
 			list.add(map);
-			getListPartDirectoryById(one.getParentId(),userId,list);
+			getListPartDirectoryById(directory.getParentId(),userId,list);
 		}
 		return list;
 	}
@@ -69,11 +72,14 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	@Override
 	public List<Object> getListDircByPid(Long pid, Long userId) {
 		ArrayList<Object> dirc = new ArrayList<>();
-		List<Directory> directoryList = this.directoryDao.getListDirByPid(pid, userId);
+		List<Directory> directoryList =this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getParentId,pid)
+				.eq(Directory::getUserId,userId));
 		for (Directory directory : directoryList) {
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("id",directory.getId());
 			map.put("name",directory.getDirectoryName());
+			map.put("type","dir");
 			map.put("modifyTime", DateUtil.format(directory.getModifyTime(),"yyyy-MM-dd HH:mm"));
 			dirc.add(map);
 		}
