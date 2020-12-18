@@ -145,9 +145,9 @@ public class DirectoryController {
     	return null;
 	}
 	@PostMapping("move")
-	public ResponseEntity move(Long sourceId,Long targetId){
+	public String move(Long sourceId,Long targetId){
 		Boolean moveDir = directorySerivce.moveDir(sourceId, targetId);
-		return null;
+		return "移动"+ (moveDir?"成功":"失败");
 	}
 	@GetMapping("/{name}")
 	public ResponseEntity findByName(@PathVariable String name){
