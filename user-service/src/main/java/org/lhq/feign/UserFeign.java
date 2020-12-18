@@ -25,8 +25,8 @@ public class UserFeign {
                               @RequestParam("type") String type){
         this.userService.updateStorage(userId,size,type);
     }
-    @PostMapping("/{id}")
-    public User getUserById(@PathVariable("id") Long userId){
+    @PostMapping("getUser")
+    public User getUserById(Long userId){
 		User byId = this.userService.getById(userId);
 		return byId;
 	}

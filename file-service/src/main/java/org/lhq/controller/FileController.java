@@ -7,6 +7,7 @@ import com.sun.jersey.core.header.AcceptableToken;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileStatus;
+import org.lhq.annotation.JsonParam;
 import org.lhq.common.ActionType;
 import org.lhq.common.Chunk;
 import org.lhq.entity.User;
@@ -153,7 +154,7 @@ public class FileController {
 		return ResponseEntity.ok("检验完毕");
 	}
 	@PostMapping("mergeFile")
-	public ResponseEntity mergeFile(String md5,
+	public ResponseEntity mergeFile(@JsonParam(value = "md5") String md5,
 									String fileName,
 									String totalSize,
 									Long userId,

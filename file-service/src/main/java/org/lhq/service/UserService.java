@@ -2,10 +2,7 @@ package org.lhq.service;
 
 import org.lhq.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author hades
@@ -26,8 +23,8 @@ public interface UserService {
 		 * @param userId
 		 * @return
 		 */
-		@PostMapping("/{id}")
-		User getUserById(@PathVariable("id") Long userId);
+		@PostMapping("getUser")
+		User getUserById(Long userId);
 
 		/**
 		 *

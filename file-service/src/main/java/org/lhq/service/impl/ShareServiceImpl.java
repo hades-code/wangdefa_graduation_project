@@ -42,12 +42,13 @@ public class ShareServiceImpl implements IShareService {
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
-	public Map<String,Object> shareDirAndFile(@RequestBody List<Item> items, Long userId,Boolean shareLock,String shareCode,Date expirationTime) {
+	public Map<String,Object> shareDirAndFile( List<Item> items, Long userId,Boolean shareLock,String shareCode,Date expirationTime) {
 		HashMap<String, Object> result = new HashMap<>();
 		Date date = new Date();
 		Share share = new Share().setShareLink(IdUtil.fastSimpleUUID());
 		share.setCreateTime(date);
 		share.setExpirationTime(expirationTime);
+		share.setUserId(userId);
 		share.setShareLock(shareLock);
 		if (shareLock){
 			share.setShareCode(shareCode);
