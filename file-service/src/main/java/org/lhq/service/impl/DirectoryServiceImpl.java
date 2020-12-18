@@ -188,6 +188,27 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		return null;
 	}
 
+	/**
+	 *
+	 * @param id
+	 * @param list
+	 * @return
+	 */
+	public List ListDir(Long id,List list){
+		List<Directory> directoryList = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getParentId, id));
+		for (Directory directory : directoryList) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("id",directory.getId());
+			map.put("name",directory.getDirectoryName());
+			List<Object> dirList = new ArrayList<>();
+			ListDir(directory.getId(),dirList);
+			map.put("children",dirList);
+			list.add(map);
+		}
+		return list;
+	}
+
 	private Map common(List<Item> list) {
 		if (list == null){
 			return new HashMap();

@@ -109,7 +109,31 @@ public class DirectoryController {
 		result.put("path",ListUtil.reverse(parentDirs));
 		return result;
 	}
-	//删除一个目录和他下面的文件
+
+	/**
+	 * 获取目录和子目录
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("listDir")
+	public List getListDir(Long userId){
+		Directory directory = this.directorySerivce.getDirByPid(0L, userId);
+		List list = new ArrayList<>();
+		list = directorySerivce.ListDir(directory.getId(), list);
+		Map<String, Object> result = new HashMap<>();
+		result.put("id",directory.getId());
+		result.put("name","全部文件");
+		result.put("children",list);
+		List<Object> allList = new ArrayList<>();
+		allList.add(result);
+		return allList;
+	}
+
+	/**
+	 * 删除文件
+	 * @param list
+	 * @return
+	 */
 	@PostMapping("deleteDir")
 	public String deleteDir(@RequestBody List<Item> list){
 		Boolean result = directorySerivce.deleteDirAndFile(list);
