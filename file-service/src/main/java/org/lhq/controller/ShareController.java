@@ -9,7 +9,6 @@ import org.lhq.exception.ProjectException;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.service.IShareService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

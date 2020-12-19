@@ -1,4 +1,4 @@
-package org.lhq.controller;
+package org.lhq.controllerAdvice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
