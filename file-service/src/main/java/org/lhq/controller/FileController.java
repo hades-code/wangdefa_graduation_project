@@ -155,10 +155,10 @@ public class FileController {
 	}
 	@PostMapping("mergeFile")
 	public ResponseEntity mergeFile(@JsonParam(value = "md5") String md5,
-									String fileName,
-									String totalSize,
-									Long userId,
-									Long dirId) throws Exception {
+									@JsonParam(value = "fileName") String fileName,
+									@JsonParam(value = "totalSize") String totalSize,
+									@JsonParam(value = "userId") Long userId,
+									@JsonParam(value = "dirId") Long dirId) throws Exception {
 		// 获取临时文件的路径
 		FileStatus[] fileStatuses = this.fileService.tempFile(TEMPPATH + "/" + md5);
 		User userInfo = userService.getUserById(userId);

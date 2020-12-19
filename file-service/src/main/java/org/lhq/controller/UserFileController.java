@@ -71,7 +71,7 @@ public class UserFileController {
 		}
 		return new ResponseEntity("删除完成",HttpStatus.OK);
 	}
-	@PostMapping("copy")
+	@PostMapping(value = "copy")
 	public String copyFile(Long sourceId,Long targetId) throws ProjectException {
 		if (sourceId < 0 || targetId < 0){
 			throw new ProjectException("文件复制失败");

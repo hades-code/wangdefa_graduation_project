@@ -24,7 +24,6 @@
         <module>file-service</module>
         <module>doc-service</module>
         <module>mail-service</module>
-        <module>file-preview</module>
     </modules>
 
     <!--版本号统一管理-->

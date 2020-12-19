@@ -56,7 +56,7 @@ public class LogAspect {
             for (int i = 0; i < paramLength - 1; i++) {
                 requestLog.append(paramNames[i]).append("=").append(JSONObject.toJSONString(paramValues[i])).append(",");
             }
-            requestLog.append(paramNames[paramLength - 1]).append("=").append(JSONObject.toJSONString(paramValues[paramLength - 1])).append("]");
+            requestLog.append(paramNames[paramLength - 1]).append("=").append(paramValues[paramLength - 1].toString()).append("]");
         }
         log.info(requestLog.toString());
     }
