@@ -49,14 +49,14 @@ public class LogAspect {
         String[] paramNames = ((MethodSignature) signature).getParameterNames();
         Object[] paramValues = joinPoint.getArgs();
         int paramLength = null == paramNames ? 0 : paramNames.length;
-        if (paramLength == 0) {
+        if (paramLength == 0 || paramValues == null) {
             requestLog.append("请求参数 = {} ");
         } else {
             requestLog.append("请求参数 = [");
-            for (int i = 0; i < paramLength - 1; i++) {
-                requestLog.append(paramNames[i]).append("=").append(JSONObject.toJSONString(paramValues[i])).append(",");
+            for (int i = 0; i <= paramLength - 1; i++) {
+                requestLog.append(paramNames[i]).append("=").append(paramValues[i]).append(",");
             }
-            requestLog.append(paramNames[paramLength - 1]).append("=").append(paramValues[paramLength - 1].toString()).append("]");
+            requestLog.append("]");
         }
         log.info(requestLog.toString());
     }

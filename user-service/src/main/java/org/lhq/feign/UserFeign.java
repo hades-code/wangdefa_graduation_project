@@ -1,5 +1,6 @@
 package org.lhq.feign;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lhq.entity.User;
 import org.lhq.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("user-feign")
+@Slf4j
 public class UserFeign {
     @Resource
     UserService userService;
@@ -26,8 +28,12 @@ public class UserFeign {
         this.userService.updateStorage(userId,size,type);
     }
     @PostMapping("getUser")
-    public User getUserById(Long userId){
+    public User getUserById(@RequestParam("userId") Long userId){
 		User byId = this.userService.getById(userId);
 		return byId;
+	}
+	@PostMapping("update")
+	public Boolean updateUser(@RequestBody User user){
+		return this.userService.updateById(user);
 	}
 }

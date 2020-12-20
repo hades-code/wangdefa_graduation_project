@@ -1,11 +1,15 @@
 package org.lhq.config;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 
 import com.alibaba.fastjson.util.IOUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
 import org.springframework.core.MethodParameter;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -16,7 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
+import java.util.Objects;
+@Slf4j
 public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver {
 	private static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 	public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -41,6 +46,9 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 		if (StrUtil.isNotBlank(requestBody)){
 			JSONObject jsonObject = JSONObject.parseObject(requestBody);
 			value = jsonObject.get(parameter.getParameterAnnotation(JsonParam.class).value());
+			Class<?> type = Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).type();
+			value = Convert.convert(type, value);
+
 		}
 		if (parameter.getParameterAnnotation(JsonParam.class).required() && value == null){
 			throw new RuntimeException(parameter.getParameterAnnotation(JsonParam.class).value() + "不能为空");

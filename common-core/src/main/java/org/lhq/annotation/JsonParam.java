@@ -26,4 +26,6 @@ public @interface JsonParam {
 	 * @return
 	 */
 	String defaultValue() default "";
+
+	Class<?> type() default Object.class;
 }

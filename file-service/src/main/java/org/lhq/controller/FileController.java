@@ -3,7 +3,6 @@ package org.lhq.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sun.jersey.core.header.AcceptableToken;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileStatus;
@@ -90,10 +89,12 @@ public class FileController {
 	@GetMapping("chunkupload")
 	public Map checkChunk (Chunk chunk,Long userId) throws Exception {
 		HashMap<String, Object> result = new HashMap<>();
-		User userInfo = userService.getUserById(1336364264798789633L);
+		//User userInfo = userService.getUserById(userId);
 		//获取当前上传块的md5值
 		String identifier = chunk.getIdentifier();
-		UserFile fileByMd5 = userFileService.getUserFileDao().getUserFileByMd5(identifier);
+		UserFile fileByMd5 = userFileService.getUserFileDao().selectOne(new QueryWrapper<UserFile>().lambda()
+				.eq(UserFile::getMd5,identifier)
+				.last("limit 1"));
 		//如果根据md5找到相同的文件，并且大小一致
 		if (fileByMd5 != null && fileByMd5.getFileSize().equals(Double.parseDouble(chunk.getTotalSize().toString()))){
 			result.put("skipUpload",true);
@@ -111,19 +112,19 @@ public class FileController {
 						.eq(UserFile::getMd5,identifier));
 				// 如果文件存在就把文件名加上日期在存储一遍
 				if (userFile != null && StrUtil.equals(filename,userFile.getFileName())){
-						filename =filename + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss");
+						filename =filename + DateUtil.format(date,"yyyy-MM-dd_HH:mm:ss");
 				}
 				chunk.setFilename(filename);
 			}
-			//throw new ProjectException("文件已存在,不需要再上传");
 			fileByMd5.setFileName(chunk.getFilename())
 					.setFileType(fileType)
 					.setDirectoryId(chunk.getDirId())
+					.setFileStatus(ActionType.OK.code)
 					.setCreateTime(date)
 					.setUserId(userId)
 					.setModifyTime(date);
 			this.userFileService.getUserFileDao().insert(fileByMd5);
-			userService.updateStorage(userId,1.0,ActionType.OK.code);
+			userService.updateStorage(userId,fileByMd5.getFileSize(),ActionType.OK.code);
 			return result;
 		}
 		/**
@@ -154,21 +155,20 @@ public class FileController {
 		return ResponseEntity.ok("检验完毕");
 	}
 	@PostMapping("mergeFile")
-	public ResponseEntity mergeFile(@JsonParam(value = "md5") String md5,
-									@JsonParam(value = "fileName") String fileName,
-									@JsonParam(value = "totalSize") String totalSize,
-									@JsonParam(value = "userId") Long userId,
-									@JsonParam(value = "dirId") Long dirId) throws Exception {
+	public String mergeFile(@JsonParam(value = "md5",type = String.class) String md5,
+									@JsonParam(value = "fileName",type = String.class) String fileName,
+									@JsonParam(value = "totalSize",type = Integer.class) Integer totalSize,
+									@JsonParam(value = "userId",type = Long.class) Long userId,
+									@JsonParam(value = "dirId",type = Long.class) Long dirId) throws Exception {
 		// 获取临时文件的路径
 		FileStatus[] fileStatuses = this.fileService.tempFile(TEMPPATH + "/" + md5);
 		User userInfo = userService.getUserById(userId);
 		Date date= new Date();
 		if (userInfo == null){
-			log.error("查无此人");
-			return ResponseEntity.ok("上传失败,未找到上传用户");
+			throw new ProjectException("合并失败,找不到此用户");
 		}
 		// 合并文件
-		String dirPath = "/"+userInfo.getUsername() + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss");
+		String dirPath = "/"+userInfo.getUsername() + DateUtil.format(date,"yyyy_MM_dd_HH_mm");
 		this.fileService.mkdir(dirPath);
 		String filePath =dirPath+"/"+fileName;
 		this.fileService.mergeFile(fileStatuses,filePath);
@@ -187,6 +187,7 @@ public class FileController {
 			userFile.setCreateTime(date);
 			userFile.setFileSize(Double.valueOf(totalSize));
 			userFile.setMd5(md5);
+			userFile.setFileStatus(ActionType.OK.code);
 			userFile.setFileType(type);
 			userFile.setUserId(userId);
 			userFile.setModifyTime(date);
@@ -197,9 +198,9 @@ public class FileController {
 			this.userService.updateUserInfoById(userInfo);
 			// 合并完成删除文件
 			this.fileService.rm(TEMPPATH + "/" +md5);
-			return ResponseEntity.ok("上传成功,文件合并成功");
+			return "上传成功,文件合并成功";
 		}
-		return ResponseEntity.ok("文件合并失败");
+		return "文件合并失败";
 	}
 	@GetMapping("download")
 	public ResponseEntity fileDownload(HttpServletRequest request,HttpServletResponse response,UserFile userFile){

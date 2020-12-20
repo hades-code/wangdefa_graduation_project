@@ -24,7 +24,7 @@ public interface UserService {
 		 * @return
 		 */
 		@PostMapping("getUser")
-		User getUserById(Long userId);
+		User getUserById(@RequestParam("userId") Long userId);
 
 		/**
 		 *
@@ -32,5 +32,5 @@ public interface UserService {
 		 * @return
 		 */
 		@PostMapping("update")
-		Integer updateUserInfoById(User user);
+		Boolean updateUserInfoById(@RequestBody User user);
 }
