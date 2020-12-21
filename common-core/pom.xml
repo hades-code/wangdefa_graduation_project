@@ -51,13 +51,11 @@
 <!--            <artifactId>knife4j-micro-spring-boot-starter</artifactId>-->
 <!--        </dependency>-->
         <!--p6spy 打印sql-->
-      <!--  <dependency>
-       <!- <dependency>
+       <dependency>
             <groupId>com.github.gavlyukovskiy</groupId>
             <artifactId>p6spy-spring-boot-starter</artifactId>
             <version>${p6spy.version}</version>
-        </dependency>-->
-        <!--   autoconfigure     -->
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>

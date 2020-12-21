@@ -10,8 +10,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * @author third_e
- * @create 2020/4/30 0030-下午 5:11
+ * @author hades
  */
 public interface FileService {
 

@@ -1,5 +1,6 @@
 package org.lhq.service.impl;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -87,13 +88,38 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 
 	@Override
+	public Boolean mkdir(String dirName, Long pid, Long userId) {
+		if (pid == null){
+			Directory directory = getDirByPid(0L, userId);
+			pid = directory.getId();
+		}
+		List<Directory> directoryList =this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getDirectoryName,dirName)
+				.eq(Directory::getParentId,pid)
+				.eq(Directory::getUserId,userId));
+		if (directoryList == null && directoryList.size() <= 0){
+			Directory newDir = new Directory();
+			newDir.setDirectoryName(dirName);
+			newDir.setParentId(pid);
+			newDir.setUserId(userId);
+			newDir.setCreateTime(new Date());
+			newDir.setModifyTime(new Date());
+			directoryDao.insert(newDir);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public Directory getDirById(Long id){
 		Directory directory = this.directoryDao.selectById(id);
 		return directory;
 	}
 	@Override
 	public Directory getDirByPid(Long id, Long userId){
-		Directory dir = this.directoryDao.getDirByPid(id, userId);
+		Directory dir = this.directoryDao.selectOne(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getParentId,id)
+				.eq(Directory::getUserId,userId));
 		return dir;
 	}
 	@Override
@@ -114,9 +140,11 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		sourceDir.setParentId(targetId);
 		sourceDir.setModifyTime(date);
 		//获取源目文件夹的子文件夹
-		List<Directory> subDirs = this.directoryDao.getListDirByPid(sourceId);
+		List<Directory> subDirs = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getParentId,sourceId));
 		//获取源目录下的文件
-		List<UserFile> sourceFiles = this.userFileService.getUserFileDao().getListUserFileByPid(sourceId);
+		List<UserFile> sourceFiles = this.userFileService.getUserFileDao().selectList(new QueryWrapper<UserFile>().lambda()
+				.eq(UserFile::getDirectoryId,sourceId));
 		for (UserFile sourceFile : sourceFiles) {
 			sourceFile.setModifyTime(date);
 			this.userFileService.getUserFileDao().updateById(sourceFile);
@@ -183,7 +211,9 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 
 	@Override
 	public List findDirByName(String name, Long userId) {
-		Directory dirByName = this.directoryDao.getDirByName(name, userId);
+		Directory dirByName = this.directoryDao.selectOne(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getDirectoryName,name)
+				.eq(Directory::getUserId,userId));
 		//TO-DO
 		return null;
 	}
@@ -194,7 +224,8 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	 * @param list
 	 * @return
 	 */
-	public List ListDir(Long id,List list){
+	@Override
+	public List listDir(Long id, List list){
 		List<Directory> directoryList = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
 				.eq(Directory::getParentId, id));
 		for (Directory directory : directoryList) {
@@ -202,7 +233,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 			map.put("id",directory.getId());
 			map.put("name",directory.getDirectoryName());
 			List<Object> dirList = new ArrayList<>();
-			ListDir(directory.getId(),dirList);
+			listDir(directory.getId(),dirList);
 			map.put("children",dirList);
 			list.add(map);
 		}
@@ -221,12 +252,14 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 				Directory directory = getDirById(item.getId());
 				if (directory == null){
 					log.error("不存在此目录");
+					continue;
 				}
 				dirs.add(directory);
 			}else {
 				UserFile userFile = userFileService.getUserFileDao().selectById(item.getId());
 				if (userFile == null){
 					log.error("不存在此文件");
+					continue;
 				}
 				files.add(userFile);
 			}

@@ -17,6 +17,7 @@ import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -147,7 +148,8 @@ public class FileController {
 		if (StrUtil.isEmpty(md5)){
 			log.info("md5为空,查找错误");
 		}
-		UserFile userFileByMd5 = userFileService.getUserFileDao().getUserFileByMd5(md5);
+		UserFile userFileByMd5 = userFileService.getUserFileDao().selectOne(new QueryWrapper<UserFile>().lambda()
+				.eq(UserFile::getMd5,md5));
 		if (userFileByMd5 != null && userFileByMd5.getFileSize() == fileSize){
 			log.info("文件存在，发动秒传");
 		}
@@ -155,6 +157,7 @@ public class FileController {
 		return ResponseEntity.ok("检验完毕");
 	}
 	@PostMapping("mergeFile")
+	@Transactional
 	public String mergeFile(@JsonParam(value = "md5",type = String.class) String md5,
 									@JsonParam(value = "fileName",type = String.class) String fileName,
 									@JsonParam(value = "totalSize",type = Integer.class) Integer totalSize,

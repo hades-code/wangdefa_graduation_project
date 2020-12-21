@@ -20,7 +20,7 @@ public interface DirectorySerivce {
 	 * 查询某一目录
 	 */
 	List<Object> getListDircByPid(Long id,Long userId);
-
+	Boolean mkdir(String dirName,Long pid,Long userId);
 	Directory getDirById(Long id);
 	Directory getDirByPid(Long id,Long userId);
 	Integer saveDir(Directory directory);
@@ -28,6 +28,6 @@ public interface DirectorySerivce {
 	Boolean moveDir(Long sourceId,Long targetId);
 	Boolean deleteDirAndFile(List<Item> items);
 	Boolean copyDirAndFile(List<Item> items,Long targetId);
-	List ListDir(Long id,List list);
+	List listDir(Long id,List list);
 	List findDirByName(String name,Long userId);
 }

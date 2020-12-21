@@ -1,8 +1,8 @@
 package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.UserFileDao;
 import org.lhq.common.ActionType;
@@ -38,6 +38,7 @@ public class UserFileServiceImpl implements UserFileService {
 	public List<Object> getListFileByPid(Long pid,Long userId){
 		List<Object> files = new ArrayList<>();
 		List<UserFile> userFiles = userFileDao.selectList(new QueryWrapper<UserFile>().lambda()
+				.select(UserFile::getId,UserFile::getUserId,UserFile::getFileName,UserFile::getFileType,UserFile::getFileSize,UserFile::getModifyTime)
 				.eq(UserFile::getDirectoryId,pid)
 				.eq(UserFile::getUserId,userId)
 				.ne(UserFile::getFileStatus,ActionType.DELETE.code)
@@ -60,7 +61,13 @@ public class UserFileServiceImpl implements UserFileService {
 		userService.updateStorage(userFile.getUserId(),userFile.getFileSize(), ActionType.DELETE.code);
 		userFile.setFileStatus(ActionType.DELETE.code);
 		userFile.setModifyTime(new Date());
-		this.userFileDao.updateById(userFile);
+		//this.userFileDao.updateById(userFile);
+		UpdateWrapper<UserFile> updateWrapper = new UpdateWrapper<>();
+		updateWrapper.lambda()
+				.eq(UserFile::getId,userFile.getId())
+				.set(UserFile::getFileStatus,ActionType.DELETE.code)
+				.set(UserFile::getModifyTime,new Date());
+		this.userFileDao.update(null, updateWrapper);
 	}
 	@Override
 	public void move(Long sourceFileId,Long targetId){

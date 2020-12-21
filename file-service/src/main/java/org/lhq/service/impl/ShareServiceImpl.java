@@ -14,10 +14,9 @@ import org.lhq.service.DirectorySerivce;
 import org.lhq.service.IShareService;
 import org.lhq.service.UserFileService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,7 @@ public class ShareServiceImpl implements IShareService {
 	}
 
 	@Override
-	@Transactional(rollbackOn = Exception.class)
+	@Transactional
 	public Map<String,Object> shareDirAndFile( List<Item> items, Long userId,Boolean shareLock,String shareCode,Date expirationTime) {
 		HashMap<String, Object> result = new HashMap<>();
 		Date date = new Date();

@@ -8,8 +8,9 @@ spring:
   application:
     name: file-service
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wgp?serverTimezone=UTC
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:p6spy:mysql://localhost:3306/wgp?serverTimezone=UTC
     username: root
     password: 123456
     jpa:
@@ -29,9 +30,6 @@ hdfs:
   #  path: hdfs://192.168.88.132:9000
   user: hades
 
-logging:
-  level:
-    org.lhq.dao: debug
 
 feign:
   okhttp:

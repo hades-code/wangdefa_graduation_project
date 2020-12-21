@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.lhq.annotation.JsonParam;
 import org.lhq.common.Item;
 import org.lhq.common.Result;
 import org.lhq.entity.Directory;
@@ -42,26 +43,14 @@ public class DirectoryController {
 	@ApiImplicitParam(name = "dirName",value = "文件夹名称",required = true)
 	@ApiOperation(value = "新建目录")
     @PostMapping(value = "mkdir" )
-    public Result mkdir(@RequestParam(value = "dirName",required = false) String dirName,
+    public String mkdir(@RequestParam(value = "dirName",required = false) String dirName,
 						@RequestParam(value = "pid",required = false) Long parentId,
 						@RequestParam(value = "userId",required = false) Long userId) throws ProjectException {
         if (StrUtil.isEmpty(dirName)){
             throw new ProjectException("文件夹名为空");
         }
-		// 如果父目录等于空，
-        if (parentId == null){
-			Directory directory = directorySerivce.getDirByPid(0L, userId);
-			parentId = directory.getId();
-		}
-
-        Directory newDir = new Directory();
-        newDir.setDirectoryName(dirName);
-        newDir.setParentId(parentId);
-        newDir.setUserId(userId);
-        newDir.setCreateTime(new Date());
-        newDir.setModifyTime(new Date());
-        directorySerivce.saveDir(newDir);
-        return new Result("新建成功").setMessage("新建成功");
+		Boolean mkdir = directorySerivce.mkdir(dirName, parentId, userId);
+		return "创建" + (mkdir?"成功!":"失败!");
     }
     @PostMapping("rename")
     public String updateDirName(String name,Long id) throws ProjectException {
@@ -119,8 +108,8 @@ public class DirectoryController {
 	public List getListDir(Long userId){
 		Directory directory = this.directorySerivce.getDirByPid(0L, userId);
 		List list = new ArrayList<>();
-		list = directorySerivce.ListDir(directory.getId(), list);
-		Map<String, Object> result = new HashMap<>();
+		list = directorySerivce.listDir(directory.getId(), list);
+		Map<String, Object> result = new HashMap<>(16);
 		result.put("id",directory.getId());
 		result.put("name","全部文件");
 		result.put("children",list);
@@ -145,9 +134,12 @@ public class DirectoryController {
     	return null;
 	}
 	@PostMapping("move")
-	public String move(Long sourceId,Long targetId){
-		Boolean moveDir = directorySerivce.moveDir(sourceId, targetId);
-		return "移动"+ (moveDir?"成功":"失败");
+	public String move(@JsonParam(value = "sourceListId") List<Long> list,@JsonParam(value = "targetId",type = Long.class) Long targetId){
+		list.forEach(item -> {
+			log.info(item.toString());
+		});
+		Boolean moveDir = directorySerivce.moveDir(null, targetId);
+		return "移动"+ ("失败");
 	}
 	@GetMapping("/{name}")
 	public ResponseEntity findByName(@PathVariable String name){
