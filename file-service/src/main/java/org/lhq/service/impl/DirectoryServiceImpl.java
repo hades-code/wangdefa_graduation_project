@@ -152,7 +152,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		}
 		//遍历
 		for (Directory subDir : subDirs) {
-			copyDirAndFile(subDir.getId(),sourceDir.getId());
+			copyDirAndFile(null,sourceDir.getId());
 		}
 		//保存
 		this.directoryDao.updateById(sourceDir);
@@ -202,7 +202,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 			checkId = directory.getId();
 		}
 		for (Directory dir : dirs) {
-			moveDir(dir.getId(),targetId);
+			moveDirAndFile(null,targetId);
 		}
 		for (UserFile file : files) {
 			userFileService.move(file.getId(),targetId);
