@@ -31,15 +31,7 @@ public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {
     @SneakyThrows
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if (returnType.getGenericParameterType().equals(String.class)){
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                return objectMapper.writeValueAsString(new Result<>(body));
-            } catch (JsonProcessingException e) {
-                throw new ProjectException();
-            }
-        }
-        return new Result<>(body);
+    	return new Result<>(body);
     }
 
 

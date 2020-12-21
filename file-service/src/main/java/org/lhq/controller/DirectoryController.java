@@ -3,14 +3,18 @@ package org.lhq.controller;
 
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+
+
 import org.lhq.annotation.JsonParam;
 import org.lhq.common.Item;
-import org.lhq.common.Result;
 import org.lhq.entity.Directory;
 import org.lhq.exception.ProjectException;
 import org.lhq.service.DirectorySerivce;
@@ -20,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.security.PrivilegedActionException;
 import java.util.*;
 
 /**
@@ -50,7 +53,7 @@ public class DirectoryController {
             throw new ProjectException("文件夹名为空");
         }
 		Boolean mkdir = directorySerivce.mkdir(dirName, parentId, userId);
-		return "创建" + (mkdir?"成功!":"失败!");
+		return mkdir?"创建成功":"创建失败";
     }
     @PostMapping("rename")
     public String updateDirName(String name,Long id) throws ProjectException {
@@ -61,9 +64,12 @@ public class DirectoryController {
         if (directory == null){
         	throw  new ProjectException("文件夹不存在");
         }
-        directory.setDirectoryName(name);
-        directory.setModifyTime(new Date());
-        directorySerivce.updateById(directory);
+		UpdateWrapper<Directory> updateWrapper = new UpdateWrapper<>();
+		updateWrapper.lambda()
+				.eq(Directory::getId,id)
+				.set(Directory::getDirectoryName,name)
+				.set(Directory::getModifyTime,new Date());
+		directorySerivce.getDirectoryDao().update(null,updateWrapper);
         return "目录重命名成功";
     }
 
@@ -129,24 +135,18 @@ public class DirectoryController {
 		return "删除"+ (result?"成功":"失败");
 	}
 	@PostMapping("copy")
-	public ResponseEntity copy(@RequestBody List<Item> list,Long targetId){
+	public ResponseEntity copy(@JsonParam(value = "targetId",type = Long.class) Long targetId,@JsonParam(value = "sourceListId",type = Item.class) List<Item> list){
     	directorySerivce.copyDirAndFile(list,targetId);
     	return null;
 	}
 	@PostMapping("move")
-	public String move(@JsonParam(value = "sourceListId") List<Long> list,@JsonParam(value = "targetId",type = Long.class) Long targetId){
-		list.forEach(item -> {
-			log.info(item.toString());
+	public String move(@JsonParam(value = "sourceListId",type = List.class) List<JSONObject> list, @JsonParam(value = "targetId",type = Long.class) Long targetId){
+		list.forEach(item ->{
+			Long id = Convert.convert(Long.class, item.get("id"));
+			Boolean result = directorySerivce.moveDir(id, targetId);
 		});
-		Boolean moveDir = directorySerivce.moveDir(null, targetId);
-		return "移动"+ ("失败");
-	}
-	@GetMapping("/{name}")
-	public ResponseEntity findByName(@PathVariable String name){
-    	if (StrUtil.isEmpty(name)){
-    		log.error("名字为空,查找失败");
-		}
-    	return new ResponseEntity("应阴阳",HttpStatus.OK);
+
+		return "移动成功";
 	}
 
 

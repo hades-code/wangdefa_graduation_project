@@ -25,7 +25,7 @@ public interface DirectorySerivce {
 	Directory getDirByPid(Long id,Long userId);
 	Integer saveDir(Directory directory);
 	Integer updateById (Directory directory);
-	Boolean moveDir(Long sourceId,Long targetId);
+	Boolean moveDirAndFile(List<Item> items,Long targetId);
 	Boolean deleteDirAndFile(List<Item> items);
 	Boolean copyDirAndFile(List<Item> items,Long targetId);
 	List listDir(Long id,List list);

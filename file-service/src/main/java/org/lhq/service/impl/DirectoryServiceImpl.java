@@ -97,7 +97,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 				.eq(Directory::getDirectoryName,dirName)
 				.eq(Directory::getParentId,pid)
 				.eq(Directory::getUserId,userId));
-		if (directoryList == null && directoryList.size() <= 0){
+		if (directoryList == null || directoryList.size() <= 0){
 			Directory newDir = new Directory();
 			newDir.setDirectoryName(dirName);
 			newDir.setParentId(pid);
@@ -133,7 +133,8 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 
 	@Override
-	public Boolean moveDir(Long sourceId, Long targetId) {
+	public Boolean copyDirAndFile(List<Item> list, Long targetId) {
+		Long sourceId = 1L;
 		Date date = new Date();
 		//获取源文件夹
 		Directory sourceDir = this.directoryDao.selectById(sourceId);
@@ -151,7 +152,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		}
 		//遍历
 		for (Directory subDir : subDirs) {
-			moveDir(subDir.getId(),sourceDir.getId());
+			copyDirAndFile(subDir.getId(),sourceDir.getId());
 		}
 		//保存
 		this.directoryDao.updateById(sourceDir);
@@ -177,7 +178,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		return true;
 	}
 	@Override
-	public Boolean copyDirAndFile(List<Item> items,Long targetId){
+	public Boolean moveDirAndFile(List<Item> items,Long targetId){
 		Map common = this.common(items);
 		//获取文件夹
 		List<Directory> dirs = MapUtil.get(common, "dirs", List.class);

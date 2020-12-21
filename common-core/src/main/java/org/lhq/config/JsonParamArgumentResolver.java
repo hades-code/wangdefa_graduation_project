@@ -1,15 +1,15 @@
 package org.lhq.config;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import com.alibaba.fastjson.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
 import org.springframework.core.MethodParameter;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 @Slf4j
 public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver {
@@ -45,10 +47,18 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 		Object value = null;
 		if (StrUtil.isNotBlank(requestBody)){
 			JSONObject jsonObject = JSONObject.parseObject(requestBody);
-			value = jsonObject.get(parameter.getParameterAnnotation(JsonParam.class).value());
+			value = jsonObject.get(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value());
 			Class<?> type = Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).type();
+			if(Collection.class.isAssignableFrom(value.getClass())) {
+				ArrayList<Object> objects = new ArrayList<>();
+				JSONArray jsonArray = JSONArray.parseArray(StrUtil.toString(value));
+				for (Object json : jsonArray) {
+					Object convert = Convert.convert(type, json);
+					objects.add(convert);
+				}
+					return objects;
+			}
 			value = Convert.convert(type, value);
-
 		}
 		if (parameter.getParameterAnnotation(JsonParam.class).required() && value == null){
 			throw new RuntimeException(parameter.getParameterAnnotation(JsonParam.class).value() + "不能为空");

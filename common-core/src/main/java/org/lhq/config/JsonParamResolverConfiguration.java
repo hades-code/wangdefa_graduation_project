@@ -21,13 +21,20 @@ import java.util.List;
  */
 @Configuration
 public class JsonParamResolverConfiguration extends WebMvcConfigurationSupport {
-
+	/**
+	 * 添加自定义参数解析器
+	 * @param resolvers
+	 */
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 		resolvers.add(new JsonParamArgumentResolver());
 		super.addArgumentResolvers(resolvers);
 	}
 
+	/**
+	 * 吧Long序列化成String
+	 * @param converters
+	 */
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		MappingJackson2HttpMessageConverter jackson2CborHttpMessageConverter = new MappingJackson2HttpMessageConverter();
@@ -41,6 +48,11 @@ public class JsonParamResolverConfiguration extends WebMvcConfigurationSupport {
 		converters.add(responseBodyConverter());
 		super.configureMessageConverters(converters);
 	}
+
+	/**
+	 * 改变响应编码
+	 * @return
+	 */
 	@Bean
 	public HttpMessageConverter responseBodyConverter() {
 		StringHttpMessageConverter converter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
