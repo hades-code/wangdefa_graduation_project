@@ -1,6 +1,5 @@
 package org.lhq.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -77,7 +76,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 				.eq(Directory::getParentId,pid)
 				.eq(Directory::getUserId,userId));
 		for (Directory directory : directoryList) {
-			HashMap<String, Object> map = new HashMap<>();
+			HashMap<String, Object> map = new HashMap<>(16);
 			map.put("id",directory.getId());
 			map.put("name",directory.getDirectoryName());
 			map.put("type","dir");
@@ -131,10 +130,8 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	public Integer updateById (Directory directory){
 		return this.directoryDao.updateById(directory);
 	}
-
 	@Override
-	public Boolean copyDirAndFile(List<Item> list, Long targetId) {
-		Long sourceId = 1L;
+	public void copyDir(Long sourceId, Long targetId){
 		Date date = new Date();
 		//获取源文件夹
 		Directory sourceDir = this.directoryDao.selectById(sourceId);
@@ -152,12 +149,61 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		}
 		//遍历
 		for (Directory subDir : subDirs) {
-			copyDirAndFile(null,sourceDir.getId());
+			copyDir(subDir.getId(),sourceDir.getId());
 		}
 		//保存
 		this.directoryDao.updateById(sourceDir);
 
-		return null;
+	}
+	@Override
+	public void moveDir(Long sourceId, Long targetId){
+		Date date = new Date();
+		//获取源目录
+		Directory sourceDir = this.directoryDao.selectById(sourceId);
+		if (sourceDir == null){
+			return;
+		}
+		//获取子目录
+		List<Directory> directoryList = this.directoryDao
+				.selectList(new QueryWrapper<Directory>().lambda()
+				.eq(Directory::getParentId, sourceId));
+		//移动子目录,子目录并没有发生改变，只是修改了子目录的修改时间
+		for (Directory directory : directoryList) {
+			moveDir(directory.getId(),sourceDir.getId());
+		}
+		//获取子文件
+		List<UserFile> userFiles = this.userFileService.getUserFileDao()
+				.selectList(new QueryWrapper<UserFile>().lambda()
+				.eq(UserFile::getDirectoryId, sourceId));
+		//修改子文件的修改日期
+		userFiles.forEach(userFile -> {
+			this.userFileService.getUserFileDao()
+					.updateById(new UserFile()
+					.setId(userFile.getId())
+					.setModifyTime(date));
+		});
+		//保存修改文件夹
+		this.directoryDao.updateById(new Directory()
+				.setId(sourceDir.getId())
+				.setParentId(targetId)
+				.setModifyTime(date));
+	}
+	@Override
+	public Boolean copyDirAndFile(List<Item> items, Long targetId) {
+		Map common = this.common(items);
+		//获取文件夹
+		List<Directory> dirs = MapUtil.get(common, "dirs", List.class);
+		//获取文件
+		List<UserFile> files = MapUtil.get(common, "files", List.class);
+		dirs.forEach(directory -> {
+			log.info("文件夹:[{}]复制到:{}",directory.getDirectoryName(),targetId);
+			this.copyDir(directory.getId(),targetId);
+		});
+		files.forEach(userFile -> {
+			log.info("文件:{}复制到{}",userFile.getFileName(),targetId);
+			this.userFileService.copy(userFile.getId(),targetId);
+		});
+		return true;
 	}
 
 	@Override
@@ -196,13 +242,13 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 					log.error("不能移动到子文件夹");
 				}
 			}
-			if (directory.getId().equals(0L)){
+			if (directory.getParentId().equals(0L)){
 				break;
 			}
-			checkId = directory.getId();
+			checkId = directory.getParentId();
 		}
 		for (Directory dir : dirs) {
-			moveDirAndFile(null,targetId);
+			moveDir(dir.getId(),targetId);
 		}
 		for (UserFile file : files) {
 			userFileService.move(file.getId(),targetId);
@@ -230,7 +276,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 		List<Directory> directoryList = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
 				.eq(Directory::getParentId, id));
 		for (Directory directory : directoryList) {
-			Map<String, Object> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>(16);
 			map.put("id",directory.getId());
 			map.put("name",directory.getDirectoryName());
 			List<Object> dirList = new ArrayList<>();

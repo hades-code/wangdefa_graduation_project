@@ -140,12 +140,8 @@ public class DirectoryController {
     	return null;
 	}
 	@PostMapping("move")
-	public String move(@JsonParam(value = "sourceListId",type = List.class) List<JSONObject> list, @JsonParam(value = "targetId",type = Long.class) Long targetId){
-		list.forEach(item ->{
-			Long id = Convert.convert(Long.class, item.get("id"));
-			Boolean result = directorySerivce.moveDir(id, targetId);
-		});
-
+	public String move(@JsonParam(value = "sourceListId",type = Item.class) List<Item> list, @JsonParam(value = "targetId",type = Long.class) Long targetId){
+		this.directorySerivce.moveDirAndFile(list,targetId);
 		return "移动成功";
 	}
 
