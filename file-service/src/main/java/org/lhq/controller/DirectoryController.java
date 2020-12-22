@@ -135,9 +135,9 @@ public class DirectoryController {
 		return "删除"+ (result?"成功":"失败");
 	}
 	@PostMapping("copy")
-	public ResponseEntity copy(@JsonParam(value = "targetId",type = Long.class) Long targetId,@JsonParam(value = "sourceListId",type = Item.class) List<Item> list){
+	public String copy(@JsonParam(value = "targetId",type = Long.class) Long targetId,@JsonParam(value = "sourceListId",type = Item.class) List<Item> list){
     	directorySerivce.copyDirAndFile(list,targetId);
-    	return null;
+    	return "复制成功";
 	}
 	@PostMapping("move")
 	public String move(@JsonParam(value = "sourceListId",type = Item.class) List<Item> list, @JsonParam(value = "targetId",type = Long.class) Long targetId){

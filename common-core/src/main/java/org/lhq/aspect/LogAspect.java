@@ -1,6 +1,7 @@
 package org.lhq.aspect;
 
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -62,6 +63,6 @@ public class LogAspect {
     }
     @AfterReturning(returning = "object",pointcut = "controllerMethod()")
     public void logResultVOInfo(Object object){
-        log.info("请求结果:"+object.toString());
+        log.info("请求结果:{}",StrUtil.toString(object));
     }
 }

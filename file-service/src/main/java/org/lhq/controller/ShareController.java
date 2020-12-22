@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.lhq.annotation.JsonParam;
 import org.lhq.common.Item;
 import org.lhq.exception.ProjectException;
 import org.lhq.entity.Directory;
@@ -54,7 +55,11 @@ public class ShareController {
 		return items;
 	}
 	@PostMapping("shareFile")
-	public Object shareDirAndFile(@RequestBody List<Item> item, Long userId, boolean shareLock, String shareCode,Date expirationTime){
+	public Object shareDirAndFile(@JsonParam(value = "item",type = Item.class) List<Item> item,
+								  Long userId,
+								  boolean shareLock,
+								  String shareCode,
+								  Date expirationTime){
 		return shareService.shareDirAndFile(item, userId,shareLock,shareCode,expirationTime);
 	}
 }

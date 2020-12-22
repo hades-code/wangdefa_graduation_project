@@ -1,6 +1,7 @@
 package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author hades
@@ -61,7 +61,6 @@ public class UserFileServiceImpl implements UserFileService {
 		userService.updateStorage(userFile.getUserId(),userFile.getFileSize(), ActionType.DELETE.code);
 		userFile.setFileStatus(ActionType.DELETE.code);
 		userFile.setModifyTime(new Date());
-		//this.userFileDao.updateById(userFile);
 		UpdateWrapper<UserFile> updateWrapper = new UpdateWrapper<>();
 		updateWrapper.lambda()
 				.eq(UserFile::getId,userFile.getId())
@@ -71,7 +70,7 @@ public class UserFileServiceImpl implements UserFileService {
 	}
 	@Override
 	public void move(Long sourceFileId,Long targetId){
-		UserFile userFile = this.userFileDao.selectById(sourceFileId);
+		UserFile userFile = this.dealFileOfDir(sourceFileId, targetId);
 		userFile.setDirectoryId(targetId);
 		userFile.setModifyTime(new Date());
 		this.userFileDao.updateById(userFile);
@@ -80,7 +79,7 @@ public class UserFileServiceImpl implements UserFileService {
 	@Override
 	public void copy(Long sourceFileId, Long targetDirId) {
 		Date date = new Date();
-		UserFile userFile = this.userFileDao.selectById(sourceFileId);
+		UserFile userFile = this.dealFileOfDir(sourceFileId, targetDirId);
 		//修改文件信息
 		if (userFile.getDirectoryId().equals(targetDirId)){
 			userFile.setFileName(userFile.getFileName() + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
@@ -94,5 +93,54 @@ public class UserFileServiceImpl implements UserFileService {
 		//保存文件
 		this.userFileDao.insert(userFile);
 
+	}
+
+	/**
+	 * 检查md5 和文件大小是否一致
+	 * @param userFile
+	 * @param userFile2
+	 * @return
+	 */
+	private Boolean isSameFile(UserFile userFile,UserFile userFile2){
+		String md5 = userFile.getMd5();
+		String md51 = userFile2.getMd5();
+		Double fileSize1 = userFile.getFileSize();
+		Double fileSize = userFile2.getFileSize();
+		if (fileSize ==null || fileSize1 ==null){
+			return false;
+		}
+		return StrUtil.equals(md51,md5)&&fileSize.equals(fileSize1);
+	}
+
+	/**
+	 * 检查文件名和后缀名是否一致
+	 * @param userFile
+	 * @param userFile2
+	 * @return
+	 */
+	private Boolean isSameFileName(UserFile userFile,UserFile userFile2){
+		return StrUtil.equals(userFile.getFileName(),userFile2.getFileName()) && StrUtil.equals(userFile.getFileType(),userFile2.getFileType());
+	}
+
+	/**
+	 * 处理复制到本目录下的文件和原来的文件时候有冲突
+	 * @param sourceId
+	 * @param tragetId
+	 * @return
+	 */
+	private UserFile dealFileOfDir(Long sourceId, Long tragetId){
+		Date date = new Date();
+		UserFile userFile = this.userFileDao.selectById(sourceId);
+		List<UserFile> fileList = this.userFileDao.selectList(new QueryWrapper<UserFile>().lambda()
+				.select(UserFile::getId,UserFile::getFileName,UserFile::getMd5,UserFile::getFileSize,UserFile::getFileType)
+				.eq(UserFile::getDirectoryId, tragetId)
+				.ne(UserFile::getFileStatus,ActionType.DELETE.code)
+				.ne(UserFile::getFileStatus,ActionType.ILLEGAL.code));
+		for (UserFile file : fileList) {
+			if (isSameFile(userFile,file) && isSameFileName(userFile,file)){
+				userFile.setFileName(userFile.getFileName() + DateUtil.format(date,"yyyy-MM-dd_HH-mm"));
+			}
+		}
+		return userFile;
 	}
 }
