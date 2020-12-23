@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -40,11 +41,11 @@ public class Share {
 	/**
 	 * 创建时间
 	 */
-	private Date createTime;
+	private LocalDateTime createTime;
 	/**
 	 * 过期时间
 	 */
-	private Date expirationTime;
+	private LocalDateTime expirationTime;
 
 
 }

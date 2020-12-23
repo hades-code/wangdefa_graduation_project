@@ -2,6 +2,7 @@ package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -14,10 +15,13 @@ import org.lhq.entity.*;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.IShareService;
 import org.lhq.service.UserFileService;
+import org.lhq.utils.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,7 +48,7 @@ public class ShareServiceImpl implements IShareService {
 	@Transactional
 	public Map<String,Object> shareDirAndFile( List<Item> items, Long userId,Boolean shareLock,String shareCode,Integer expirationTime) {
 		HashMap<String, Object> result = new HashMap<>(16);
-		Date date = new Date();
+		LocalDateTime date = LocalDateTime.now();
 		Share share = new Share().setShareLink(IdUtil.fastSimpleUUID());
 		share.setCreateTime(date);
 		share.setUserId(userId);
@@ -53,8 +57,9 @@ public class ShareServiceImpl implements IShareService {
 			share.setShareCode(shareCode);
 		}
 		if (expirationTime != null && expirationTime > 0){
-			DateTime dateTime = DateUtil.offsetDay(date, expirationTime);
-			share.setExpirationTime(dateTime);
+			LocalDateTime expDate = LocalDateTimeUtil.offset(date, expirationTime, ChronoUnit.DAYS);
+			share.setExpirationTime(expDate);
+			result.put("liveTime",expirationTime +"天");
 		}
 		shareDao.insert(share);
 		for (Item item :items){
@@ -82,7 +87,9 @@ public class ShareServiceImpl implements IShareService {
 			log.error("分享不存在或者已被取消");
 			throw new ProjectException("分享不存在或者已被取消");
 		}
-		if(!DateUtil.isIn(date,getShare.getCreateTime(),getShare.getExpirationTime())){
+		Date createTime = DateUtils.asDate(getShare.getCreateTime());
+		Date expirationTime = DateUtils.asDate(getShare.getExpirationTime());
+		if(!DateUtil.isIn(date,createTime,expirationTime)){
 			log.error("分享文件已经过期");
 			throw new ProjectException("分享文件已经过期");
 		}

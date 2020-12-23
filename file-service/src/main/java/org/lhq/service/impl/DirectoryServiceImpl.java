@@ -1,6 +1,7 @@
 package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -14,6 +15,7 @@ import org.lhq.service.UserFileService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -80,7 +82,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 			map.put("id",directory.getId());
 			map.put("name",directory.getDirectoryName());
 			map.put("type","dir");
-			map.put("modifyTime", DateUtil.format(directory.getModifyTime(),"yyyy-MM-dd HH:mm"));
+			map.put("modifyTime", LocalDateTimeUtil.format(directory.getModifyTime(),"yyyy-MM-dd HH:mm"));
 			dirc.add(map);
 		}
 		return dirc;
@@ -101,8 +103,8 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 			newDir.setDirectoryName(dirName);
 			newDir.setParentId(pid);
 			newDir.setUserId(userId);
-			newDir.setCreateTime(new Date());
-			newDir.setModifyTime(new Date());
+			newDir.setCreateTime(LocalDateTime.now());
+			newDir.setModifyTime(LocalDateTime.now());
 			directoryDao.insert(newDir);
 			return true;
 		}
@@ -132,7 +134,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 	@Override
 	public void copyDir(Long sourceId, Long targetId){
-		Date date = new Date();
+		LocalDateTime date = LocalDateTime.now();
 		//获取源文件夹
 		Directory sourceDir = this.directoryDao.selectById(sourceId);
 		sourceDir.setParentId(targetId);
@@ -157,7 +159,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 	@Override
 	public void moveDir(Long sourceId, Long targetId){
-		Date date = new Date();
+		LocalDateTime date = LocalDateTime.now();
 		//获取源目录
 		Directory sourceDir = this.directoryDao.selectById(sourceId);
 		if (sourceDir == null){

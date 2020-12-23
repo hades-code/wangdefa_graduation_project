@@ -60,7 +60,7 @@ public class ShareController {
 								  @JsonParam(value = "userId",type = Long.class) Long userId,
 								  @JsonParam(value = "shareLock",type = Boolean.class) boolean shareLock,
 								  @JsonParam(value = "shareCode",type = String.class,required = false) String shareCode,
-								  @JsonParam(value = "expirationTime",type = Integer.class) Integer expirationTime){
+								  @JsonParam(value = "expirationTime",type = Integer.class,required = false) Integer expirationTime){
 		return shareService.shareDirAndFile(item, userId,shareLock,shareCode,expirationTime);
 	}
 }

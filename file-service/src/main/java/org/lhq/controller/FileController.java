@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ public class FileController {
 		if (fileByMd5 != null && fileByMd5.getFileSize().equals(Double.parseDouble(chunk.getTotalSize().toString()))){
 			result.put("skipUpload",true);
 			result.put("needMerge",false);
-			Date date = new Date();
+			LocalDateTime date = LocalDateTime.now();
 			fileByMd5.setId(null);
 			int index = chunk.getFilename().lastIndexOf(".");
 			String fileType = null;
@@ -113,7 +114,7 @@ public class FileController {
 						.eq(UserFile::getMd5,identifier));
 				// 如果文件存在就把文件名加上日期在存储一遍
 				if (userFile != null && StrUtil.equals(filename,userFile.getFileName())){
-						filename =filename + DateUtil.format(date,"yyyy-MM-dd_HH:mm:ss");
+						filename =filename + DateUtil.format(date,"yyyy-MM-dd_HH_mm");
 				}
 				chunk.setFilename(filename);
 			}
@@ -166,7 +167,7 @@ public class FileController {
 		// 获取临时文件的路径
 		FileStatus[] fileStatuses = this.fileService.tempFile(TEMPPATH + "/" + md5);
 		User userInfo = userService.getUserById(userId);
-		Date date= new Date();
+		LocalDateTime date = LocalDateTime.now();
 		if (userInfo == null){
 			throw new ProjectException("合并失败,找不到此用户");
 		}

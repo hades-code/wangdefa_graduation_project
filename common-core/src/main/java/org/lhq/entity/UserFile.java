@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -31,7 +32,7 @@ public class UserFile {
 	private Long userId;
 	private String fileStatus;
 	private Double fileSize;
-	private Date createTime;
-	private Date modifyTime;
+	private LocalDateTime createTime;
+	private LocalDateTime modifyTime;
 
 }

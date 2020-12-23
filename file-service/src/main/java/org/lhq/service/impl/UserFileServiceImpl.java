@@ -13,6 +13,7 @@ import org.lhq.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class UserFileServiceImpl implements UserFileService {
 		UserFile userFile = this.userFileDao.selectById(id);
 		userService.updateStorage(userFile.getUserId(),userFile.getFileSize(), ActionType.DELETE.code);
 		userFile.setFileStatus(ActionType.DELETE.code);
-		userFile.setModifyTime(new Date());
+		userFile.setModifyTime(LocalDateTime.now());
 		UpdateWrapper<UserFile> updateWrapper = new UpdateWrapper<>();
 		updateWrapper.lambda()
 				.eq(UserFile::getId,userFile.getId())
@@ -72,22 +73,21 @@ public class UserFileServiceImpl implements UserFileService {
 	public void move(Long sourceFileId,Long targetId){
 		UserFile userFile = this.dealFileOfDir(sourceFileId, targetId);
 		userFile.setDirectoryId(targetId);
-		userFile.setModifyTime(new Date());
+		userFile.setModifyTime(LocalDateTime.now());
 		this.userFileDao.updateById(userFile);
 	}
 
 	@Override
 	public void copy(Long sourceFileId, Long targetDirId) {
-		Date date = new Date();
 		UserFile userFile = this.dealFileOfDir(sourceFileId, targetDirId);
 		//修改文件信息
 		if (userFile.getDirectoryId().equals(targetDirId)){
-			userFile.setFileName(userFile.getFileName() + DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
+			userFile.setFileName(userFile.getFileName() + DateUtil.format(LocalDateTime.now(),"yyyy-MM-dd_HH_mm"));
 		}
 		userFile.setId(null);
 		userFile.setDirectoryId(targetDirId);
-		userFile.setCreateTime(date);
-		userFile.setModifyTime(date);
+		userFile.setCreateTime(LocalDateTime.now());
+		userFile.setModifyTime(LocalDateTime.now());
 		//修改用户信息
 		this.userService.updateStorage(userFile.getUserId(),userFile.getFileSize(),ActionType.COPY.code);
 		//保存文件

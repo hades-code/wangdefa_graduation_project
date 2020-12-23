@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class UserFileController {
 			throw new ProjectException("文件不存在");
 		}
 		userFile.setFileName(name);
-		userFile.setModifyTime(new Date());
+		userFile.setModifyTime(LocalDateTime.now());
 		userFileService.getUserFileDao().updateById(userFile);
 		return "修改成功";
 	}
