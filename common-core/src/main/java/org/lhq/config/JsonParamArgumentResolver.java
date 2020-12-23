@@ -49,7 +49,7 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 			JSONObject jsonObject = JSONObject.parseObject(requestBody);
 			value = jsonObject.get(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value());
 			Class<?> type = Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).type();
-			if(Collection.class.isAssignableFrom(value.getClass())) {
+			if( value != null && Collection.class.isAssignableFrom(value.getClass())) {
 				ArrayList<Object> objects = new ArrayList<>();
 				JSONArray jsonArray = JSONArray.parseArray(StrUtil.toString(value));
 				for (Object json : jsonArray) {

@@ -10,6 +10,6 @@ import java.util.Map;
 
 public interface IShareService {
 	ShareDao getShareDao();
-	Object shareDirAndFile(List<Item> items, Long userId, Boolean shareLock,String shareCode, Date expirationTime);
+	Object shareDirAndFile(List<Item> items, Long userId, Boolean shareLock,String shareCode, Integer expirationTime);
 	Map getShare(String shareLink, String shareCode) throws ProjectException;
 }

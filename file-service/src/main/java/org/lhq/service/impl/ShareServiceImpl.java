@@ -1,5 +1,6 @@
 package org.lhq.service.impl;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -41,16 +42,19 @@ public class ShareServiceImpl implements IShareService {
 
 	@Override
 	@Transactional
-	public Map<String,Object> shareDirAndFile( List<Item> items, Long userId,Boolean shareLock,String shareCode,Date expirationTime) {
-		HashMap<String, Object> result = new HashMap<>();
+	public Map<String,Object> shareDirAndFile( List<Item> items, Long userId,Boolean shareLock,String shareCode,Integer expirationTime) {
+		HashMap<String, Object> result = new HashMap<>(16);
 		Date date = new Date();
 		Share share = new Share().setShareLink(IdUtil.fastSimpleUUID());
 		share.setCreateTime(date);
-		share.setExpirationTime(expirationTime);
 		share.setUserId(userId);
 		share.setShareLock(shareLock);
 		if (shareLock){
 			share.setShareCode(shareCode);
+		}
+		if (expirationTime != null && expirationTime > 0){
+			DateTime dateTime = DateUtil.offsetDay(date, expirationTime);
+			share.setExpirationTime(dateTime);
 		}
 		shareDao.insert(share);
 		for (Item item :items){

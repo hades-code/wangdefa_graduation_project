@@ -3,6 +3,7 @@ package org.lhq.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import io.swagger.annotations.Api;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
 import org.lhq.common.Item;
@@ -56,10 +57,10 @@ public class ShareController {
 	}
 	@PostMapping("shareFile")
 	public Object shareDirAndFile(@JsonParam(value = "item",type = Item.class) List<Item> item,
-								  Long userId,
-								  boolean shareLock,
-								  String shareCode,
-								  Date expirationTime){
+								  @JsonParam(value = "userId",type = Long.class) Long userId,
+								  @JsonParam(value = "shareLock",type = Boolean.class) boolean shareLock,
+								  @JsonParam(value = "shareCode",type = String.class,required = false) String shareCode,
+								  @JsonParam(value = "expirationTime",type = Integer.class) Integer expirationTime){
 		return shareService.shareDirAndFile(item, userId,shareLock,shareCode,expirationTime);
 	}
 }
