@@ -10,6 +10,8 @@ import org.lhq.common.ActionType;
 import org.lhq.entity.UserFile;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "userFileCache")
 public class UserFileServiceImpl implements UserFileService {
 	@Resource
 	UserFileDao userFileDao;
@@ -36,6 +39,7 @@ public class UserFileServiceImpl implements UserFileService {
 	}
 
 	@Override
+	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#pid != null",unless = "#result == null")
 	public List<Object> getListFileByPid(Long pid,Long userId){
 		List<Object> files = new ArrayList<>();
 		List<UserFile> userFiles = userFileDao.selectList(new QueryWrapper<UserFile>().lambda()

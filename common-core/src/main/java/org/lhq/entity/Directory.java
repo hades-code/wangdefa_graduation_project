@@ -1,15 +1,22 @@
 package org.lhq.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,7 +27,9 @@ import java.util.Date;
 @Entity
 @Accessors(chain = true)
 @ApiModel("目录")
-public class Directory {
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Directory  {
 	@Id
 	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
@@ -34,7 +43,10 @@ public class Directory {
 	private Long parentId;
 	@JsonSerialize(using = ToStringSerializer.class)
 	private Long userId;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime createTime;
-	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime modifyTime;
 }

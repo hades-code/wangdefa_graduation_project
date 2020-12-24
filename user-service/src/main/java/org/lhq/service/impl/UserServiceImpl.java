@@ -1,6 +1,8 @@
 package org.lhq.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.UserDao;
 import org.lhq.entity.User;
 import org.lhq.service.UserService;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,7 +24,8 @@ import java.util.Optional;
  * @author wangdefa
  * @since 2020-09-15 20:28:42
  */
-@Service("userService")
+@Service
+@Slf4j
 @CacheConfig(cacheNames = "userCache")
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
 
@@ -32,13 +36,13 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
 
     @Override
-   // @Cacheable(key = "#id",condition = "id != null")
+    @Cacheable(key = "#root.methodName+#root.args[0]",condition = "#id != null",unless="#result == null")
     public User getById(Serializable id) {
         return super.getById(id);
     }
 
     @Override
-    @CachePut(key = "#result.id")
+    @CachePut(key = "#result",condition = "#result != null")
     public boolean saveOrUpdate(User entity) {
         return super.saveOrUpdate(entity);
     }
@@ -50,12 +54,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     }
 
     @Override
-    public User login(User user) {
-        User loginUser = userDao.selectByUsername(user.getUsername());
-        User optionalUser = Optional.ofNullable(loginUser).orElse(new User().setPassword("").setUsername(""));
-        boolean equals = optionalUser.getPassword().equals(user.getPassword());
-        LOGGER.info("登录:{}",equals);
-        return optionalUser;
+	@Cacheable(key = "#root.methodName+#root.args[0]",condition = "#user != null",unless="#result == null")
+    public User login(String username,String password) {
+		User loginUser = this.userDao.selectOne(new QueryWrapper<User>().lambda()
+				.eq(User::getUsername,username));
+		return Optional.ofNullable(loginUser).orElse(new User().setPassword("").setUsername(""));
     }
 
 

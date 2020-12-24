@@ -38,7 +38,7 @@ public class AuthController {
         if (user == null){
            throw new ProjectException("登陆用户为空");
         }
-        User loginUser = userService.login(user);
+        User loginUser = userService.login(username,password);
         if (loginUser.getUsername() == null|| "".equals(loginUser.getUsername()) ){
             LOGGER.error("用户名或密码错误");
             throw new ProjectException("用户名或密码错误");

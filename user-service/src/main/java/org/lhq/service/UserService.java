@@ -16,7 +16,7 @@ public interface UserService extends IService<User> {
      * @param user
      * @return
      */
-    User login(User user);
+    User login(String username,String password);
 
     /**
      * 注册功能

@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class FileController {
 	@Autowired
 	UserService userService;
 
-	private static final String TEMPPATH = "/temp";
+	private static final String TEMP_PATH = "/temp";
 	/**
 	 * 分片上传
 	 * @param chunk
@@ -54,7 +53,7 @@ public class FileController {
 	public Map chunkUpload(Chunk chunk) throws Exception {
 		MultipartFile file = chunk.getFile();
 		// 临时文件路径，文件的MD5值为文件名
-		String temPath = TEMPPATH + "/" + chunk.getIdentifier();
+		String temPath = TEMP_PATH + "/" + chunk.getIdentifier();
 		//创建临时文件夹
 		this.fileService.mkdir(temPath);
 
@@ -134,7 +133,7 @@ public class FileController {
 		 *  查询文件是否有上传过
 		 *  获取文件路径，查询文件是否存在
 		 */
-		String tempPath = TEMPPATH +"/"+ chunk.getIdentifier();
+		String tempPath = TEMP_PATH +"/"+ chunk.getIdentifier();
 		if (!this.fileService.exitFile(tempPath)){
 			return result;
 		}else {
@@ -165,7 +164,7 @@ public class FileController {
 									@JsonParam(value = "userId",type = Long.class) Long userId,
 									@JsonParam(value = "dirId",type = Long.class) Long dirId) throws Exception {
 		// 获取临时文件的路径
-		FileStatus[] fileStatuses = this.fileService.tempFile(TEMPPATH + "/" + md5);
+		FileStatus[] fileStatuses = this.fileService.tempFile(TEMP_PATH + "/" + md5);
 		User userInfo = userService.getUserById(userId);
 		LocalDateTime date = LocalDateTime.now();
 		if (userInfo == null){
@@ -201,7 +200,7 @@ public class FileController {
 			userInfo.setUsedStorageSize(userFile.getFileSize()+userInfo.getUsedStorageSize());
 			this.userService.updateUserInfoById(userInfo);
 			// 合并完成删除文件
-			this.fileService.rm(TEMPPATH + "/" +md5);
+			this.fileService.rm(TEMP_PATH + "/" +md5);
 			return "上传成功,文件合并成功";
 		}
 		return "文件合并失败";

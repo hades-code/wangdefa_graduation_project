@@ -1,5 +1,6 @@
 package org.lhq.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -19,8 +20,8 @@ import java.time.Duration;
  */
 @Configuration
 @EnableCaching
+@Slf4j
 public class RedisConfig extends CachingConfigurerSupport {
-    private static Logger log = LoggerFactory.getLogger(RedisConfig.class);
     private Duration timeToLive = Duration.ZERO;
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;
@@ -52,8 +53,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisTemplate.setHashKeySerializer(keySerializer());
         redisTemplate.setValueSerializer(valueSerializer());
         redisTemplate.setHashValueSerializer(valueSerializer());
-
-        log.debug("自定义RedisTemplate加载完成");
+        log.info("自定义RedisTemplate加载完成");
         return redisTemplate;
     }
 

@@ -28,7 +28,6 @@ public class User {
 	@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String username;
-    @JsonIgnore
     private String password;
     @Email
     private String email;

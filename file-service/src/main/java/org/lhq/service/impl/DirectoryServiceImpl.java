@@ -12,6 +12,8 @@ import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.UserFileService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,6 +25,7 @@ import java.util.*;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "directoryCache")
 public class DirectoryServiceImpl implements DirectorySerivce {
 
 	@Resource
@@ -43,6 +46,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	 * @return
 	 */
 	@Override
+	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#id != null",unless = "#result == null")
 	public List<Object> getListPartDirectoryById(Long id, Long userId, List list) {
 		if (id ==null || id<=0){
 			log.error("没有上一级目录");
@@ -72,6 +76,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	 * @return
 	 */
 	@Override
+	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#pid != null",unless = "#result == null")
 	public List<Object> getListDircByPid(Long pid, Long userId) {
 		ArrayList<Object> dirc = new ArrayList<>();
 		List<Directory> directoryList =this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
@@ -112,11 +117,13 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 
 	@Override
+	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#id != null",unless = "#result == null")
 	public Directory getDirById(Long id){
 		Directory directory = this.directoryDao.selectById(id);
 		return directory;
 	}
 	@Override
+	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#id != null",unless = "#result == null")
 	public Directory getDirByPid(Long id, Long userId){
 		Directory dir = this.directoryDao.selectOne(new QueryWrapper<Directory>().lambda()
 				.eq(Directory::getParentId,id)
@@ -274,6 +281,7 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	 * @return
 	 */
 	@Override
+	@Cacheable(key = "#root.methodName + #root.args[0]",unless = "#result == null ")
 	public List listDir(Long id, List list){
 		List<Directory> directoryList = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
 				.eq(Directory::getParentId, id));
