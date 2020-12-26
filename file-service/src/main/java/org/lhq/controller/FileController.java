@@ -9,9 +9,13 @@ import org.apache.hadoop.fs.FileStatus;
 import org.lhq.annotation.JsonParam;
 import org.lhq.common.ActionType;
 import org.lhq.common.Chunk;
+import org.lhq.common.Item;
+import org.lhq.common.Result;
+import org.lhq.entity.Directory;
 import org.lhq.entity.User;
 import org.lhq.entity.UserFile;
 import org.lhq.exception.ProjectException;
+import org.lhq.service.DirectorySerivce;
 import org.lhq.service.FileService;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
@@ -21,13 +25,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author hades
@@ -37,12 +50,14 @@ import java.util.Map;
 @Slf4j
 @Api(tags = "文件上传下载接口")
 public class FileController {
-	@Autowired
-	FileService fileService;
-	@Autowired
-	UserFileService userFileService;
-	@Autowired
-	UserService userService;
+	@Resource
+	private FileService fileService;
+	@Resource
+	private UserFileService userFileService;
+	@Resource
+	private UserService userService;
+	@Resource
+	private DirectorySerivce directorySerivce;
 
 	private static final String TEMP_PATH = "/temp";
 	/**
@@ -124,7 +139,7 @@ public class FileController {
 					.setCreateTime(date)
 					.setUserId(userId)
 					.setModifyTime(date);
-			this.userFileService.getUserFileDao().insert(fileByMd5);
+			this.userFileService.save(fileByMd5);
 			userService.updateStorage(userId,fileByMd5.getFileSize(),ActionType.OK.code);
 			return result;
 		}
@@ -171,7 +186,7 @@ public class FileController {
 			throw new ProjectException("合并失败,找不到此用户");
 		}
 		// 合并文件
-		String dirPath = "/"+userInfo.getUsername() + DateUtil.format(date,"yyyy_MM_dd_HH_mm");
+		String dirPath = "/"+userInfo.getUsername() +"/"+ DateUtil.format(date,"yyyy_MM_dd_HH_mm");
 		this.fileService.mkdir(dirPath);
 		String filePath =dirPath+"/"+fileName;
 		this.fileService.mergeFile(fileStatuses,filePath);
@@ -186,6 +201,7 @@ public class FileController {
 				fileName = fileName.substring(0,index);
 			}
 			userFile.setFileName(fileName);
+			userFile.setFilePath(filePath);
 			userFile.setDirectoryId(dirId);
 			userFile.setCreateTime(date);
 			userFile.setFileSize(Double.valueOf(totalSize));
@@ -205,14 +221,20 @@ public class FileController {
 		}
 		return "文件合并失败";
 	}
+
+	/**
+	 * 单文件下载
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ProjectException
+	 */
 	@GetMapping("download")
-	public ResponseEntity fileDownload(HttpServletRequest request,HttpServletResponse response,UserFile userFile){
-		if (userFile == null||userFile.getId() < 0){
-			log.error("下载失败");
-			return ResponseEntity.ok("下载失败");
+	public Result fileDownload(HttpServletRequest request, HttpServletResponse response, Item item) throws ProjectException {
+		if (item == null||item.getId() < 0){
+			throw new ProjectException("下载失败");
 		}
-        if (StrUtil.equals("dir", userFile.getFileType())) {
-			UserFile downloadFile = this.userFileService.getUserFileDao().selectById(userFile.getId());
+			UserFile downloadFile = this.userFileService.getUserFileDao().selectById(item.getId());
 			String fileName;
 			if (StrUtil.isNotEmpty(downloadFile.getFileType())){
 				fileName = downloadFile.getFileName()+"."+downloadFile.getFileType();
@@ -220,14 +242,33 @@ public class FileController {
 				fileName = downloadFile.getFileName();
 			}
 			try {
-				response.setHeader("Content-Disposition", "attachment;fileName=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" ));
+				response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName,"UTF-8"));
 				this.fileService.download(downloadFile.getFilePath(),response.getOutputStream());
 			} catch (Exception e) {
 				log.error("发生了不可描述的错误:",e);
 			}
-		}
         return null;
     }
-	@GetMapping
-	public void multipleDownload(){}
+	@GetMapping("multDownload")
+	public Result multipleDownload(List<Item> items,HttpServletResponse response) throws ProjectException, IOException, URISyntaxException, InterruptedException {
+		if (items == null || items.isEmpty()){
+			throw new ProjectException("下载失败");
+		}
+		List<Directory> directories = new ArrayList<>();
+		List<UserFile> userFiles = new ArrayList<>();
+		for (Item item : items) {
+			if (StrUtil.equals(item.getType(),"dir")){
+				Directory dir = this.directorySerivce.getDirById(item.getId());
+				directories.add(dir);
+			}else {
+				UserFile userFile = this.userFileService.getUserFileDao().selectById(item.getId());
+				userFiles.add(userFile);
+			}
+		}
+		OutputStream outputStream = response.getOutputStream();
+		ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+		this.fileService.multipleDownload(directories,userFiles,zipOutputStream,"");
+		zipOutputStream.close();
+		return null;
+	}
 }

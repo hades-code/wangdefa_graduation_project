@@ -1,14 +1,20 @@
 package org.lhq.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
+import org.lhq.dao.DirectoryDao;
+import org.lhq.dao.UserFileDao;
+import org.lhq.entity.Directory;
+import org.lhq.entity.UserFile;
 import org.lhq.service.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.hadoop.security.UserGroupInformation;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +25,8 @@ import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author hades
@@ -26,6 +34,10 @@ import java.util.List;
 @Service
 @Slf4j
 public class FileServiceImpl implements FileService {
+	@Resource
+	private DirectoryDao directoryDao;
+	@Resource
+	private UserFileDao userFileDao;
 
 	@Value("${hdfs.path}")
 	private String path;
@@ -276,4 +288,38 @@ public class FileServiceImpl implements FileService {
 	public List getStaticNums() {
 		return null;
 	}
+
+	@Override
+	public void multipleDownload(List<Directory> directories, List<UserFile> userFiles, ZipOutputStream zipOutputStream, String path) throws IOException, URISyntaxException, InterruptedException {
+		for (Directory directory : directories) {
+			String filePath = path + directory.getDirectoryName() + "/";
+			ZipEntry zipEntry = new ZipEntry(filePath);
+			zipOutputStream.putNextEntry(zipEntry);
+			List<Directory> subDir = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda().eq(Directory::getParentId, directory.getId()));
+			List<UserFile> subUserFile = this.userFileDao.selectList(new QueryWrapper<UserFile>().lambda().eq(UserFile::getDirectoryId, directory.getId()));
+			if (!subDir.isEmpty() || !subUserFile.isEmpty()){
+				multipleDownload(subDir,subUserFile,zipOutputStream,path);
+			}
+		}
+		FileSystem fileSystem = this.getFileSystem();
+		for (UserFile userFile : userFiles) {
+			InputStream inputStream = fileSystem.open(new Path(userFile.getFilePath()));
+			String fileName;
+			if (userFile.getFileType() != null){
+				fileName = path + userFile.getFileName()+"."+userFile.getFileType();
+			}else {
+				fileName = path + userFile.getFileName();
+			}
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			ZipEntry zipEntry = new ZipEntry(fileName);
+			zipOutputStream.putNextEntry(zipEntry);
+			while ((len = inputStream.read(buffer))!=-1){
+				zipOutputStream.write(buffer,0,len);
+			}
+			inputStream.close();
+			zipOutputStream.closeEntry();
+		}
+	}
+
 }

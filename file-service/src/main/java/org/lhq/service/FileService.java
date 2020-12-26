@@ -4,10 +4,15 @@ package org.lhq.service;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.lhq.entity.Directory;
+import org.lhq.entity.UserFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author hades
@@ -95,4 +100,5 @@ public interface FileService {
 
 
 	List getStaticNums();
+	void multipleDownload(List<Directory> directories, List<UserFile> userFiles, ZipOutputStream zipOutputStream,String path) throws IOException, URISyntaxException, InterruptedException;
 }

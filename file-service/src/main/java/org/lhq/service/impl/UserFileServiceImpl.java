@@ -11,7 +11,9 @@ import org.lhq.entity.UserFile;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,7 +41,7 @@ public class UserFileServiceImpl implements UserFileService {
 	}
 
 	@Override
-	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#pid != null",unless = "#result == null")
+	@Cacheable(key = "#root.methodName + #root.args[1]",condition = "#pid != null",unless = "#result == null")
 	public List<Object> getListFileByPid(Long pid,Long userId){
 		List<Object> files = new ArrayList<>();
 		List<UserFile> userFiles = userFileDao.selectList(new QueryWrapper<UserFile>().lambda()
@@ -73,6 +75,17 @@ public class UserFileServiceImpl implements UserFileService {
 				.set(UserFile::getModifyTime,new Date());
 		this.userFileDao.update(null, updateWrapper);
 	}
+
+	@Override
+	@Caching(
+			evict = {
+					@CacheEvict(key = "getListFileByPid + #args[0].userId")
+			}
+	)
+	public void save(UserFile userFile) {
+		int insert = userFileDao.insert(userFile);
+	}
+
 	@Override
 	public void move(Long sourceFileId,Long targetId){
 		UserFile userFile = this.dealFileOfDir(sourceFileId, targetId);
