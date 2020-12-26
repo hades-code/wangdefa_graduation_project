@@ -229,12 +229,12 @@ public class FileController {
 	 * @return
 	 * @throws ProjectException
 	 */
-	@GetMapping("download")
-	public Result fileDownload(HttpServletRequest request, HttpServletResponse response, Item item) throws ProjectException {
-		if (item == null||item.getId() < 0){
+	@GetMapping("download/{id}")
+	public Result fileDownload(HttpServletResponse response,@PathVariable("id") Long id) throws ProjectException {
+		if (id == null||id<=0){
 			throw new ProjectException("下载失败");
 		}
-			UserFile downloadFile = this.userFileService.getUserFileDao().selectById(item.getId());
+			UserFile downloadFile = this.userFileService.getUserFileDao().selectById(id);
 			String fileName;
 			if (StrUtil.isNotEmpty(downloadFile.getFileType())){
 				fileName = downloadFile.getFileName()+"."+downloadFile.getFileType();
