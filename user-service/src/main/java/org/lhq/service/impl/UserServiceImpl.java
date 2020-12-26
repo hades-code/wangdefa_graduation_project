@@ -36,7 +36,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
 
     @Override
-    @Cacheable(key = "#root.methodName+#root.args[0]",condition = "#id != null",unless="#result == null")
+    @Cacheable(key = "#root.methodName + #root.args[0]",condition = "#id != null",unless="#result == null")
     public User getById(Serializable id) {
         return super.getById(id);
     }
@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     }
 
     @Override
-	@Cacheable(key = "#root.methodName+#root.args[0]",condition = "#user != null",unless="#result == null")
+	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#user != null",unless="#result == null")
     public User login(String username,String password) {
 		User loginUser = this.userDao.selectOne(new QueryWrapper<User>().lambda()
 				.eq(User::getUsername,username));
