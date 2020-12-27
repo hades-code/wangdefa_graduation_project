@@ -41,7 +41,6 @@ public class UserFileServiceImpl implements UserFileService {
 	}
 
 	@Override
-	@Cacheable(key = "#root.methodName + #root.args[1]",condition = "#pid != null",unless = "#result == null")
 	public List<Object> getListFileByPid(Long pid,Long userId){
 		List<Object> files = new ArrayList<>();
 		List<UserFile> userFiles = userFileDao.selectList(new QueryWrapper<UserFile>().lambda()
@@ -77,11 +76,6 @@ public class UserFileServiceImpl implements UserFileService {
 	}
 
 	@Override
-	@Caching(
-			evict = {
-					@CacheEvict(key = "getListFileByPid + #args[0].userId")
-			}
-	)
 	public void save(UserFile userFile) {
 		int insert = userFileDao.insert(userFile);
 	}

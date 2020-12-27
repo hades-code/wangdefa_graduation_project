@@ -31,10 +31,9 @@ public class LogAspect {
     /**
      * 执行方法前
      * @param joinPoint
-     * @throws Exception
-     */
+	 */
     @Before("controllerMethod()")
-    public void LogRequestInfo(JoinPoint joinPoint)throws Exception{
+    public void LogRequestInfo(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         StringBuffer requestLog = new StringBuffer();

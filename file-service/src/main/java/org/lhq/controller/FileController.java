@@ -224,7 +224,6 @@ public class FileController {
 
 	/**
 	 * 单文件下载
-	 * @param request
 	 * @param response
 	 * @return
 	 * @throws ProjectException
@@ -249,8 +248,8 @@ public class FileController {
 			}
         return null;
     }
-	@GetMapping("multDownload")
-	public Result multipleDownload(List<Item> items,HttpServletResponse response) throws ProjectException, IOException, URISyntaxException, InterruptedException {
+	@PostMapping("multDownload")
+	public Result multipleDownload(@JsonParam(value ="item",type = Item.class,required = false) List<Item> items,HttpServletResponse response) throws ProjectException, IOException, URISyntaxException, InterruptedException {
 		if (items == null || items.isEmpty()){
 			throw new ProjectException("下载失败");
 		}
