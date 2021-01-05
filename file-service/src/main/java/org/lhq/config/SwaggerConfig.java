@@ -19,11 +19,11 @@ public class SwaggerConfig {
 
 	@Bean(value = "defaultApi2")
 	public Docket defaultApi2() {
-		Docket docket=new Docket(DocumentationType.SWAGGER_2)
+		Docket docket = new Docket(DocumentationType.SWAGGER_2)
 				.apiInfo(new ApiInfoBuilder()
 						.title("LSP网盘项目文档接口")
 						.description("# 文件模块接口")
-						.contact(new Contact("陆海琦","www.lsp.com","lhq_hcl@foxmail.com"))
+						.contact(new Contact("陆海琦", "www.lsp.com", "lhq_hcl@foxmail.com"))
 						.termsOfServiceUrl("http://www.lsp.com/")
 						.version("1.0")
 						.build())

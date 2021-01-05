@@ -3,7 +3,6 @@ package org.lhq.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -41,7 +40,6 @@ public class User {
     @ApiModelProperty("邮箱")
     private String email;
     private Role role;
-    @ApiModelProperty("用户邮箱")
     private String status;
     private Double usedStorageSize;
     @JsonSerialize(using = LocalDateTimeSerializer.class)

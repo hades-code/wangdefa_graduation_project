@@ -1,37 +1,42 @@
 package org.lhq.service;
 
-import org.lhq.dao.DirectoryDao;
 import org.lhq.common.Item;
+import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;
 
 import java.util.List;
 
 public interface DirectorySerivce {
 	DirectoryDao getDirectoryDao();
+
 	/**
 	 * 查询某一目录的上级目录
+	 *
 	 * @param id
 	 * @param userId
 	 * @param list
 	 * @return
 	 */
-	List<Object> getListPartDirectoryById(Long id,Long userId,List list);
+	List<Object> getListPartDirectoryById(Long id, Long userId, List list);
+
 	/**
 	 * 查询某一目录
 	 */
-	List<Object> getListDircByPid(Long id,Long userId);
+	List<Object> getListDircByPid(Long id, Long userId);
 
 	/**
 	 * 新建文件夹
+	 *
 	 * @param dirName
 	 * @param pid
 	 * @param userId
 	 * @return
 	 */
-	Boolean mkdir(String dirName,Long pid,Long userId);
+	Boolean mkdir(String dirName, Long pid, Long userId);
 
 	/**
 	 * 根据文件夹id获取文件夹
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -39,14 +44,16 @@ public interface DirectorySerivce {
 
 	/**
 	 * 根据pid和userId 获取文件夹
+	 *
 	 * @param id
 	 * @param userId
 	 * @return
 	 */
-	Directory getDirByPid(Long id,Long userId);
+	Directory getDirByPid(Long id, Long userId);
 
 	/**
 	 * 保存文件夹......没啥用
+	 *
 	 * @param directory
 	 * @return
 	 */
@@ -54,35 +61,40 @@ public interface DirectorySerivce {
 
 	/**
 	 * 复制文件夹
+	 *
 	 * @param sourceId
 	 * @param targetId
 	 */
-	void copyDir(Long sourceId,Long targetId);
+	void copyDir(Long sourceId, Long targetId);
 
 	/**
 	 * 移动文件夹
+	 *
 	 * @param sourceId
 	 * @param targetId
 	 */
-	void moveDir(Long sourceId,Long targetId);
+	void moveDir(Long sourceId, Long targetId);
 
 	/**
 	 * 通过id更新文件夹
+	 *
 	 * @param directory
 	 * @return
 	 */
-	Integer updateById (Directory directory);
+	Integer updateById(Directory directory);
 
 	/**
 	 * 移动文件夹和文件
+	 *
 	 * @param items
 	 * @param targetId
 	 * @return
 	 */
-	Boolean moveDirAndFile(List<Item> items,Long targetId);
+	Boolean moveDirAndFile(List<Item> items, Long targetId);
 
 	/**
 	 * 删除文件夹和文件
+	 *
 	 * @param items
 	 * @return
 	 */
@@ -90,18 +102,21 @@ public interface DirectorySerivce {
 
 	/**
 	 * 复制文件夹个文件
+	 *
 	 * @param items
 	 * @param targetId
 	 * @return
 	 */
-	Boolean copyDirAndFile(List<Item> items,Long targetId);
+	Boolean copyDirAndFile(List<Item> items, Long targetId);
 
 	/**
 	 * 树状结构返回目录结构
+	 *
 	 * @param id
 	 * @param list
 	 * @return
 	 */
-	List listDir(Long id,List list);
-	List findDirByName(String name,Long userId);
+	List listDir(Long id, List list);
+
+	List findDirByName(String name, Long userId);
 }

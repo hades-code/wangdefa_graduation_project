@@ -1,17 +1,19 @@
 package org.lhq.service.impl;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.exception.ProjectException;
+import org.lhq.common.Item;
 import org.lhq.dao.ShareDao;
 import org.lhq.dao.ShareFileDao;
-import org.lhq.common.Item;
-import org.lhq.entity.*;
+import org.lhq.entity.Directory;
+import org.lhq.entity.Share;
+import org.lhq.entity.ShareFile;
+import org.lhq.entity.UserFile;
+import org.lhq.exception.ProjectException;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.IShareService;
 import org.lhq.service.UserFileService;
@@ -22,7 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -39,32 +44,33 @@ public class ShareServiceImpl implements IShareService {
 	private UserFileService userFileService;
 	@Resource
 	private ShareFileDao shareFileDao;
+
 	@Override
-	public ShareDao getShareDao(){
+	public ShareDao getShareDao() {
 		return this.shareDao;
 	}
 
 	@Override
 	@Transactional
-	public Map<String,Object> shareDirAndFile( List<Item> items, Long userId,Boolean shareLock,String shareCode,Integer expirationTime) {
+	public Map<String, Object> shareDirAndFile(List<Item> items, Long userId, Boolean shareLock, String shareCode, Integer expirationTime) {
 		HashMap<String, Object> result = new HashMap<>(16);
 		LocalDateTime date = LocalDateTime.now();
 		Share share = new Share().setShareLink(IdUtil.fastSimpleUUID());
 		share.setCreateTime(date);
 		share.setUserId(userId);
 		share.setShareLock(shareLock);
-		if (shareLock){
+		if (shareLock) {
 			share.setShareCode(shareCode);
 		}
-		if (expirationTime != null && expirationTime > 0){
+		if (expirationTime != null && expirationTime > 0) {
 			LocalDateTime expDate = LocalDateTimeUtil.offset(date, expirationTime, ChronoUnit.DAYS);
 			share.setExpirationTime(expDate);
-			result.put("liveTime",expirationTime +"天");
+			result.put("liveTime", expirationTime + "天");
 		}
 		shareDao.insert(share);
-		for (Item item :items){
+		for (Item item : items) {
 			ShareFile shareFile = new ShareFile();
-			if (StrUtil.equals(item.getType(),"dir")){
+			if (StrUtil.equals(item.getType(), "dir")) {
 				shareFile.setFileOrDir(false);
 			}
 			shareFile.setFileOrDir(true);
@@ -72,28 +78,28 @@ public class ShareServiceImpl implements IShareService {
 			shareFile.setShareId(share.getShareLink());
 			shareFileDao.insert(shareFile);
 		}
-		result.put("shareLink",share.getShareLink());
-		result.put("shareCode",share.getShareCode());
+		result.put("shareLink", share.getShareLink());
+		result.put("shareCode", share.getShareCode());
 		return result;
- 	}
+	}
 
 	@Override
-	public Map<String,Object> getShare(String shareLink, String shareCode) throws ProjectException {
+	public Map<String, Object> getShare(String shareLink, String shareCode) throws ProjectException {
 		Date date = new Date();
 		HashMap<String, Object> result = new HashMap<>();
 		Share share = new Share().setShareLink(shareLink);
 		Share getShare = this.shareDao.selectOne(new QueryWrapper<>(share));
-		if (getShare == null){
+		if (getShare == null) {
 			log.error("分享不存在或者已被取消");
 			throw new ProjectException("分享不存在或者已被取消");
 		}
 		Date createTime = DateUtils.asDate(getShare.getCreateTime());
 		Date expirationTime = DateUtils.asDate(getShare.getExpirationTime());
-		if(!DateUtil.isIn(date,createTime,expirationTime)){
+		if (!DateUtil.isIn(date, createTime, expirationTime)) {
 			log.error("分享文件已经过期");
 			throw new ProjectException("分享文件已经过期");
 		}
-		if(getShare.getShareLock() && !StrUtil.equals(getShare.getShareCode(),shareCode)){
+		if (getShare.getShareLock() && !StrUtil.equals(getShare.getShareCode(), shareCode)) {
 			log.error("提取码错误");
 			throw new ProjectException("提取码错误");
 		}
@@ -101,22 +107,22 @@ public class ShareServiceImpl implements IShareService {
 		ShareFile shareFile = new ShareFile();
 		shareFile.setShareId(getShare.getShareLink());
 		List<ShareFile> shareFiles = shareFileDao.selectList(new QueryWrapper<ShareFile>().lambda()
-				.eq(ShareFile::getShareId,getShare.getShareLink()));
+				.eq(ShareFile::getShareId, getShare.getShareLink()));
 		List<Long> fileIdList = shareFiles.stream()
 				.filter(ShareFile::getFileOrDir)
 				.map(ShareFile::getFileId)
 				.collect(Collectors.toList());
-		if (!fileIdList.isEmpty()){
+		if (!fileIdList.isEmpty()) {
 			List<UserFile> fileList = userFileService.getUserFileDao().selectBatchIds(fileIdList);
-			result.put("files",fileList);
+			result.put("files", fileList);
 		}
 		List<Long> dirIdList = shareFiles.stream()
 				.filter(sF -> !sF.getFileOrDir())
 				.map(ShareFile::getFileId)
 				.collect(Collectors.toList());
-		if (!dirIdList.isEmpty()){
+		if (!dirIdList.isEmpty()) {
 			List<Directory> directoryList = directorySerivce.getDirectoryDao().selectBatchIds(dirIdList);
-			result.put("dirs",directoryList);
+			result.put("dirs", directoryList);
 		}
 		return result;
 	}

@@ -17,6 +17,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableCaching
 public class FileServiceApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(FileServiceApplication.class,args);
+		SpringApplication.run(FileServiceApplication.class, args);
 	}
 }

@@ -17,24 +17,24 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-<property>
-  <name>fs.default.name</name>
-  <value>hdfs://master:9000</value>
- </property>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://master:9000</value>
+    </property>
 
-<property>
-  <name>fs.defaultFS</name>
-  <value>hdfs://master:9000</value>
- </property>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://master:9000</value>
+    </property>
 
- <property>
-  <name>io.file.buffer.size</name>
-  <value>131072</value>
- </property>
-<property>
-     <name>hadoop.tmp.dir</name>
-     <value>file:/home/hades/hadoop/tmp</value>
-     <description>Abase for other temporary directories.</description>
-</property>
+    <property>
+        <name>io.file.buffer.size</name>
+        <value>131072</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>file:/home/hades/hadoop/tmp</value>
+        <description>Abase for other temporary directories.</description>
+    </property>
 
- </configuration>
+</configuration>

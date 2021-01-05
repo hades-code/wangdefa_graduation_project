@@ -19,27 +19,27 @@
 <configuration>
 
 
-   <property>
-             <name>dfs.replication</name>
-             <value>1</value>
-        </property>
-        <property>
-             <name>dfs.namenode.name.dir</name>
-             <value>file:/home/hades/hadoop/tmp/dfs/name</value>
-        </property>
-        <property>
-             <name>dfs.datanode.data.dir</name>
-             <value>file:/home/hades/hadoop/tmp/dfs/data</value>
-        </property>
-	<property>
-		<name>dfs.http.address</name>
-		<value>master:50070</value>
-	</property>
-<!-- 设置secondarynamenode的http通讯地址 -->
-<property>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:/home/hades/hadoop/tmp/dfs/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:/home/hades/hadoop/tmp/dfs/data</value>
+    </property>
+    <property>
+        <name>dfs.http.address</name>
+        <value>master:50070</value>
+    </property>
+    <!-- 设置secondarynamenode的http通讯地址 -->
+    <property>
         <name>dfs.namenode.secondary.http-address</name>
-       <value>master:50090</value>
-</property>
+        <value>master:50090</value>
+    </property>
 
 
 </configuration>

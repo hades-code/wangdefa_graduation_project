@@ -21,25 +21,29 @@ public interface FileService {
 
 
 	Configuration getHDFSConfig();
+
 	FileSystem getFileSystem() throws Exception;
 
 	/**
 	 * ls 列出子目录和文件
+	 *
 	 * @return
 	 */
 	List<Integer> ls(String dir) throws Exception;
 
 	/**
 	 * 列出所有的文件
+	 *
 	 * @param dir
 	 * @return
 	 * @throws Exception
 	 */
-	FileStatus[] tempFile (String dir) throws Exception;
+	FileStatus[] tempFile(String dir) throws Exception;
 
 
 	/**
 	 * 校验文件MD5
+	 *
 	 * @param dir 文件路径
 	 * @return
 	 * @throws Exception
@@ -49,18 +53,21 @@ public interface FileService {
 
 	/**
 	 * 合并文件
+	 *
 	 * @param fileStatuses
 	 * @param fileName
 	 * @throws Exception
 	 */
-	void mergeFile (FileStatus[] fileStatuses,String fileName) throws Exception;
+	void mergeFile(FileStatus[] fileStatuses, String fileName) throws Exception;
+
 	/**
 	 * 创建目录
+	 *
 	 * @return
 	 */
-	void mkdir(String dir)throws Exception;
+	void mkdir(String dir) throws Exception;
 
-	Boolean exitFile (String dir) throws Exception;
+	Boolean exitFile(String dir) throws Exception;
 
 	/**
 	 * 删除文件或目录
@@ -86,10 +93,11 @@ public interface FileService {
 	/**
 	 * 重命名
 	 */
-	String[] rename(String path,String dirName) throws Exception;
+	String[] rename(String path, String dirName) throws Exception;
 
 	/**
 	 * 获取文件命
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -100,5 +108,6 @@ public interface FileService {
 
 
 	List getStaticNums();
-	void multipleDownload(List<Directory> directories, List<UserFile> userFiles, ZipOutputStream zipOutputStream,String path) throws IOException, URISyntaxException, InterruptedException;
+
+	void multipleDownload(List<Directory> directories, List<UserFile> userFiles, ZipOutputStream zipOutputStream, String path) throws IOException, URISyntaxException, InterruptedException;
 }
