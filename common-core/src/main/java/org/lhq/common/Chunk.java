@@ -11,11 +11,8 @@ import javax.persistence.Transient;
 /**
  * @author hades
  */
-@Entity
 @Data
 public class Chunk {
-	@Id
-	@GeneratedValue
 	private Long id;
 	/**
 	 * 分片号

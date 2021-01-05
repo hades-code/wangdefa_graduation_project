@@ -3,10 +3,12 @@ package org.lhq.config;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -21,7 +23,7 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 @Slf4j
-public class RedisConfig extends CachingConfigurerSupport {
+public class CustomizeRedisConfig extends CachingConfigurerSupport {
     private Duration timeToLive = Duration.ZERO;
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;

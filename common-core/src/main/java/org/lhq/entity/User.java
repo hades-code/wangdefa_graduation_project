@@ -32,20 +32,32 @@ public class User {
 	@Id
 	@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
+
 	@ApiModelProperty("用户名")
     private String username;
+
 	@ApiModelProperty("密码")
     private String password;
+
     @Email
-    @ApiModelProperty("邮箱")
     private String email;
+
+
     private Role role;
+
+
     private String status;
+
+
     private Double usedStorageSize;
+
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
+
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @TableField(fill = FieldFill.INSERT_UPDATE)
