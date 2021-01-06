@@ -5,6 +5,10 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: admin-service
+  jackson:
+    default-property-inclusion: always
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   cloud:
     nacos:
       discovery:

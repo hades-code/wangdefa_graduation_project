@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 @ApiModel("用户实体")
 public class User {
 	@Id
-	@JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
 	@ApiModelProperty("用户名")
@@ -52,14 +51,12 @@ public class User {
     private Double usedStorageSize;
 
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime modifyTime;
 

@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+
 @Slf4j
 @Component
 public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver {
@@ -41,7 +42,7 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 
 
 	@Override
-	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory)  {
+	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws IOException {
 		String requestBody = getRequestBody(webRequest);
 		Object value = null;
 		if (StrUtil.isNotBlank(requestBody)){
@@ -59,8 +60,8 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 			}
 			value = Convert.convert(type, value);
 		}
-		if (parameter.getParameterAnnotation(JsonParam.class).required() && value == null){
-			throw new RuntimeException(parameter.getParameterAnnotation(JsonParam.class).value() + "不能为空");
+		if (Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).required() && value == null){
+			throw new RuntimeException(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value() + "不能为空");
 		}
 		return value;
 	}
