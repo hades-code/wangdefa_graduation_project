@@ -1,7 +1,10 @@
 package org.lhq.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.lhq.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,4 +47,16 @@ public interface UserService {
      */
     @PostMapping("delete")
     Boolean deleteUserById(@RequestParam("id") Long id);
+
+    /**
+     * 分页查找
+     * @param user
+     * @param size
+     * @param pageNum
+     * @return
+     */
+    @PostMapping("page")
+    Page<User> getUserPage(@RequestBody User user,
+                           @RequestParam Long size,
+                           @RequestParam Long pageNum);
 }

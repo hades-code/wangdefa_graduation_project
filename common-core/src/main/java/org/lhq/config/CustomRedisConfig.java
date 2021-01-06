@@ -23,7 +23,7 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 @Slf4j
-public class CustomizeRedisConfig extends CachingConfigurerSupport {
+public class CustomRedisConfig extends CachingConfigurerSupport {
     private Duration timeToLive = Duration.ZERO;
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;

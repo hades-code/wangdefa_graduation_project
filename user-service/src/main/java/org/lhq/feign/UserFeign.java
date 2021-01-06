@@ -1,5 +1,8 @@
 package org.lhq.feign;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.entity.User;
 import org.lhq.service.UserService;
@@ -36,4 +39,13 @@ public class UserFeign {
 	public Boolean updateUser(@RequestBody User user){
 		return this.userService.updateById(user);
 	}
+	@PostMapping("page")
+	public IPage<User>  pageUser(@RequestBody User user,
+                                 @RequestParam(required = false) Long pageNum,
+                                 @RequestParam(required = false) Long size){
+        pageNum = pageNum ==null?1:pageNum;
+        size = size == null?5:size;
+        IPage<User> userPage = new Page<User>().setSize(size).setCurrent(pageNum);
+        return this.userService.page(userPage, new QueryWrapper<>(user));
+    }
 }

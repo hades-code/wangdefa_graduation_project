@@ -43,7 +43,7 @@ public class User {
     private String email;
 
 
-    private Role role;
+    private String role;
 
 
     private String status;

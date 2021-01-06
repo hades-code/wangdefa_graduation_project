@@ -11,3 +11,6 @@ knife4j:
       - name: 文件服务
         uri: localhost:9999
         location: /v2/api-docs?group=2.0
+      - name: 管理员服务
+        uri: localhost:8889
+        location: /v2/api-docs?group=3.0
