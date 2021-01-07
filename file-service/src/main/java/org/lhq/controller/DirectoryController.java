@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
-import org.lhq.common.Item;
+import org.lhq.entity.vo.Item;
 import org.lhq.entity.Directory;
 import org.lhq.exception.ProjectException;
 import org.lhq.service.DirectorySerivce;

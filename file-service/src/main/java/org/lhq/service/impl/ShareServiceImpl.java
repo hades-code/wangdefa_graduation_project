@@ -6,13 +6,14 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.common.Item;
 import org.lhq.dao.ShareDao;
 import org.lhq.dao.ShareFileDao;
 import org.lhq.entity.Directory;
 import org.lhq.entity.Share;
 import org.lhq.entity.ShareFile;
 import org.lhq.entity.UserFile;
+import org.lhq.entity.vo.Item;
+import org.lhq.entity.vo.ShareVO;
 import org.lhq.exception.ProjectException;
 import org.lhq.service.DirectorySerivce;
 import org.lhq.service.IShareService;
@@ -24,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -125,6 +123,25 @@ public class ShareServiceImpl implements IShareService {
 			result.put("dirs", directoryList);
 		}
 		return result;
+	}
+	public ShareVO getShareVO(Long id){
+		Share share = this.shareDao.selectById(id);
+		String shareLink = share.getShareLink();
+		List<ShareFile> shareFiles = this.shareFileDao.selectList(new QueryWrapper<ShareFile>().lambda().eq(ShareFile::getShareId, shareLink));
+		ShareVO shareVO = new ShareVO();
+		HashSet<UserFile> userFiles = new HashSet<>();
+		HashSet<Directory> directories = new HashSet<>();
+		shareFiles.forEach(shareFile -> {
+			if (shareFile.getFileOrDir()){
+				UserFile userFile = this.userFileService.getUserFileDao().selectById(shareFile.getFileId());
+				userFiles.add(userFile);
+			}
+			Directory directory = this.directorySerivce.getDirectoryDao().selectById(shareFile.getFileId());
+			directories.add(directory);
+		});
+		shareVO.setUserFiles(userFiles);
+		shareVO.setDirectories(directories);
+		return shareVO;
 	}
 
 }

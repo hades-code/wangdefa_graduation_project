@@ -5,7 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
-import org.lhq.common.Item;
+import org.lhq.entity.vo.Item;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.exception.ProjectException;

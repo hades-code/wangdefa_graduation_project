@@ -4,8 +4,8 @@ package org.lhq.controller;
 
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
+import org.lhq.entity.vo.ResultVO;
 import org.lhq.exception.ProjectException;
-import org.lhq.common.Result;
 import org.lhq.entity.User;
 import org.lhq.service.UserService;
 import org.lhq.util.JwtUtil;
@@ -58,13 +58,13 @@ public class AuthController {
 
     }
     @PostMapping("register")
-    public ResponseEntity<Result<User>> register(User user){
+    public ResponseEntity<ResultVO<User>> register(User user){
         //明天再写
         LOGGER.info("请求注册方法");
         //user.setId(1L);
         LOGGER.info("获得的User：{}",user);
         User register = userService.register(user);
-        return ResponseEntity.ok(new Result<User>()
+        return ResponseEntity.ok(new ResultVO<User>()
 				.setMessage("注册成功")
 				.setData(register));
     }

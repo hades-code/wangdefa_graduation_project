@@ -20,10 +20,8 @@ import javax.persistence.Id;
 public class ShareFile {
     @Id
     @GeneratedValue
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String shareId;
-	@JsonSerialize(using = ToStringSerializer.class)
     private Long fileId;
     private Boolean fileOrDir;
 }

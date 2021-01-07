@@ -1,4 +1,4 @@
-package org.lhq.common;
+package org.lhq.entity.vo;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

@@ -2,8 +2,10 @@ package org.lhq.config;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.google.gson.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
 import org.springframework.core.MethodParameter;
@@ -27,7 +29,7 @@ import java.util.Objects;
 public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver {
 	private static final String JSON_REQUEST_BODY = "JSON_REQUEST_BODY";
 	public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-	private Charset charset;
+	private final Charset charset;
 
 	public JsonParamArgumentResolver(){
 		this(DEFAULT_CHARSET);
@@ -46,12 +48,12 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 		String requestBody = getRequestBody(webRequest);
 		Object value = null;
 		if (StrUtil.isNotBlank(requestBody)){
-			JSONObject jsonObject = JSONObject.parseObject(requestBody);
+			JSONObject jsonObject = JSONUtil.parseObj(requestBody);
 			value = jsonObject.get(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value());
 			Class<?> type = Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).type();
 			if( value != null && Collection.class.isAssignableFrom(value.getClass())) {
 				ArrayList<Object> objects = new ArrayList<>();
-				JSONArray jsonArray = JSONArray.parseArray(StrUtil.toString(value));
+				JSONArray jsonArray = JSONUtil.parseArray(StrUtil.toString(value));
 				for (Object json : jsonArray) {
 					Object convert = Convert.convert(type, json);
 					objects.add(convert);

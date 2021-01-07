@@ -17,7 +17,6 @@ import javax.persistence.Id;
 public class Permission {
 	@Id
 	@GeneratedValue
-	@JsonSerialize(using = ToStringSerializer.class)
 	private Integer id;
 	private String permissionName;
 	private String permissionCode;

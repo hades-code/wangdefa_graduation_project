@@ -1,10 +1,7 @@
 package org.lhq.controllerAdvice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.lhq.exception.ProjectException;
-import org.lhq.common.Result;
+import org.lhq.entity.vo.ResultVO;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -25,13 +22,13 @@ public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> aClass) {
         // 如果接口返回的类型本身就是ResultVO那就没有必要进行额外的操作，返回false
-        return !returnType.getGenericParameterType().equals(Result.class);
+        return !returnType.getGenericParameterType().equals(ResultVO.class);
     }
 
     @SneakyThrows
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-    	return new Result<>(body);
+    	return new ResultVO<>(body);
     }
 
 

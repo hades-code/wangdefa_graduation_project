@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileStatus;
 import org.lhq.annotation.JsonParam;
 import org.lhq.common.ActionType;
-import org.lhq.common.Chunk;
-import org.lhq.common.Item;
-import org.lhq.common.Result;
+import org.lhq.entity.vo.Chunk;
+import org.lhq.entity.vo.Item;
+import org.lhq.entity.vo.ResultVO;
 import org.lhq.entity.Directory;
 import org.lhq.entity.User;
 import org.lhq.entity.UserFile;
@@ -231,7 +231,7 @@ public class FileController {
 	 * @throws ProjectException
 	 */
 	@GetMapping("download/{id}")
-	public Result fileDownload(HttpServletResponse response, @PathVariable("id") Long id) throws ProjectException {
+	public ResultVO fileDownload(HttpServletResponse response, @PathVariable("id") Long id) throws ProjectException {
 		if (id == null || id <= 0) {
 			throw new ProjectException("下载失败");
 		}
@@ -252,7 +252,7 @@ public class FileController {
 	}
 
 	@PostMapping("multDownload")
-	public Result multipleDownload(@JsonParam(value = "item", type = Item.class, required = false) List<Item> items, HttpServletResponse response) throws ProjectException, IOException, URISyntaxException, InterruptedException {
+	public ResultVO multipleDownload(@JsonParam(value = "item", type = Item.class, required = false) List<Item> items, HttpServletResponse response) throws ProjectException, IOException, URISyntaxException, InterruptedException {
 		if (items == null || items.isEmpty()) {
 			throw new ProjectException("下载失败");
 		}

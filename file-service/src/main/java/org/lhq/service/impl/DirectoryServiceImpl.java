@@ -5,7 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.common.Item;
+import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;

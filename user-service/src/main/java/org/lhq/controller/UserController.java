@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import io.swagger.annotations.Api;
-import org.lhq.common.Result;
+import org.lhq.entity.vo.ResultVO;
 import org.lhq.entity.User;
 import org.lhq.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +36,9 @@ public class UserController extends ApiController {
    * @return 所有数据
    */
   @GetMapping
-  public Result selectAll(Page<User> page, User user) {
+  public ResultVO selectAll(Page<User> page, User user) {
     //return success(this.userService.page(page, new QueryWrapper<>(user)));
-    Result responseEntity = new Result().setData(this.userService.page(page, new QueryWrapper<>(user)));
+    ResultVO responseEntity = new ResultVO().setData(this.userService.page(page, new QueryWrapper<>(user)));
 
     return responseEntity;
   }

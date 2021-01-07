@@ -1,4 +1,4 @@
-package org.lhq.common;
+package org.lhq.entity.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Accessors(chain = true)
 public class Item {
-	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
 	private String type;
 	private String name;

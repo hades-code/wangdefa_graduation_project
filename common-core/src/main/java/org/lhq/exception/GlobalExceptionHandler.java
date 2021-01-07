@@ -1,7 +1,7 @@
 package org.lhq.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.common.Result;
+import org.lhq.entity.vo.ResultVO;
 import org.lhq.common.ResultCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result<Object> projectException(ProjectException e){
+    public ResultVO<Object> projectException(ProjectException e){
         log.error("业务异常",e);
-        return Result.error(ResultCode.FAIL,e.getMessage());
+        return ResultVO.error(ResultCode.FAIL,e.getMessage());
     }
 }

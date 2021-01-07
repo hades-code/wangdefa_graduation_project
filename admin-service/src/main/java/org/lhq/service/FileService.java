@@ -2,10 +2,7 @@ package org.lhq.service;
 
 import org.lhq.entity.UserFile;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: admin-service
@@ -21,8 +18,8 @@ public interface FileService {
     Boolean saveUserFile(@RequestBody UserFile userFile);
     @PostMapping("delete")
     Boolean deleteUserFileById(@RequestParam("id") Long id);
-    @PostMapping("get")
-    UserFile getUserFileById(@RequestParam("id") Long id);
+    @GetMapping("{id}")
+    UserFile getUserFileById(@PathVariable("id") Long id);
     @PostMapping("update")
     Boolean updateUserById(UserFile userFile);
 }

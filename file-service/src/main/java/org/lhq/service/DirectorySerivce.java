@@ -1,6 +1,6 @@
 package org.lhq.service;
 
-import org.lhq.common.Item;
+import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;
 

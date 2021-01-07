@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class UserFile {
 	@Id
-	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
 	/**
 	 * 文件名
@@ -30,7 +29,6 @@ public class UserFile {
 	 * 文件路径
 	 */
 	private String filePath;
-	@JsonSerialize(using = ToStringSerializer.class)
 	/**
 	 * 文件所在目录
 	 */
@@ -47,7 +45,6 @@ public class UserFile {
 	/**
 	 * 文件属于的用户
 	 */
-	@JsonSerialize(using = ToStringSerializer.class)
 	private Long userId;
 	/**
 	 * 文件属于用户
@@ -60,14 +57,11 @@ public class UserFile {
 	/**
 	 * 创建时间
 	 */
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+
 	private LocalDateTime createTime;
 	/**
 	 * 修改时间
 	 */
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime modifyTime;
 
 }

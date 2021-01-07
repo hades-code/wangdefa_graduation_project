@@ -34,15 +34,13 @@ public class Directory  {
 	 */
 	@ApiModelProperty("文件夹名称")
 	private String directoryName;
-	@JsonSerialize(using = ToStringSerializer.class)
+
 	@ApiModelProperty("父目录id")
 	private Long parentId;
-	@JsonSerialize(using = ToStringSerializer.class)
+
 	private Long userId;
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+
 	private LocalDateTime createTime;
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+
 	private LocalDateTime modifyTime;
 }
