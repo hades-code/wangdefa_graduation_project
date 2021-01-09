@@ -58,7 +58,7 @@ public class AuthController {
 
     }
     @PostMapping("register")
-    public ResponseEntity<ResultVO<User>> register(User user){
+    public ResponseEntity<ResultVO<User>> register(User user) throws ProjectException {
         //明天再写
         LOGGER.info("请求注册方法");
         //user.setId(1L);

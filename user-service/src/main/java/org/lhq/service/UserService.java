@@ -2,6 +2,7 @@ package org.lhq.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.lhq.entity.User;
+import org.lhq.exception.ProjectException;
 
 
 /**
@@ -23,6 +24,6 @@ public interface UserService extends IService<User> {
      * @param user
      * @return
      */
-    User register(User user);
+    User register(User user) throws ProjectException;
     void updateStorage(Long userId,Double size,String type);
 }

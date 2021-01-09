@@ -1,15 +1,13 @@
 package org.lhq.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.UserDao;
 import org.lhq.entity.User;
+import org.lhq.exception.ProjectException;
 import org.lhq.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -30,8 +28,6 @@ import java.util.Optional;
 @Slf4j
 @CacheConfig(cacheNames = "userCache")
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Resource
     private UserDao userDao;
@@ -65,16 +61,18 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
 
     @Override
-    public User register(User user) {
-        User registerUser = userDao.selectByUsername(user.getUsername());
-        if (registerUser != null){
-            LOGGER.info("用户名重复");
-            return null;
-        }else {
-            userDao.insert(user);
-            LOGGER.info("注册成功");
-            return user;
+    public User register(User user) throws ProjectException {
+        Integer integer = this.userDao.selectCount(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername()));
+        if (integer > 0){
+            throw new ProjectException("该用户名已被注册");
         }
+        integer = this.userDao.selectCount(new LambdaQueryWrapper<User>().eq(User::getEmail, user.getEmail()));
+        if (integer > 0){
+            throw new ProjectException("该邮箱已经被注册");
+        }else {
+            this.userDao.insert(user);
+        }
+        return user;
     }
 
 	@Override

@@ -93,4 +93,5 @@ public class MailServiceImpl implements MailService {
     public boolean sendWithWithEnclosure(String to, String subject, String content, String[] filePaths) {
         return false;
     }
+
 }
