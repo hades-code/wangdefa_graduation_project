@@ -19,7 +19,6 @@ public class Share {
 
 	@Id
 	@GeneratedValue
-	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
 	/**
 	 * 分享链接

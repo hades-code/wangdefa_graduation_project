@@ -124,6 +124,7 @@ public class ShareServiceImpl implements IShareService {
 		}
 		return result;
 	}
+	@Override
 	public ShareVO getShareVO(Long id){
 		Share share = this.shareDao.selectById(id);
 		String shareLink = share.getShareLink();
@@ -135,10 +136,12 @@ public class ShareServiceImpl implements IShareService {
 			if (shareFile.getFileOrDir()){
 				UserFile userFile = this.userFileService.getUserFileDao().selectById(shareFile.getFileId());
 				userFiles.add(userFile);
+			}else {
+				Directory directory = this.directorySerivce.getDirectoryDao().selectById(shareFile.getFileId());
+				directories.add(directory);
 			}
-			Directory directory = this.directorySerivce.getDirectoryDao().selectById(shareFile.getFileId());
-			directories.add(directory);
 		});
+		shareVO.setShare(share);
 		shareVO.setUserFiles(userFiles);
 		shareVO.setDirectories(directories);
 		return shareVO;

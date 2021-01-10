@@ -5,6 +5,7 @@ import org.lhq.service.FileService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: admin-service
@@ -26,6 +27,10 @@ public class AdminUserFileController {
     public UserFile getUserFileById(@PathVariable("id") Long id){
         return fileService.getUserFileById(id);
     }
+    @GetMapping("user/{userId}")
+    public List<UserFile> getUserFileListByUserId(@PathVariable("userId") Long userId){
+    	return fileService.getUserFileListByUserId(userId);
+	}
     @PostMapping("update")
     public void updateUserFile(@RequestBody UserFile userFile){
         fileService.updateUserById(userFile);

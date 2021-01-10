@@ -9,6 +9,7 @@ public interface UserFileService {
 	UserFileDao getUserFileDao();
 
 	List<Object> getListFileByPid(Long pid, Long userId);
+	List<UserFile> getUserFileFileByUserId(Long userId);
 
 	void deleteById(Long id);
 

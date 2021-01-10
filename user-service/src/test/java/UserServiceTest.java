@@ -33,8 +33,6 @@ public class UserServiceTest {
             user.setUsername("wdf_"+ RandomUtil.randomString(5));
             user.setEmail(RandomUtil.randomString(5)+"@wdf.com");
             user.setPassword("123456");
-            user.setCreateTime(LocalDateTime.now());
-            user.setModifyTime(LocalDateTime.now());
             userService.register(user);
         }
     }

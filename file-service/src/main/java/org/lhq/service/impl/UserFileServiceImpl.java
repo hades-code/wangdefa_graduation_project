@@ -2,6 +2,7 @@ package org.lhq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,11 @@ public class UserFileServiceImpl implements UserFileService {
 			files.add(fileMap);
 		}
 		return files;
+	}
+
+	@Override
+	public List<UserFile> getUserFileFileByUserId(Long userId) {
+		return userFileDao.selectList(new LambdaQueryWrapper<UserFile>().eq(UserFile::getUserId, userId));
 	}
 
 	@Override

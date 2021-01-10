@@ -37,7 +37,7 @@ public class AdminUserController {
     public Boolean saveUser(User user){
         return userService.saveUser(user);
     }
-    @PostMapping("query")
+    @GetMapping("query")
     public Page<User> queryList(User user, Long pageNum, Long size){
         return this.userService.getUserPage(user,size,pageNum);
     }

@@ -4,6 +4,8 @@ import org.lhq.entity.UserFile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @program: admin-service
  * @description: 管理员文件管理
@@ -20,6 +22,8 @@ public interface FileService {
     Boolean deleteUserFileById(@RequestParam("id") Long id);
     @GetMapping("{id}")
     UserFile getUserFileById(@PathVariable("id") Long id);
+    @GetMapping("user/{userId}")
+    List<UserFile> getUserFileListByUserId(@PathVariable("userId") Long userId);
     @PostMapping("update")
     Boolean updateUserById(UserFile userFile);
 }

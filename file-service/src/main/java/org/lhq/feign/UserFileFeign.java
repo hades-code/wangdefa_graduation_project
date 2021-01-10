@@ -6,6 +6,7 @@ import org.lhq.service.UserFileService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: admin-service
@@ -15,7 +16,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
-@RequestMapping("userFile-feign")
+@RequestMapping("file-feign")
 @Slf4j
 public class UserFileFeign {
     @Resource
@@ -24,6 +25,10 @@ public class UserFileFeign {
     public UserFile getUserFileById(@PathVariable("id") Long id){
         return userFileService.getUserFileDao().selectById(id);
     }
+    @GetMapping("user/{userId}")
+    public List<UserFile> getUserFileListByUserId(@PathVariable("userId") Long userId){
+    	return userFileService.getUserFileFileByUserId(userId);
+	}
     @DeleteMapping("{id}")
     public void deleteUserFileById(@PathVariable("id") Long id){
         userFileService.getUserFileDao().deleteById(id);

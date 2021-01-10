@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.google.gson.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.annotation.JsonParam;
 import org.springframework.core.MethodParameter;
@@ -24,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * @author hades
+ */
 @Slf4j
 @Component
 public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver {
@@ -69,7 +71,7 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 	}
 	private String getRequestBody(NativeWebRequest webRequest){
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-		String jsonBody = (String)servletRequest.getAttribute(JSON_REQUEST_BODY);
+		String jsonBody = StrUtil.toString(servletRequest.getAttribute(JSON_REQUEST_BODY));
 		if (StrUtil.isEmpty(jsonBody)){
 			try {
 				jsonBody = StreamUtils.copyToString(servletRequest.getInputStream(),charset);
