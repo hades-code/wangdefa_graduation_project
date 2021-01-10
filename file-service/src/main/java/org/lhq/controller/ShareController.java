@@ -56,7 +56,10 @@ public class ShareController {
 		}
 		return items;
 	}
-
+	@GetMapping("needShareCode/{shareLink}")
+	public Boolean needShareCode(@PathVariable("shareLink") String shareLink){
+		return this.shareService.needShareCode(shareLink);
+	}
 	@PostMapping("shareFile")
 	public Object shareDirAndFile(@JsonParam(value = "item", type = Item.class) List<Item> item,
 								  @JsonParam(value = "userId", type = Long.class) Long userId,

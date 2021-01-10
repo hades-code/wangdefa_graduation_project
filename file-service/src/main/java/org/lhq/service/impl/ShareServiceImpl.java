@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.dao.ShareDao;
@@ -79,6 +80,18 @@ public class ShareServiceImpl implements IShareService {
 		result.put("shareLink", share.getShareLink());
 		result.put("shareCode", share.getShareCode());
 		return result;
+	}
+
+	@Override
+	public Boolean needShareCode(String shareLink) {
+		Share share = this.shareDao.selectOne(new LambdaQueryWrapper<Share>()
+				.select(Share::getShareLock)
+				.eq(Share::getShareLink, shareLink));
+		if (share!=null&& share.getShareLock()!=null){
+			return share.getShareLock();
+		}else {
+			return false;
+		}
 	}
 
 	@Override
