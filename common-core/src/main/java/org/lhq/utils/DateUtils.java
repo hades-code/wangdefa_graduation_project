@@ -15,7 +15,10 @@ public class DateUtils {
 	}
 
 	public static Date asDate(LocalDateTime localDateTime) {
-		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		if (localDateTime!= null){
+			return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		}
+		return null;
 	}
 
 	public static LocalDate asLocalDate(Date date) {

@@ -194,12 +194,10 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 				.selectList(new QueryWrapper<UserFile>().lambda()
 						.eq(UserFile::getDirectoryId, sourceId));
 		//修改子文件的修改日期
-		userFiles.forEach(userFile -> {
-			this.userFileService.getUserFileDao()
-					.updateById(new UserFile()
-							.setId(userFile.getId())
-							.setModifyTime(date));
-		});
+		userFiles.forEach(userFile -> this.userFileService.getUserFileDao()
+				.updateById(new UserFile()
+						.setId(userFile.getId())
+						.setModifyTime(date)));
 		//保存修改文件夹
 		this.directoryDao.updateById(new Directory()
 				.setId(sourceDir.getId())

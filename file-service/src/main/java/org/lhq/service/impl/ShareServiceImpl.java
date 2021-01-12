@@ -106,7 +106,7 @@ public class ShareServiceImpl implements IShareService {
 		}
 		Date createTime = DateUtils.asDate(getShare.getCreateTime());
 		Date expirationTime = DateUtils.asDate(getShare.getExpirationTime());
-		if (!DateUtil.isIn(date, createTime, expirationTime)) {
+		if (createTime != null && expirationTime != null && !DateUtil.isIn(date, createTime, expirationTime)) {
 			log.error("分享文件已经过期");
 			throw new ProjectException("分享文件已经过期");
 		}
