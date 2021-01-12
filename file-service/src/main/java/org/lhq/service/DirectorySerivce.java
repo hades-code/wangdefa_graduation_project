@@ -118,5 +118,11 @@ public interface DirectorySerivce {
 	 */
 	List listDir(Long id, List list);
 
+	/**
+	 * 根据名字查找目录
+	 * @param name
+	 * @param userId
+	 * @return
+	 */
 	List findDirByName(String name, Long userId);
 }

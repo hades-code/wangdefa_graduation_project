@@ -68,4 +68,8 @@ public class ShareController {
 								  @JsonParam(value = "expirationTime", type = Integer.class, required = false) Integer expirationTime) {
 		return shareService.shareDirAndFile(item, userId, shareLock, shareCode, expirationTime);
 	}
+	@GetMapping("confirmShareCode")
+	public Boolean confirmShareCode(String shareLink,String shareCode) throws ProjectException {
+		return this.shareService.confirmShareCode(shareLink,shareCode);
+	}
 }

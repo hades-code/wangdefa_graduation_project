@@ -38,18 +38,11 @@ public class UserFileController {
 	 * @return
 	 */
 	@PostMapping("rename")
-	public String rename(@RequestParam("id") Long id, @RequestParam("name") String name) throws ProjectException {
+	public Boolean rename(@RequestParam("id") Long id, @RequestParam("name") String name) throws ProjectException {
 		if (StrUtil.isEmpty(name)) {
 			throw new ProjectException("重命名失败,文件名为空");
 		}
-		UserFile userFile = userFileService.getUserFileDao().selectById(id);
-		if (userFile == null) {
-			throw new ProjectException("文件不存在");
-		}
-		userFile.setFileName(name);
-		userFile.setModifyTime(LocalDateTime.now());
-		userFileService.getUserFileDao().updateById(userFile);
-		return "修改成功";
+		return userFileService.rename(name,id);
 	}
 
 	/**

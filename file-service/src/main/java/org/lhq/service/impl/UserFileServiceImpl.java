@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lhq.common.ActionType;
 import org.lhq.dao.UserFileDao;
 import org.lhq.entity.UserFile;
+import org.lhq.exception.ProjectException;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -106,6 +107,21 @@ public class UserFileServiceImpl implements UserFileService {
 		this.userService.updateStorage(userFile.getUserId(), userFile.getFileSize(), ActionType.COPY.code);
 		//保存文件
 		this.userFileDao.insert(userFile);
+
+	}
+
+	@Override
+	public Boolean rename(String newName, Long fileId) throws ProjectException {
+		Integer count = this.userFileDao.selectCount(new LambdaQueryWrapper<UserFile>().eq(UserFile::getId, fileId));
+		if (count==null || count<0){
+			throw new ProjectException("文件不存在");
+		}
+		if (StrUtil.isNotEmpty(newName)){
+			this.userFileDao.updateById(new UserFile().setFileName(newName).setId(fileId));
+			return true;
+		}else {
+			return false;
+		}
 
 	}
 

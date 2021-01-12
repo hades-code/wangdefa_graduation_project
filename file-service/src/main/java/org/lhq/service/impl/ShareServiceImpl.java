@@ -160,4 +160,13 @@ public class ShareServiceImpl implements IShareService {
 		return shareVO;
 	}
 
+	@Override
+	public Boolean confirmShareCode(String shareLink, String shareCode) throws ProjectException {
+		Share share = this.shareDao.selectOne(new LambdaQueryWrapper<Share>().eq(Share::getShareLink, shareLink));
+		if(share == null){
+			throw new ProjectException("此分享不存在或者被取消");
+		}
+		return StrUtil.equals(shareCode, share.getShareCode());
+	}
+
 }
