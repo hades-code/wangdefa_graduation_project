@@ -53,18 +53,18 @@ public class DirectoryServiceImpl implements DirectoryService {
 	@Override
 	@Cacheable(key = "#root.methodName + #root.args[0]", condition = "#id != null", unless = "#result == null")
 	public List<Object> getListPartDirectoryById(Long id, Long userId, List list) {
+		HashMap<String, Object> map = new HashMap<>(16);
 		if (id == null || id <= 0) {
 			log.error("没有上一级目录");
-			return null;
+			return list;
 		}
 		Directory directory = directoryDao.selectOne(new QueryWrapper<Directory>().lambda()
 				.eq(Directory::getId, id)
 				.eq(Directory::getUserId, userId));
 		log.info("找到的目录为:{}", directory);
-		HashMap<String, Object> map = new HashMap<>(16);
 		map.put("id", directory.getId());
 		if (directory.getParentId() == 0) {
-			map.put("name", "根目录");
+			map.put("name", directory.getDirectoryName());
 			list.add(map);
 		} else {
 			map.put("name", directory.getDirectoryName());

@@ -74,25 +74,18 @@ public class DirectoryController {
 	 * @param userId
 	 * @return
 	 */
-	@GetMapping("/getDir")
-	public Map getDir(@RequestParam("pid") Long pid, @RequestParam("userId") Long userId) throws ProjectException {
-		//如果传上来的pid为空泽获取根目录
-		if (pid == null || pid <= 0) {
-			Directory dir = directorySerivce.getDirByPid(0L, userId);
-			if (dir != null) {
-				pid = dir.getId();
-			}
-		}
-		Directory directory = directorySerivce.getDirById(pid);
-		if (directory == null) {
-			throw new ProjectException("目录不存在");
-		}
-		HashMap<String, Object> result = new HashMap<>(16);
+	@PostMapping("/getCurrentDir")
+	public Map getDir(@RequestParam(value = "pid",required = false) Long pid, @RequestParam("userId") Long userId) throws ProjectException {
+		pid = Optional.ofNullable(pid).orElse(0L);
+		Map<String, Object> result = new HashMap<>(16);
 		//获取目录
 		List<Object> directories = directorySerivce.getListDircByPid(pid, userId);
 		List<Object> userFiles = userFileService.getListFileByPid(pid, userId);
 		List<Object> parentDirs = new ArrayList<>();
 		parentDirs = directorySerivce.getListPartDirectoryById(pid, userId, parentDirs);
+		HashMap<String, String> map = new HashMap<>();
+		map.put("name","根目录");
+		parentDirs.add(map);
 		result.put("id", pid);
 		result.put("dirs", directories);
 		result.put("file", userFiles);
@@ -143,7 +136,7 @@ public class DirectoryController {
 		this.directorySerivce.moveDirAndFile(list, targetId);
 		return "移动成功";
 	}
-	@GetMapping("dirTree")
+	@PostMapping("dirTree")
 	public List getDirTree(Long userId){
 		return this.directorySerivce.getDirTree(userId,null);
 	}
