@@ -16,7 +16,7 @@ import org.lhq.entity.UserFile;
 import org.lhq.entity.vo.Item;
 import org.lhq.entity.vo.ShareVO;
 import org.lhq.exception.ProjectException;
-import org.lhq.service.DirectorySerivce;
+import org.lhq.service.DirectoryService;
 import org.lhq.service.IShareService;
 import org.lhq.service.UserFileService;
 import org.lhq.utils.DateUtils;
@@ -38,7 +38,7 @@ public class ShareServiceImpl implements IShareService {
 	@Resource
 	private ShareDao shareDao;
 	@Resource
-	private DirectorySerivce directorySerivce;
+	private DirectoryService directorySerivce;
 	@Resource
 	private UserFileService userFileService;
 	@Resource

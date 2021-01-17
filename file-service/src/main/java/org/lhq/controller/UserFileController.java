@@ -6,14 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.exception.ProjectException;
-import org.lhq.service.DirectorySerivce;
+import org.lhq.service.DirectoryService;
 import org.lhq.service.UserFileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public class UserFileController {
 	@Resource
 	UserFileService userFileService;
 	@Resource
-	DirectorySerivce directorySerivce;
+    DirectoryService directorySerivce;
 
 	/**
 	 * 重命名文件

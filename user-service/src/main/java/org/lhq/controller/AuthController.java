@@ -4,6 +4,7 @@ package org.lhq.controller;
 
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.lhq.entity.vo.ResultVO;
 import org.lhq.exception.ProjectException;
 import org.lhq.entity.User;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("auth")
+@Slf4j
 @Api(tags = "授权接口")
 public class AuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
@@ -32,7 +34,7 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("login")
-    public User login(String username,String password, HttpServletResponse response) throws ProjectException {
+    public Map login(String username,String password, HttpServletResponse response) throws ProjectException {
     	User user = new User().setUsername(username).setPassword(password);
         LOGGER.info("登录行动:{}",user);
         if (user == null){
@@ -49,10 +51,10 @@ public class AuthController {
             String token = JwtUtil.createJwt(loginUser.getId(),loginUser.getUsername(),"user");
             response.setHeader(JwtUtil.AUTH_HEADER_KEY,JwtUtil.TOKEN_PREFIX+token);
             response.setHeader("Access-Control-Expose-Headers", JwtUtil.AUTH_HEADER_KEY);
-            Map<String, Object> resultMap = new HashMap<>(16);
+            Map<String, Object> resultMap = new HashMap<>(2);
             resultMap.put("user",loginUser);
             resultMap.put("token",JwtUtil.TOKEN_PREFIX+token);
-            return loginUser;
+            return resultMap;
 
         }
 
@@ -68,10 +70,15 @@ public class AuthController {
 				.setMessage("注册成功")
 				.setData(register));
     }
-    @GetMapping("article")
-    public ResponseEntity article(){
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("code",200);
-		return ResponseEntity.ok(map);
+    @PostMapping("userInfo")
+    public Map userInfo(String token){
+        log.info(token);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("label","年轻人不讲武德");
+		map.put("location","年轻人不讲武德");
+		map.put("position","武汉");
+		map.put("skill","闪电五连鞭");
+		map.put("username","test");
+		return map;
 	}
 }

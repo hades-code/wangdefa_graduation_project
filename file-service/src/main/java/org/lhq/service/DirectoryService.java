@@ -1,12 +1,14 @@
 package org.lhq.service;
 
+import org.lhq.entity.bo.TreeModel;
 import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;
+import org.lhq.exception.ProjectException;
 
 import java.util.List;
 
-public interface DirectorySerivce {
+public interface DirectoryService {
 	DirectoryDao getDirectoryDao();
 
 	/**
@@ -32,7 +34,7 @@ public interface DirectorySerivce {
 	 * @param userId
 	 * @return
 	 */
-	Boolean mkdir(String dirName, Long pid, Long userId);
+	Boolean mkdir(String dirName, Long pid, Long userId) throws ProjectException;
 
 	/**
 	 * 根据文件夹id获取文件夹
@@ -125,4 +127,5 @@ public interface DirectorySerivce {
 	 * @return
 	 */
 	List findDirByName(String name, Long userId);
+	List<TreeModel> getDirTree(Long userId, List<TreeModel> models);
 }

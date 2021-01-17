@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
@@ -27,7 +28,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class Directory  {
 	@Id
-	@JsonSerialize(using = ToStringSerializer.class)
 	private Long id;
 	/**
 	 * 目录名称
@@ -36,6 +36,7 @@ public class Directory  {
 	private String directoryName;
 
 	@ApiModelProperty("父目录id")
+	@Column(columnDefinition="bigint default 0")
 	private Long parentId;
 
 	private Long userId;

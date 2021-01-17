@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Accessors(chain = true)
-@ApiModel("用户实体")
 public class User {
 	@Id
     private Long id;
@@ -40,11 +39,7 @@ public class User {
 
     @Email
     private String email;
-
-
-    private String role;
-
-
+    private Role role;
     private String status;
 
 
@@ -54,11 +49,6 @@ public class User {
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
-
-
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime modifyTime;
 
 
 

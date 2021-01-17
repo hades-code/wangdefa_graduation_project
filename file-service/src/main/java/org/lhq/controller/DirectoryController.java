@@ -12,7 +12,7 @@ import org.lhq.annotation.JsonParam;
 import org.lhq.entity.vo.Item;
 import org.lhq.entity.Directory;
 import org.lhq.exception.ProjectException;
-import org.lhq.service.DirectorySerivce;
+import org.lhq.service.DirectoryService;
 import org.lhq.service.UserFileService;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,7 @@ import java.util.*;
 @Api(tags = "目录接口")
 public class DirectoryController {
 	@Resource
-	DirectorySerivce directorySerivce;
+	DirectoryService directorySerivce;
 	@Resource
 	UserFileService userFileService;
 
@@ -142,6 +142,10 @@ public class DirectoryController {
 	public String move(@JsonParam(value = "sourceListId", type = Item.class) List<Item> list, @JsonParam(value = "targetId", type = Long.class) Long targetId) {
 		this.directorySerivce.moveDirAndFile(list, targetId);
 		return "移动成功";
+	}
+	@GetMapping("dirTree")
+	public List getDirTree(Long userId){
+		return this.directorySerivce.getDirTree(userId,null);
 	}
 
 

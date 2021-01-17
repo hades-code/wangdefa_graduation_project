@@ -3,24 +3,26 @@ package org.lhq.service.impl;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.lhq.entity.bo.TreeModel;
 import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
-import org.lhq.service.DirectorySerivce;
+import org.lhq.exception.ProjectException;
+import org.lhq.service.DirectoryService;
 import org.lhq.service.UserFileService;
+import org.lhq.utils.TreeGenerateHandler;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author hades
@@ -28,7 +30,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @CacheConfig(cacheNames = "directoryCache")
-public class DirectoryServiceImpl implements DirectorySerivce {
+public class DirectoryServiceImpl implements DirectoryService {
 
 	@Resource
 	DirectoryDao directoryDao;
@@ -98,11 +100,8 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 	}
 
 	@Override
-	public Boolean mkdir(String dirName, Long pid, Long userId) {
-		if (pid == null) {
-			Directory directory = getDirByPid(0L, userId);
-			pid = directory.getId();
-		}
+	public Boolean mkdir(String dirName, Long pid, Long userId) throws ProjectException {
+
 		List<Directory> directoryList = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda()
 				.eq(Directory::getDirectoryName, dirName)
 				.eq(Directory::getParentId, pid)
@@ -116,8 +115,9 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 			newDir.setModifyTime(LocalDateTime.now());
 			directoryDao.insert(newDir);
 			return true;
+		}else {
+			throw new ProjectException("同名目录已经存在");
 		}
-		return false;
 	}
 
 	@Override
@@ -281,6 +281,26 @@ public class DirectoryServiceImpl implements DirectorySerivce {
 				.eq(Directory::getUserId, userId));
 		//TO-DO
 		return null;
+	}
+
+	@Override
+	public List<TreeModel> getDirTree(Long userId, List<TreeModel> models) {
+		List<Directory> directories = this.directoryDao.selectList(new LambdaQueryWrapper<Directory>().eq(Directory::getUserId, userId));
+		List<TreeModel> collect = directories.stream()
+				.map(directory -> {
+					TreeModel treeModel = new TreeModel(directory.getId(), directory.getDirectoryName(), directory.getParentId(), 0L);
+					treeModel.setType("dir");
+					return treeModel;
+				})
+				.collect(Collectors.toList());
+		List<UserFile> userFiles = this.userFileService.getUserFileFileByUserId(userId);
+		List<TreeModel> userFileTreeModel = userFiles.stream().map(userFile ->{
+			TreeModel treeModel = new TreeModel(userFile.getId(), userFile.getFileName(), userFile.getDirectoryId(), 0L);
+			treeModel.setType(userFile.getFileType());
+			return treeModel;
+		} ).collect(Collectors.toList());
+		collect.addAll(userFileTreeModel);
+		return TreeGenerateHandler.treeModelToTree(collect);
 	}
 
 	/**

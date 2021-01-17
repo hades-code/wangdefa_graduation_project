@@ -15,7 +15,7 @@ import org.lhq.entity.Directory;
 import org.lhq.entity.User;
 import org.lhq.entity.UserFile;
 import org.lhq.exception.ProjectException;
-import org.lhq.service.DirectorySerivce;
+import org.lhq.service.DirectoryService;
 import org.lhq.service.FileService;
 import org.lhq.service.UserFileService;
 import org.lhq.service.UserService;
@@ -53,7 +53,7 @@ public class FileController {
 	@Resource
 	private UserService userService;
 	@Resource
-	private DirectorySerivce directorySerivce;
+	private DirectoryService directorySerivce;
 
 	private static final String TEMP_PATH = "/temp";
 
