@@ -38,7 +38,7 @@ public class ShareServiceImpl implements IShareService {
 	@Resource
 	private ShareDao shareDao;
 	@Resource
-	private DirectoryService directorySerivce;
+	private DirectoryService directoryService;
 	@Resource
 	private UserFileService userFileService;
 	@Resource
@@ -132,7 +132,7 @@ public class ShareServiceImpl implements IShareService {
 				.map(ShareFile::getFileId)
 				.collect(Collectors.toList());
 		if (!dirIdList.isEmpty()) {
-			List<Directory> directoryList = directorySerivce.getDirectoryDao().selectBatchIds(dirIdList);
+			List<Directory> directoryList = directoryService.getDirectoryDao().selectBatchIds(dirIdList);
 			result.put("dirs", directoryList);
 		}
 		return result;
@@ -150,7 +150,7 @@ public class ShareServiceImpl implements IShareService {
 				UserFile userFile = this.userFileService.getUserFileDao().selectById(shareFile.getFileId());
 				userFiles.add(userFile);
 			}else {
-				Directory directory = this.directorySerivce.getDirectoryDao().selectById(shareFile.getFileId());
+				Directory directory = this.directoryService.getDirectoryDao().selectById(shareFile.getFileId());
 				directories.add(directory);
 			}
 		});
