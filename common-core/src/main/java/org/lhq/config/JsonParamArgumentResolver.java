@@ -72,7 +72,7 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 	private String getRequestBody(NativeWebRequest webRequest){
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 		String jsonBody = StrUtil.toString(servletRequest.getAttribute(JSON_REQUEST_BODY));
-		if (StrUtil.isEmpty(jsonBody)){
+		if (jsonBody.equals("null") ||StrUtil.isEmpty(jsonBody)){
 			try {
 				jsonBody = StreamUtils.copyToString(servletRequest.getInputStream(),charset);
 				servletRequest.setAttribute(JSON_REQUEST_BODY, jsonBody);

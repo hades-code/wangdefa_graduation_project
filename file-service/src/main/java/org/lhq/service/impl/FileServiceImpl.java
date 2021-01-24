@@ -1,5 +1,6 @@
 package org.lhq.service.impl;
 
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
@@ -24,6 +25,7 @@ import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -294,13 +296,18 @@ public class FileServiceImpl implements FileService {
 			String filePath = path + directory.getDirectoryName() + "/";
 			ZipEntry zipEntry = new ZipEntry(filePath);
 			zipOutputStream.putNextEntry(zipEntry);
+			// 取这个文件夹下所有子文件夹
 			List<Directory> subDir = this.directoryDao.selectList(new QueryWrapper<Directory>().lambda().eq(Directory::getParentId, directory.getId()));
+			// 取这个文件夹下所以子文件
 			List<UserFile> subUserFile = this.userFileDao.selectList(new QueryWrapper<UserFile>().lambda().eq(UserFile::getDirectoryId, directory.getId()));
 			if (!subDir.isEmpty() || !subUserFile.isEmpty()) {
 				multipleDownload(subDir, subUserFile, zipOutputStream, path);
 			}
 		}
 		FileSystem fileSystem = this.getFileSystem();
+		if (userFiles == null || userFiles.size()<=0){
+			return;
+		}
 		for (UserFile userFile : userFiles) {
 			InputStream inputStream = fileSystem.open(new Path(userFile.getFilePath()));
 			String fileName;
@@ -310,15 +317,16 @@ public class FileServiceImpl implements FileService {
 				fileName = path + userFile.getFileName();
 			}
 			byte[] buffer = new byte[1024];
-			int len = 0;
+			int len;
 			ZipEntry zipEntry = new ZipEntry(fileName);
 			zipOutputStream.putNextEntry(zipEntry);
 			while ((len = inputStream.read(buffer)) != -1) {
 				zipOutputStream.write(buffer, 0, len);
 			}
 			inputStream.close();
-			zipOutputStream.closeEntry();
 		}
+		zipOutputStream.closeEntry();
+
 	}
 
 }

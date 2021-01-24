@@ -231,13 +231,28 @@ public class FileController {
 	 * @throws ProjectException
 	 */
 	@GetMapping("download/{id}")
-	public ResultVO fileDownload(HttpServletResponse response, @PathVariable("id") Long id) throws ProjectException {
+	public ResultVO fileDownload(HttpServletResponse response, @PathVariable("id") Long id) throws ProjectException, IOException, URISyntaxException, InterruptedException {
 		if (id == null || id <= 0) {
 			throw new ProjectException("下载失败");
 		}
 		UserFile downloadFile = this.userFileService.getUserFileDao().selectById(id);
 		String fileName;
-		if (StrUtil.isNotEmpty(downloadFile.getFileType())) {
+		Directory dir = null;
+		if(downloadFile == null){
+			dir = this.directorySerivce.getDirById(id);
+		}
+		if (dir!=null){
+			List<Directory> directories = new ArrayList<>(1);
+			directories.add(dir);
+			OutputStream outputStream = response.getOutputStream();
+			ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(dir.getDirectoryName(), "UTF-8"));
+			this.fileService.multipleDownload(directories, null, zipOutputStream, dir.getDirectoryName());
+			zipOutputStream.close();
+			return null;
+		}
+		if (downloadFile!= null && StrUtil.isNotEmpty(downloadFile.getFileType())) {
 			fileName = downloadFile.getFileName() + "." + downloadFile.getFileType();
 		} else {
 			fileName = downloadFile.getFileName();
@@ -251,7 +266,7 @@ public class FileController {
 		return null;
 	}
 
-	@PostMapping("multDownload")
+	@PostMapping("multiDownload")
 	public ResultVO multipleDownload(@JsonParam(value = "item", type = Item.class, required = false) List<Item> items, HttpServletResponse response) throws ProjectException, IOException, URISyntaxException, InterruptedException {
 		if (items == null || items.isEmpty()) {
 			throw new ProjectException("下载失败");

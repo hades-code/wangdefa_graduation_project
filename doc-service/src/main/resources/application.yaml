@@ -6,7 +6,7 @@ knife4j:
     enable: true
     routes:
       - name: 用户服务
-        uri: localhost:8899
+        uri: localhost:9998
         location: /v2/api-docs?group=2
       - name: 文件服务
         uri: localhost:9999

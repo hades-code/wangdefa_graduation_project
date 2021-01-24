@@ -95,11 +95,12 @@ public class DirectoryController {
 
 	/**
 	 * 获取目录和子目录
-	 *
+	 * 已经弃用，推荐使用DirTree
 	 * @param userId
 	 * @return
 	 */
 	@GetMapping("listDir")
+	@Deprecated
 	public List getListDir(Long userId) {
 		Directory directory = this.directorySerivce.getDirByPid(0L, userId);
 		List list = new ArrayList<>();
