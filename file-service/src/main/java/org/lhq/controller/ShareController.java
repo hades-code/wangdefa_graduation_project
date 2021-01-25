@@ -76,4 +76,9 @@ public class ShareController {
     public Boolean confirmShareCode(String shareLink, String shareCode) throws ProjectException {
         return this.shareService.confirmShareCode(shareLink, shareCode);
     }
+    @ApiOperation(value = "获取分享目录树")
+    @GetMapping("getShareDirTree")
+    public List getShareDirTree(){
+        return null;
+    }
 }

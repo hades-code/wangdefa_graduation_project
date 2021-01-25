@@ -293,13 +293,6 @@ public class DirectoryServiceImpl implements DirectoryService {
 					return treeModel;
 				})
 				.collect(Collectors.toList());
-		List<UserFile> userFiles = this.userFileService.getUserFileFileByUserId(userId);
-		List<TreeModel> userFileTreeModel = userFiles.stream().map(userFile ->{
-			TreeModel treeModel = new TreeModel(userFile.getId(), userFile.getFileName(), userFile.getDirectoryId(), 0L);
-			treeModel.setType(userFile.getFileType());
-			return treeModel;
-		} ).collect(Collectors.toList());
-		collect.addAll(userFileTreeModel);
 		return TreeGenerateHandler.treeModelToTree(collect);
 	}
 

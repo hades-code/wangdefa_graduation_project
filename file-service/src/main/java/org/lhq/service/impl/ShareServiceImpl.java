@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author hades
@@ -87,7 +88,7 @@ public class ShareServiceImpl implements IShareService {
 		Share share = this.shareDao.selectOne(new LambdaQueryWrapper<Share>()
 				.select(Share::getShareLock)
 				.eq(Share::getShareLink, shareLink));
-		if (share!=null&& share.getShareLock()!=null){
+		if (share!=null && share.getShareLock()!=null){
 			return share.getShareLock();
 		}else {
 			return false;
@@ -167,6 +168,14 @@ public class ShareServiceImpl implements IShareService {
 			throw new ProjectException("此分享不存在或者被取消");
 		}
 		return StrUtil.equals(shareCode, share.getShareCode());
+	}
+
+	@Override
+	public List getShareDirTree(String shareLink) {
+		Share share = this.shareDao.selectOne(new LambdaQueryWrapper<Share>().eq(Share::getShareLink, shareLink));
+		List<ShareFile> shareFileList = this.shareFileDao.selectList(new LambdaQueryWrapper<ShareFile>().eq(ShareFile::getShareId, shareLink));
+		List<Long> dirList = shareFileList.stream().filter(shareFile -> !shareFile.getFileOrDir()).map(ShareFile::getFileId).collect(Collectors.toList());
+		return null;
 	}
 
 }

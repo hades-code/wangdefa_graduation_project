@@ -36,4 +36,10 @@ public class UserServiceTest {
             userService.register(user);
         }
     }
+    @Test
+    public void selectUser(){
+        if (log.isDebugEnabled()){
+            log.debug("sdadada");
+        }
+    }
 }

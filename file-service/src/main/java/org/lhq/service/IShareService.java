@@ -53,4 +53,10 @@ public interface IShareService {
 	 * @throws ProjectException
 	 */
 	Boolean confirmShareCode(String shareLink,String shareCode) throws ProjectException;
+
+	/**
+	 * 获取分享目录树
+	 * @return
+	 */
+	List getShareDirTree(String shareLink);
 }
