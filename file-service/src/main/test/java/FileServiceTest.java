@@ -2,13 +2,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lhq.FileServiceApplication;
+import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
+import org.lhq.entity.bo.TreeModel;
 import org.lhq.service.DirectoryService;
 import org.lhq.service.UserFileService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.ArrayDeque;
+import java.util.Stack;
 
 @SpringBootTest(classes = FileServiceApplication.class)
 @RunWith(SpringRunner.class)
@@ -26,5 +30,10 @@ public class FileServiceTest {
         userFile.setFileName("大鳥轉轉轉");
         userFile.setFileType("mp4");
         userFileService.save(userFile);
+    }
+    @Test
+    public void treeDir(Directory root){
+        ArrayDeque<Directory> dirQueue = new ArrayDeque<>();
+
     }
 }

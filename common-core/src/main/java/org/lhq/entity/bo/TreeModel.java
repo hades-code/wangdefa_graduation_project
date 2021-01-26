@@ -36,6 +36,10 @@ public class TreeModel {
         }
     }
 
+    public TreeModel() {
+
+    }
+
     public void setRoot(Object rootFlag) {
         if (null != rootFlag && StrUtil.isNotBlank(rootFlag.toString())) {
             if (null == this.pid) {

@@ -74,6 +74,17 @@ public class DirectoryServiceImpl implements DirectoryService {
 		return list;
 	}
 
+	@Override
+	public List<Directory> getListSubDirectoryById(Long id, List list) {
+		if (id == null || id <= 0) {
+			log.error("没有上一级目录");
+			return list;
+		}
+		Directory directory = this.directoryDao.selectById(id);
+
+		return list;
+	}
+
 	/**
 	 * 查询某一目录，和他下面的文件
 	 *

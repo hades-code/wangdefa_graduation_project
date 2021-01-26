@@ -10,6 +10,7 @@ import org.lhq.entity.vo.Item;
 import org.lhq.entity.Directory;
 import org.lhq.entity.UserFile;
 import org.lhq.exception.ProjectException;
+import org.lhq.service.DirectoryService;
 import org.lhq.service.IShareService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,8 @@ import java.util.Map;
 public class ShareController {
     @Resource
     IShareService shareService;
+    @Resource
+    DirectoryService directoryService;
 
     @GetMapping("/{shareLink}")
     public List<Item> shareLink(@PathVariable String shareLink, String shareCode) throws ProjectException {
@@ -80,5 +83,11 @@ public class ShareController {
     @GetMapping("getShareDirTree")
     public List getShareDirTree(){
         return null;
+    }
+    @ApiOperation(value = "保存分享文件")
+    @PostMapping("saveShare")
+    public Boolean saveShare(Long userId,List<Item> source,Long targetId){
+        directoryService.copyDirAndFile(source,targetId);
+        return false;
     }
 }

@@ -20,6 +20,7 @@ public interface DirectoryService {
 	 * @return
 	 */
 	List<Object> getListPartDirectoryById(Long id, Long userId, List list);
+	List<Directory> getListSubDirectoryById(Long id,List list);
 
 	/**
 	 * 查询某一目录
