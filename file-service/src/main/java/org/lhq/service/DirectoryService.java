@@ -1,6 +1,6 @@
 package org.lhq.service;
 
-import org.lhq.entity.bo.TreeModel;
+import org.lhq.entity.vo.TreeModel;
 import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;

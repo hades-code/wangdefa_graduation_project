@@ -1,4 +1,4 @@
-package org.lhq.entity.bo;
+package org.lhq.entity.vo;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.Collection;
+/**
+ * @author Wallace
+ */
 @Getter
 @Setter
 @Accessors(chain = true)

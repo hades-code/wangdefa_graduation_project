@@ -1,7 +1,7 @@
 package org.lhq.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
-import org.lhq.entity.bo.TreeModel;
+import org.lhq.entity.vo.TreeModel;
 
 import java.util.*;
 

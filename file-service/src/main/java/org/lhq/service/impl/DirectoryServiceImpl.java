@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lhq.entity.bo.TreeModel;
+import org.lhq.entity.vo.TreeModel;
 import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
 import org.lhq.entity.Directory;

@@ -49,21 +49,22 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws IOException {
 		String requestBody = getRequestBody(webRequest);
 		Object value = null;
-		if (StrUtil.isNotBlank(requestBody)){
-			JSONObject jsonObject = JSONUtil.parseObj(requestBody);
-			value = jsonObject.get(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value());
-			Class<?> type = Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).type();
-			if( value != null && Collection.class.isAssignableFrom(value.getClass())) {
-				ArrayList<Object> objects = new ArrayList<>();
-				JSONArray jsonArray = JSONUtil.parseArray(StrUtil.toString(value));
-				for (Object json : jsonArray) {
-					Object convert = Convert.convert(type, json);
-					objects.add(convert);
-				}
-					return objects;
-			}
-			value = Convert.convert(type, value);
+		if (StrUtil.isBlank(requestBody)){
+			return requestBody;
 		}
+		JSONObject jsonObject = JSONUtil.parseObj(requestBody);
+		value = jsonObject.get(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value());
+		Class<?> type = Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).type();
+		if( value != null && Collection.class.isAssignableFrom(value.getClass())) {
+			ArrayList<Object> objects = new ArrayList<>();
+			JSONArray jsonArray = JSONUtil.parseArray(StrUtil.toString(value));
+			for (Object json : jsonArray) {
+				Object convert = Convert.convert(type, json);
+				objects.add(convert);
+			}
+				return objects;
+		}
+		value = Convert.convert(type, value);
 		if (Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).required() && value == null){
 			throw new RuntimeException(Objects.requireNonNull(parameter.getParameterAnnotation(JsonParam.class)).value() + "不能为空");
 		}
@@ -72,7 +73,7 @@ public class JsonParamArgumentResolver implements HandlerMethodArgumentResolver 
 	private String getRequestBody(NativeWebRequest webRequest){
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 		String jsonBody = StrUtil.toString(servletRequest.getAttribute(JSON_REQUEST_BODY));
-		if (jsonBody.equals("null") ||StrUtil.isEmpty(jsonBody)){
+		if ("null".equals(jsonBody) ||StrUtil.isEmpty(jsonBody)){
 			try {
 				jsonBody = StreamUtils.copyToString(servletRequest.getInputStream(),charset);
 				servletRequest.setAttribute(JSON_REQUEST_BODY, jsonBody);
