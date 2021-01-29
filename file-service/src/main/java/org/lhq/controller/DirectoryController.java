@@ -69,7 +69,7 @@ public class DirectoryController {
 
 	/**
 	 * 获取该文件夹下的文件和文件夹
-	 *
+	 * 并返回文件路径
 	 * @param pid
 	 * @param userId
 	 * @return
@@ -83,7 +83,7 @@ public class DirectoryController {
 		List<Object> userFiles = userFileService.getListFileByPid(pid, userId);
 		List<Object> parentDirs = new ArrayList<>();
 		parentDirs = directorySerivce.getListPartDirectoryById(pid, userId, parentDirs);
-		HashMap<String, String> map = new HashMap<>();
+		HashMap<String, String> map = new HashMap<>(16);
 		map.put("name","根目录");
 		parentDirs.add(map);
 		result.put("id", pid);

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 
 @SpringBootTest(classes = FileServiceApplication.class)
@@ -31,10 +32,14 @@ public class FileServiceTest {
     }
     @Test
     public void treeDir(Directory root){
-        if (root == null){
-            return;
+        ArrayDeque<Directory> directories = new ArrayDeque<>();
+        Directory directory;
+        if (root != null){
+            directories.add(root);
         }
-        LinkedList<Directory> linkedList = new LinkedList<>();
-        linkedList.add(root);
+        while (!directories.isEmpty()){
+            directory = directories.remove();
+
+        }
     }
 }

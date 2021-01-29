@@ -74,13 +74,23 @@ public class DirectoryServiceImpl implements DirectoryService {
 		return list;
 	}
 
+	/**
+	 * 此目录为根目录，查找下面的目录结构
+	 * @param id
+	 * @param list
+	 * @return
+	 */
 	@Override
 	public List<Directory> getListSubDirectoryById(Long id, List list) {
 		if (id == null || id <= 0) {
 			log.error("没有上一级目录");
 			return list;
 		}
-		Directory directory = this.directoryDao.selectById(id);
+		List<Directory> directories = directoryDao.selectList(new LambdaQueryWrapper<Directory>()
+				.eq(Directory::getParentId, id));
+		while (!directories.isEmpty()){
+
+		}
 
 		return list;
 	}
@@ -175,7 +185,7 @@ public class DirectoryServiceImpl implements DirectoryService {
 			sourceFile.setModifyTime(date);
 			this.userFileService.getUserFileDao().updateById(sourceFile);
 		}
-		//遍历
+		//递归遍历
 		for (Directory subDir : subDirs) {
 			copyDir(subDir.getId(), sourceDir.getId());
 		}
@@ -231,6 +241,21 @@ public class DirectoryServiceImpl implements DirectoryService {
 			log.info("文件:{}复制到{}", userFile.getFileName(), targetId);
 			this.userFileService.copy(userFile.getId(), targetId);
 		});
+		return true;
+	}
+
+	@Override
+	public Boolean copyDirAndFile(List<Item> items, Long targetId, Long userId) {
+		Map common = this.common(items);
+		//获取文件夹
+		List<Directory> dirs = MapUtil.get(common, "dirs", List.class);
+		//获取文件
+		List<UserFile> files = MapUtil.get(common, "files", List.class);
+		dirs=dirs.stream().map(directory -> directory.setUserId(userId)).collect(Collectors.toList());
+		files= files.stream().map(userFile -> userFile.setUserId(userId)).collect(Collectors.toList());
+
+		dirs.forEach(directory -> this.copyDir(directory.getId(),targetId));
+		files.forEach(userFile -> this.userFileService.copy(userFile.getId(),targetId));
 		return true;
 	}
 

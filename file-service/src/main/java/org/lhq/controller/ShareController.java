@@ -87,7 +87,7 @@ public class ShareController {
     @ApiOperation(value = "保存分享文件")
     @PostMapping("saveShare")
     public Boolean saveShare(Long userId,List<Item> source,Long targetId){
-        directoryService.copyDirAndFile(source,targetId);
+        this.directoryService.copyDirAndFile(source,targetId,userId);
         return false;
     }
 }

@@ -20,6 +20,13 @@ public interface DirectoryService {
 	 * @return
 	 */
 	List<Object> getListPartDirectoryById(Long id, Long userId, List list);
+
+	/**
+	 * 查询某一目录和他下级目录
+	 * @param id
+	 * @param list
+	 * @return
+	 */
 	List<Directory> getListSubDirectoryById(Long id,List list);
 
 	/**
@@ -111,6 +118,7 @@ public interface DirectoryService {
 	 * @return
 	 */
 	Boolean copyDirAndFile(List<Item> items, Long targetId);
+	Boolean copyDirAndFile(List<Item> items, Long targetId,Long userId);
 
 	/**
 	 * 树状结构返回目录结构
