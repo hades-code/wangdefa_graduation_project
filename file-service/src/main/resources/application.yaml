@@ -4,10 +4,6 @@ spring:
   cache:
     cache-names: directoryCache
     type: redis
-  cloud:
-    nacos:
-      discovery:
-        server-addr: master:8848
   application:
     name: file-service
   datasource:

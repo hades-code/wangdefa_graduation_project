@@ -39,7 +39,7 @@ public class User {
 
     @Email
     private String email;
-    private Role role;
+    //private Role role;
     private String status;
 
 

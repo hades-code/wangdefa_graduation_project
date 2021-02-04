@@ -1,9 +1,11 @@
 package org.lhq.filter;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
-import org.lhq.utils.JwtUtil;
+import org.lhq.entity.dto.PayloadDto;
+import org.lhq.serivce.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,8 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -33,14 +37,16 @@ public class AuthFilter implements GlobalFilter, Ordered {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
 
-  @Value("${jwt.secret.key}")
+  @Value("${jwt.secret.key:123456}")
   private String secretKey;
 
-  @Value("${auth.skip.urls}")
+  @Value("${auth.skip.urls:auth/login}")
   private String[] skipAuthUrls;
 
-  @Value("${jwt.blacklist.key.format}")
-  private String jwtBlacklistKeyFormat;
+  /*@Value("${jwt.blacklist.key.format}")
+  private String jwtBlacklistKeyFormat;*/
+
+  private AuthService authService;
 
 
   @Override
@@ -69,7 +75,11 @@ public class AuthFilter implements GlobalFilter, Ordered {
       DataBuffer buffer = originalResponse.bufferFactory().wrap(response);
       return originalResponse.writeWith(Flux.just(buffer));
     }
-    Claims claims = JwtUtil.parseJwt(token);
+    PayloadDto payloadDto = authService.verifyToken(token);
+    if (DateUtil.current() - payloadDto.getExp()<= TimeUnit.MICROSECONDS.convert(10,TimeUnit.MINUTES)){
+          payloadDto.setIat(DateUtil.current());
+      String newToken = authService.refreshToken(payloadDto);
+    }
     // 将现在的request，添加当前身份
     ServerHttpRequest mutableReq =
         exchange.getRequest().mutate().header("Authorization-UserName", "userName").build();

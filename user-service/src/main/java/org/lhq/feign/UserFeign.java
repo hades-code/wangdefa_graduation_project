@@ -3,12 +3,17 @@ package org.lhq.feign;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.proc.BadJWTException;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.entity.User;
+import org.lhq.entity.dto.PayloadDto;
 import org.lhq.service.UserService;
+import org.lhq.util.TokenUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 
 /**
  * @program: wangdefa_graduation_project
@@ -47,5 +52,10 @@ public class UserFeign {
         size = size == null?5:size;
         IPage<User> userPage = new Page<User>().setSize(size).setCurrent(pageNum);
         return this.userService.page(userPage, new QueryWrapper<>(user));
+    }
+    @PostMapping("verifyToken")
+    public PayloadDto verifyToken(String token) throws BadJWTException, JOSEException, ParseException {
+        PayloadDto payloadDto = TokenUtil.verifyTokenByHMAC(token, "123456");
+        return payloadDto;
     }
 }

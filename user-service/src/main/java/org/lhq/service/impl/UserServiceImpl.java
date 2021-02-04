@@ -54,10 +54,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     }
 
     @Override
-	@Cacheable(key = "#root.methodName + #root.args[0]",condition = "#user != null",unless="#result == null")
     public User login(String username,String password) {
-		User loginUser = this.userDao.selectOne(new QueryWrapper<User>().lambda()
-				.eq(User::getUsername,username));
+		User loginUser = this.userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername,username));
+		log.info("查找到登录用户:{}",loginUser);
 		return Optional.ofNullable(loginUser).orElse(new User().setPassword("").setUsername(""));
     }
 

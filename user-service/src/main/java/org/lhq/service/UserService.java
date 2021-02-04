@@ -14,7 +14,7 @@ import org.lhq.exception.ProjectException;
 public interface UserService extends IService<User> {
     /**
      * 登录功能
-     * @param user
+     * @param
      * @return
      */
     User login(String username,String password);

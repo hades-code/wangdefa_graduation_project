@@ -120,4 +120,12 @@ public class UserFileController {
 		this.userFileService.getUserFileDao().updateById(getFile);
 		return ResponseEntity.ok("修改成功");
 	}
+	@PostMapping("recovery")
+	public void recoveryFile(List ids){
+		this.userFileService.recovery(ids);
+	}
+	@PostMapping("cleanRecyclingBin")
+	public void cleanRecyclingBin(){
+
+	}
 }

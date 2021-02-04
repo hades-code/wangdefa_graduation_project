@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lhq.common.ActionType;
@@ -123,6 +124,22 @@ public class UserFileServiceImpl implements UserFileService {
 			return false;
 		}
 
+	}
+
+	@Override
+	public Boolean recovery(List ids) {
+		this.userFileDao.update(null,new LambdaUpdateWrapper<UserFile>()
+				.set(UserFile::getFileStatus,ActionType.OK)
+				.in(UserFile::getId,ids));
+		return null;
+	}
+
+	@Override
+	public Boolean cleanRecyclingBin(List ids) {
+		this.userFileDao.update(null,new LambdaUpdateWrapper<UserFile>()
+				.set(UserFile::getFileStatus,ActionType.DELETE_FOREVER)
+				.in(UserFile::getId,ids));
+		return null;
 	}
 
 	/**

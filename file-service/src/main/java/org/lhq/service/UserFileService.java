@@ -21,4 +21,6 @@ public interface UserFileService {
 	void copy(Long sourceFileId, Long targetDirId);
 
 	Boolean rename(String newName,Long fileId) throws ProjectException;
+	Boolean recovery(List id);
+	Boolean cleanRecyclingBin(List id);
 }

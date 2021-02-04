@@ -32,7 +32,7 @@ import java.util.*;
 @Api(tags = "目录接口")
 public class DirectoryController {
 	@Resource
-	DirectoryService directorySerivce;
+	DirectoryService directoryService;
 	@Resource
 	UserFileService userFileService;
 
@@ -45,7 +45,7 @@ public class DirectoryController {
 		if (StrUtil.isEmpty(dirName)) {
 			throw new ProjectException("文件夹名为空");
 		}
-		Boolean mkdir = directorySerivce.mkdir(dirName, parentId, userId);
+		Boolean mkdir = directoryService.mkdir(dirName, parentId, userId);
 		return mkdir ? "创建成功" : "创建失败";
 	}
 
@@ -54,7 +54,7 @@ public class DirectoryController {
 		if (StrUtil.isEmpty(name) || id <= 0) {
 			throw new ProjectException("文件名为空");
 		}
-		Directory directory = directorySerivce.getDirById(id);
+		Directory directory = directoryService.getDirById(id);
 		if (directory == null) {
 			throw new ProjectException("文件夹不存在");
 		}
@@ -63,7 +63,7 @@ public class DirectoryController {
 				.eq(Directory::getId, id)
 				.set(Directory::getDirectoryName, name)
 				.set(Directory::getModifyTime, new Date());
-		directorySerivce.getDirectoryDao().update(null, updateWrapper);
+		directoryService.getDirectoryDao().update(null, updateWrapper);
 		return "目录重命名成功";
 	}
 
@@ -79,10 +79,10 @@ public class DirectoryController {
 		pid = Optional.ofNullable(pid).orElse(0L);
 		Map<String, Object> result = new HashMap<>(16);
 		//获取目录
-		List<Object> directories = directorySerivce.getListDircByPid(pid, userId);
+		List<Object> directories = directoryService.getListDircByPid(pid, userId);
 		List<Object> userFiles = userFileService.getListFileByPid(pid, userId);
 		List<Object> parentDirs = new ArrayList<>();
-		parentDirs = directorySerivce.getListPartDirectoryById(pid, userId, parentDirs);
+		parentDirs = directoryService.getListPartDirectoryById(pid, userId, parentDirs);
 		HashMap<String, String> map = new HashMap<>(16);
 		map.put("name","根目录");
 		parentDirs.add(map);
@@ -102,9 +102,9 @@ public class DirectoryController {
 	@GetMapping("listDir")
 	@Deprecated
 	public List getListDir(Long userId) {
-		Directory directory = this.directorySerivce.getDirByPid(0L, userId);
+		Directory directory = this.directoryService.getDirByPid(0L, userId);
 		List list = new ArrayList<>();
-		list = directorySerivce.listDir(directory.getId(), list);
+		list = directoryService.listDir(directory.getId(), list);
 		Map<String, Object> result = new HashMap<>(16);
 		result.put("id", directory.getId());
 		result.put("name", "全部文件");
@@ -122,24 +122,24 @@ public class DirectoryController {
 	 */
 	@PostMapping("deleteDir")
 	public String deleteDir(@RequestBody List<Item> list) {
-		Boolean result = directorySerivce.deleteDirAndFile(list);
+		Boolean result = directoryService.deleteDirAndFile(list);
 		return "删除" + (result ? "成功" : "失败");
 	}
 
 	@PostMapping("copy")
 	public String copy(@JsonParam(value = "targetId", type = Long.class) Long targetId, @JsonParam(value = "sourceListId", type = Item.class) List<Item> list) {
-		directorySerivce.copyDirAndFile(list, targetId);
+		directoryService.copyDirAndFile(list, targetId);
 		return "复制成功";
 	}
 
 	@PostMapping("move")
 	public String move(@JsonParam(value = "sourceListId", type = Item.class) List<Item> list, @JsonParam(value = "targetId", type = Long.class) Long targetId) {
-		this.directorySerivce.moveDirAndFile(list, targetId);
+		this.directoryService.moveDirAndFile(list, targetId);
 		return "移动成功";
 	}
 	@PostMapping("dirTree")
 	public List getDirTree(Long userId){
-		return this.directorySerivce.getDirTree(userId,null);
+		return this.directoryService.getDirTree(userId,null);
 	}
 	@PostMapping("getRecycleBin")
 	public List getRecycleBin(Long userId){

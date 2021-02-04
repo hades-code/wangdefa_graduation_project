@@ -32,6 +32,8 @@ public class JwtUtil{
      */
     public static final String TOKEN_PREFIX = "Bearer ";
 
+    public static final String TOKEN_PREFIX_WITHOUT_SPACE = "Bearer";
+
     /**
      * token 签名id
      */
