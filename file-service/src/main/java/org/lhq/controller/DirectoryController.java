@@ -141,6 +141,10 @@ public class DirectoryController {
 	public List getDirTree(Long userId){
 		return this.directorySerivce.getDirTree(userId,null);
 	}
+	@PostMapping("getRecycleBin")
+	public List getRecycleBin(Long userId){
+		return this.directorySerivce.getRecycleBin(userId);
+	}
 
 
 }

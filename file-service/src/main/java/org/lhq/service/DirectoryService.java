@@ -137,4 +137,5 @@ public interface DirectoryService {
 	 */
 	List findDirByName(String name, Long userId);
 	List<TreeModel> getDirTree(Long userId, List<TreeModel> models);
+	List getRecycleBin(Long userId);
 }

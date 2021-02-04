@@ -6,11 +6,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import org.lhq.entity.User;
 import org.lhq.entity.vo.ResultVO;
 import org.lhq.exception.ProjectException;
 import org.lhq.service.UserService;
-import org.lhq.util.JwtUtil;
+import org.lhq.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,8 @@ public class AuthController {
         if (user == null) {
             throw new ProjectException("登陆用户为空");
         }
-        User loginUser = userService.login(username, password);
+        String md5Hex = DigestUtil.md5Hex(password);
+        User loginUser = userService.login(username, md5Hex);
         if (loginUser.getUsername() == null || "".equals(loginUser.getUsername())) {
             LOGGER.error("用户名或密码错误");
             throw new ProjectException("用户名或密码错误");
@@ -66,12 +68,17 @@ public class AuthController {
 
     @PostMapping("register")
     public ResponseEntity<ResultVO<User>> register(User user) throws ProjectException {
-        // 明天再写
         LOGGER.info("请求注册方法");
-        // user.setId(1L);
         LOGGER.info("获得的User：{}", user);
         User register = userService.register(user);
         return ResponseEntity.ok(new ResultVO<User>().setMessage("注册成功").setData(register));
+    }
+    @PostMapping("refresh")
+    public String refreshToken(){
+        return "newToken";
+    }
+    @PostMapping("resetPassword")
+    public void resetPassword(){
     }
 
     @PostMapping("userInfo")

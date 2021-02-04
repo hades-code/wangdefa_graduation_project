@@ -1,5 +1,7 @@
 package org.lhq.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -70,6 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (integer > 0){
             throw new ProjectException("该邮箱已经被注册");
         }else {
+            user.setPassword(DigestUtil.md5Hex(user.getPassword()));
             this.userDao.insert(user);
         }
         return user;

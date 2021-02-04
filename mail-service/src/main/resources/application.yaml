@@ -4,9 +4,12 @@ spring:
   application:
     name: mail-service
   mail:
-    host: smtp.qq.com
-    username: 444@444.com
-    password: 123456
+    host: smtp.office365.com
+    username: hcl@keestore.onmicrosoft.com
+    password: Of951753654
     properties.mail.smtp.auth: true
     properties.mail.smtp.starttls.enable: true
     default-encoding: utf-8
+    port: 587
+    protocol: smtp
+    debug: true

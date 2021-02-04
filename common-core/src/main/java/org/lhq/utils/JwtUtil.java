@@ -1,4 +1,4 @@
-package org.lhq.util;
+package org.lhq.utils;
 
 
 

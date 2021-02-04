@@ -9,6 +9,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.internet.MimeMessage;
 
@@ -26,6 +28,9 @@ public class MailServiceImpl implements MailService {
     private MailProperties mailProperties;
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     /**
      * 发送简单文本的邮件
@@ -81,12 +86,14 @@ public class MailServiceImpl implements MailService {
             // 设置标题
             mimeMessageHelper.setSubject(subject);
             // 设置内容，并设置内容 html 格式为 true
-            mimeMessageHelper.setText(html, true);
+            Context context = new Context();
+            context.setVariable("context",html);
+            String emailContent = templateEngine.process("/mail.html",context);
+            mimeMessageHelper.setText(emailContent, true);
 
             javaMailSender.send(mimeMessage);
             log.info("## Send the mail with html success ...");
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Send html mail error: ", e);
             return false;
         }

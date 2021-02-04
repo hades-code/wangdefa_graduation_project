@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.lhq.common.ActionType;
 import org.lhq.entity.vo.TreeModel;
 import org.lhq.entity.vo.Item;
 import org.lhq.dao.DirectoryDao;
@@ -353,6 +354,14 @@ public class DirectoryServiceImpl implements DirectoryService {
 		}
 		return list;
 	}
+	@Override
+	public List getRecycleBin(Long userId){
+		List<UserFile> userFiles = this.userFileService.getUserFileDao().selectList(new LambdaQueryWrapper<UserFile>()
+				.eq(UserFile::getUserId, userId)
+				.eq(UserFile::getFileStatus, ActionType.DELETE));
+		return userFiles;
+	}
+
 
 	private Map common(List<Item> list) {
 		if (list == null) {
