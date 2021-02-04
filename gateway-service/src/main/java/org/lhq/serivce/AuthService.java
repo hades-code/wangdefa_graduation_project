@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@FeignClient
+@FeignClient(name = "user-service")
 @RequestMapping("user-feign")
 public interface AuthService {
     @PostMapping("verifyToken")
