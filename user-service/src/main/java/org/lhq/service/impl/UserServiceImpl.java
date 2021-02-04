@@ -1,6 +1,6 @@
 package org.lhq.service.impl;
 
-import cn.hutool.crypto.SecureUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -78,7 +78,25 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         return user;
     }
 
-	@Override
+    @Override
+    public void resetPassword(Long userId, String newPassword) {
+
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, Long userId) throws ProjectException {
+        User user = this.userDao.selectOne(new LambdaQueryWrapper<User>()
+                .select(User::getId)
+                .select(User::getPassword)
+                .eq(User::getId,userId));
+        if (StrUtil.equals(user.getPassword(),DigestUtil.md5Hex(oldPassword))){
+            this.userDao.updateById(user.setPassword(DigestUtil.md5Hex(newPassword)));
+        }else {
+            throw new ProjectException("原密码错误");
+        }
+    }
+
+    @Override
 	public void updateStorage(Long userId, Double size, String type) {
 		User user = userDao.selectById(userId);
 		if (user == null) {

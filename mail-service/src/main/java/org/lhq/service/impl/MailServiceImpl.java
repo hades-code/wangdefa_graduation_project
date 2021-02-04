@@ -72,7 +72,7 @@ public class MailServiceImpl implements MailService {
      * @return
      */
     @Override
-    public boolean sendWithHtml(String to, String subject, String html) {
+    public boolean sendWithHtml(String to, String subject, String html,String template) {
         log.info("## Ready to send mail ...");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 

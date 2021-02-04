@@ -78,7 +78,12 @@ public class AuthController {
         return "newToken";
     }
     @PostMapping("resetPassword")
-    public void resetPassword(){
+    public void resetPassword(Long userId){
+
+    }
+    @PostMapping("changePassword")
+    public void changePassword(Long userId,String oldPassword,String newPassword) throws ProjectException {
+        this.userService.changePassword(oldPassword,newPassword,userId);
     }
 
     @PostMapping("userInfo")

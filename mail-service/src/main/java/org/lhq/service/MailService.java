@@ -25,7 +25,7 @@ public interface MailService {
      * @param html
      * @return
      */
-    boolean sendWithHtml(String to, String subject, String html);
+    boolean sendWithHtml(String to, String subject, String html,String template);
 
     /**
      * 发送带有图片的 html 的邮件
