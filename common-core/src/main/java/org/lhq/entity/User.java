@@ -3,12 +3,6 @@ package org.lhq.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -40,7 +34,12 @@ public class User {
     @Email
     private String email;
     //private Role role;
-    private String status;
+
+    @ApiModelProperty("用户状态")
+    private Boolean status;
+
+    @ApiModelProperty("备注")
+    private String remark;
 
 
     private Double usedStorageSize;

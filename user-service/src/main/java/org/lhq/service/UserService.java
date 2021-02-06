@@ -24,8 +24,10 @@ public interface UserService extends IService<User> {
      * @param user
      * @return
      */
-    User register(User user) throws ProjectException;
+    User register(User user,String code) throws ProjectException;
     void resetPassword(Long userId,String newPassword);
+    void activateAccount(Long userId);
+    void mailVerificationCode(String mail);
     void changePassword(String oldPassword,String newPassword,Long userId) throws ProjectException;
     void updateStorage(Long userId,Double size,String type);
 }

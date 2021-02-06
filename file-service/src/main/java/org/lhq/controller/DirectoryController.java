@@ -143,7 +143,7 @@ public class DirectoryController {
 	}
 	@PostMapping("getRecycleBin")
 	public List getRecycleBin(Long userId){
-		return this.directorySerivce.getRecycleBin(userId);
+		return this.directoryService.getRecycleBin(userId);
 	}
 
 

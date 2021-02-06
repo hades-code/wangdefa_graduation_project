@@ -33,7 +33,7 @@ public class UserServiceTest {
             user.setUsername("wdf_"+ RandomUtil.randomString(5));
             user.setEmail(RandomUtil.randomString(5)+"@wdf.com");
             user.setPassword("123456");
-            userService.register(user);
+//            userService.register(user);
         }
     }
     @Test

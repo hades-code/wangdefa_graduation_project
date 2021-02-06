@@ -23,6 +23,6 @@ public class MailTest {
     private MailService mailService;
     @Test
     public void sendEmail(){
-        mailService.sendWithHtml("lhq_hcl@outlook.com","欢迎来到LSP之家","欢迎来到LSP之家",null);
+        mailService.sendWithHtml("736251671@qq.com","欢迎来到计工十一少之家","欢迎来到计工十一少之家",null);
     }
 }
